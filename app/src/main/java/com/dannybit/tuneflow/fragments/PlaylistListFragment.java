@@ -18,7 +18,7 @@ public class PlaylistListFragment extends ListFragment {
 
 
     private PlaylistAdapter adapter;
-    OnPlaylistSelectedListener callback;
+    private OnPlaylistSelectedListener callback;
 
     public interface OnPlaylistSelectedListener {
         public void onPlaylistSelected(Playlist playlist);

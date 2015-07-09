@@ -11,6 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
 
 import com.dannybit.tuneflow.fragments.PlaylistListFragment;
 import com.dannybit.tuneflow.fragments.search.SearchSoundcloudFragment;
@@ -27,7 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class SearchSongActivity extends ActionBarActivity {
+public class SearchSongActivity extends ActionBarActivity implements SearchSoundcloudFragment.OnFragmentInteractionListener {
 
     private WebsiteSelection websiteSelection;
     private Toolbar toolbar;
@@ -54,6 +56,8 @@ public class SearchSongActivity extends ActionBarActivity {
         handleIntent(intent);
     }
 
+
+
     @Override
     protected void onNewIntent(Intent intent) {
         setIntent(intent);
@@ -67,6 +71,8 @@ public class SearchSongActivity extends ActionBarActivity {
             songSearch(query);
         }
     }
+
+
 
     public void songSearch(String query){
         RequestParams params = new RequestParams();
@@ -93,7 +99,7 @@ public class SearchSongActivity extends ActionBarActivity {
                     try {
                         JSONObject jsonSong = response.getJSONObject(i);
                         song.setTrackId(jsonSong.getString("id"));
-                        song.setDuration(jsonSong.getInt("duration"));
+                        song.setDuration(jsonSong.getString("duration"));
                         song.setTrackName(jsonSong.getString("title"));
                         song.setArtworkLink(jsonSong.getString("artwork_url"));
                         song.setUrl(jsonSong.getString("url"));
@@ -116,6 +122,14 @@ public class SearchSongActivity extends ActionBarActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onFragmentInteraction(Song song) {
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("result", song);
+        setResult(RESULT_OK, returnIntent);
+        finish();
     }
 
     @Override

@@ -40,7 +40,8 @@ public class SongsListFragment extends ListFragment {
     private SongAdapter adapter;
     private List<String> songLinks;
     private String playListName;
-    public static final int FIND_SOUNDClOUD_SONG_REQUEST = 1;
+    private WebsiteSelectionDialogFragment webSelectionFragment;
+
 
 
     /**
@@ -56,6 +57,7 @@ public class SongsListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        webSelectionFragment = new WebsiteSelectionDialogFragment();
         // Needed to intercept menu click
         setHasOptionsMenu(true);
         adapter = new SongAdapter(getActivity());
@@ -75,7 +77,7 @@ public class SongsListFragment extends ListFragment {
                     try {
                         song.setTrackName(response.getString("title"));
                         song.setArtworkLink(response.getString("artwork_url"));
-                        song.setDuration(response.getInt("duration"));
+                        song.setDuration(response.getString("duration"));
                         song.setUrl(addClientIdToUrl(response.getString("stream_url")));
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -139,27 +141,25 @@ public class SongsListFragment extends ListFragment {
 
     private void addNewSong(){
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        WebsiteSelectionDialogFragment webSelectionFragment = new WebsiteSelectionDialogFragment();
         webSelectionFragment.show(fm, "show");
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    public void closeSelectionDialog(){
+        webSelectionFragment.dismiss();
+    }
+
+
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+
         public void onFragmentInteraction(String id);
     }
 
     public String addClientIdToUrl(String url){
         return url + "?client_id=" + SoundcloudRestClient.CLIENT_ID;
+    }
+
+    public SongAdapter getAdapter(){
+        return this.adapter;
     }
 
 

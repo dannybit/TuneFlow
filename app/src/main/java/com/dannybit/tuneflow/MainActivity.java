@@ -1,5 +1,6 @@
 package com.dannybit.tuneflow;
 
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -14,14 +16,18 @@ import android.widget.Toast;
 import com.dannybit.tuneflow.fragments.NavigationDrawerFragment;
 import com.dannybit.tuneflow.fragments.PlaylistListFragment;
 import com.dannybit.tuneflow.fragments.SongsListFragment;
+import com.dannybit.tuneflow.fragments.WebsiteSelectionDialogFragment;
+import com.dannybit.tuneflow.fragments.search.WebsiteSelection;
 import com.dannybit.tuneflow.models.Playlist;
+import com.dannybit.tuneflow.models.Song;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerCallbacks, SongsListFragment.OnFragmentInteractionListener, PlaylistListFragment.OnPlaylistSelectedListener {
+        implements NavigationDrawerCallbacks, SongsListFragment.OnFragmentInteractionListener, PlaylistListFragment.OnPlaylistSelectedListener, WebsiteSelectionDialogFragment.OnWebsiteSelectionListner {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -30,6 +36,10 @@ public class MainActivity extends ActionBarActivity
     private Toolbar mToolbar;
     private MediaPlayer mediaPlayer;
     private PlaylistListFragment playlistListFragment;
+    private Playlist currentPlaylist;
+    private boolean songAddedToPlaylist;
+    private SongsListFragment currentSongsListFragment;
+    public static final int FIND_SOUNDClOUD_SONG_REQUEST = 1;
 
 
     @Override
@@ -108,6 +118,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onFragmentInteraction(String url) {
+        /*
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             mediaPlayer.setDataSource(url);
@@ -116,21 +127,63 @@ public class MainActivity extends ActionBarActivity
         } catch (IOException e){
             e.printStackTrace();
         }
+        */
     }
 
     @Override
     public void onPlaylistSelected(Playlist playlist) {
+        currentPlaylist = playlist;
         SongsListFragment songsListFragment = new SongsListFragment();
         Bundle extras = new Bundle();
         extras.putStringArrayList("SONG_LINKS", (ArrayList) playlist.getSongsLinks());
         extras.putString("PLAYLIST_NAME", playlist.getName());
         songsListFragment.setArguments(extras);
+        currentSongsListFragment = songsListFragment;
         getSupportFragmentManager().beginTransaction().replace(R.id.container, songsListFragment).addToBackStack(null).commit();
+    }
+
+
+
+    @Override
+    public void onWebsiteSelected(WebsiteSelection websiteSelection) {
+        if (websiteSelection.equals(WebsiteSelection.SOUNDCLOUD)){
+            startSoundcloudSearch();
+        }
+    }
+
+    public void startSoundcloudSearch(){
+        currentSongsListFragment.closeSelectionDialog();
+        Intent intent = new Intent(this, SearchSongActivity.class);
+        intent.putExtra("SELECTION", WebsiteSelection.SOUNDCLOUD);
+        startActivityForResult(intent, FIND_SOUNDClOUD_SONG_REQUEST);
+
     }
 
     public void setActionBarTitle(String newTitle){
         setTitle(newTitle);
     }
 
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        if (songAddedToPlaylist){
+            //startSongsFragment(currentPlaylist);
+        }
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == FIND_SOUNDClOUD_SONG_REQUEST){
+            if (resultCode == RESULT_OK){
+                Song addedSong = data.getParcelableExtra("result");
+                Log.v("HELLO", addedSong.getTrackName());
+                currentPlaylist.add(addedSong.getTrackId());
+                currentSongsListFragment.getAdapter().add(addedSong);
+                currentSongsListFragment.getAdapter().notifyDataSetChanged();
+
+            }
+        }
+
+    }
 }

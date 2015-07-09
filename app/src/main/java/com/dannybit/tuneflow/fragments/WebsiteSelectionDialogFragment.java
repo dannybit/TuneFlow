@@ -1,6 +1,7 @@
 package com.dannybit.tuneflow.fragments;
 
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -17,12 +18,18 @@ import android.widget.Button;
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.SearchSongActivity;
 import com.dannybit.tuneflow.fragments.search.WebsiteSelection;
+import com.dannybit.tuneflow.models.Playlist;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class WebsiteSelectionDialogFragment extends DialogFragment {
 
+    private OnWebsiteSelectionListner callback;
+
+    public interface OnWebsiteSelectionListner {
+        public void onWebsiteSelected(WebsiteSelection websiteSelection);
+    }
 
     public WebsiteSelectionDialogFragment() {
         // Required empty public constructor
@@ -39,6 +46,22 @@ public class WebsiteSelectionDialogFragment extends DialogFragment {
         }
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            callback =  (OnWebsiteSelectionListner) activity;
+        } catch (ClassCastException e){
+            throw new ClassCastException(activity.toString() + " must implement OnPlaylistSelectedListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,9 +73,8 @@ public class WebsiteSelectionDialogFragment extends DialogFragment {
         soundcloudButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), SearchSongActivity.class);
-                intent.putExtra("SELECTION", WebsiteSelection.SOUNDCLOUD);
-                startActivityForResult(intent, SongsListFragment.FIND_SOUNDClOUD_SONG_REQUEST);
+                callback.onWebsiteSelected(WebsiteSelection.SOUNDCLOUD);
+
             }
         });
         return view;
