@@ -1,5 +1,6 @@
 package com.dannybit.tuneflow.models;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,37 +8,29 @@ import java.util.List;
  * Created by danielnamdar on 7/4/15.
  */
 public class Playlist {
-    private List<String> songsLinks;
+    private ArrayList<Song> songs;
     private String name;
     private String artworkLink;
 
     public Playlist(String name){
         this.name = name;
-        songsLinks = new ArrayList<String>();
+        songs = new ArrayList<Song>();
     }
 
-    public void add(String songLink){
-        songsLinks.add(songLink);
+    public void add(Song song){
+        songs.add(song);
     }
 
     public String getName() {
         return name;
     }
 
-    public List<String> getSongsLinks() {
-        return songsLinks;
+    public ArrayList<Song> getSongs() {
+        return songs;
     }
 
     public int getSize(){
-        return songsLinks.size();
-    }
-
-    public String getArtworkLink(){
-        return artworkLink;
-    }
-
-    public void setArtworkLink(String artworkLink){
-        this.artworkLink = artworkLink;
+        return songs.size();
     }
 
 }

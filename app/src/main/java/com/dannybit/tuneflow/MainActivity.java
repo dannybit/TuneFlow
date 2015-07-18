@@ -34,10 +34,8 @@ public class MainActivity extends ActionBarActivity
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private Toolbar mToolbar;
-    private MediaPlayer mediaPlayer;
     private PlaylistListFragment playlistListFragment;
     private Playlist currentPlaylist;
-    private boolean songAddedToPlaylist;
     private SongsListFragment currentSongsListFragment;
     public static final int FIND_SOUNDClOUD_SONG_REQUEST = 1;
 
@@ -46,22 +44,29 @@ public class MainActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initToolbar();
+        setupDrawer();
+        setupFragment();
+    }
+
+    private void initToolbar(){
         mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(mToolbar);
+    }
 
+    private void setupDrawer(){
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.fragment_drawer);
-
-        mediaPlayer = new MediaPlayer();
-
         // Set up the drawer.
         mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);
+    }
+
+    private void setupFragment(){
         //songsListFragment = new SongsListFragment();
         playlistListFragment = new PlaylistListFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.container, playlistListFragment).commit();
-
-
     }
+
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
@@ -118,16 +123,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onFragmentInteraction(String url) {
-        /*
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mediaPlayer.setDataSource(url);
-            mediaPlayer.prepare(); // might take long! (for buffering, etc)
-            mediaPlayer.start();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-        */
+
     }
 
     @Override
@@ -135,7 +131,7 @@ public class MainActivity extends ActionBarActivity
         currentPlaylist = playlist;
         SongsListFragment songsListFragment = new SongsListFragment();
         Bundle extras = new Bundle();
-        extras.putStringArrayList("SONG_LINKS", (ArrayList) playlist.getSongsLinks());
+        extras.putParcelableArrayList("SONGS", playlist.getSongs());
         extras.putString("PLAYLIST_NAME", playlist.getName());
         songsListFragment.setArguments(extras);
         currentSongsListFragment = songsListFragment;
@@ -166,9 +162,6 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onResumeFragments() {
         super.onResumeFragments();
-        if (songAddedToPlaylist){
-            //startSongsFragment(currentPlaylist);
-        }
     }
 
     @Override
@@ -177,11 +170,9 @@ public class MainActivity extends ActionBarActivity
         if (requestCode == FIND_SOUNDClOUD_SONG_REQUEST){
             if (resultCode == RESULT_OK){
                 Song addedSong = data.getParcelableExtra("result");
-                Log.v("HELLO", addedSong.getTrackName());
-                currentPlaylist.add(addedSong.getTrackId());
+                currentPlaylist.add(addedSong);
                 currentSongsListFragment.getAdapter().add(addedSong);
                 currentSongsListFragment.getAdapter().notifyDataSetChanged();
-
             }
         }
 

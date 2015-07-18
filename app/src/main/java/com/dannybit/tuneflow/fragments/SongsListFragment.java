@@ -25,6 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,7 +39,7 @@ public class SongsListFragment extends ListFragment {
 
     private OnFragmentInteractionListener mListener;
     private SongAdapter adapter;
-    private List<String> songLinks;
+    private ArrayList<Song> songs;
     private String playListName;
     private WebsiteSelectionDialogFragment webSelectionFragment;
 
@@ -62,35 +63,15 @@ public class SongsListFragment extends ListFragment {
         setHasOptionsMenu(true);
         adapter = new SongAdapter(getActivity());
         Bundle extras = getArguments();
-        songLinks = extras.getStringArrayList("SONG_LINKS");
+        songs = extras.getParcelableArrayList("SONGS");
         playListName = extras.getString("PLAYLIST_NAME");
         ((MainActivity) getActivity()).setActionBarTitle(playListName);
         setListAdapter(adapter);
 
-        for (int i = 0; i < songLinks.size(); i++){
-            RequestParams params = new RequestParams();
-            params.put("client_id", SoundcloudRestClient.CLIENT_ID);
-            SoundcloudRestClient.getTrack(songLinks.get(i), params, new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    Song song = new Song();
-                    try {
-                        song.setTrackName(response.getString("title"));
-                        song.setArtworkLink(response.getString("artwork_url"));
-                        song.setDuration(response.getString("duration"));
-                        song.setUrl(addClientIdToUrl(response.getString("stream_url")));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    adapter.add(song);
-                    adapter.notifyDataSetChanged();
-                }
+        for (int i = 0; i < songs.size(); i++){
 
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                    Log.v("HELLO", "array");
-                }
-            });
+            songs.get(i).load(adapter);
+
         }
 
     }
@@ -152,10 +133,6 @@ public class SongsListFragment extends ListFragment {
     public interface OnFragmentInteractionListener {
 
         public void onFragmentInteraction(String id);
-    }
-
-    public String addClientIdToUrl(String url){
-        return url + "?client_id=" + SoundcloudRestClient.CLIENT_ID;
     }
 
     public SongAdapter getAdapter(){

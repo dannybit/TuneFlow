@@ -105,4 +105,9 @@ public class Song implements Parcelable {
             return new Song[size];
         }
     };
+
+
+    public void load(){
+
+    }
 }

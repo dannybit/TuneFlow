@@ -25,10 +25,6 @@ public class PlaylistListFragment extends ListFragment {
     }
 
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public PlaylistListFragment() {
     }
 
@@ -39,8 +35,6 @@ public class PlaylistListFragment extends ListFragment {
         setHasOptionsMenu(true);
         adapter = new PlaylistAdapter(getActivity());
         Playlist playlist = new Playlist("TEST");
-        playlist.add("211943269");
-        playlist.add("211943303");
         adapter.add(playlist);
         setListAdapter(adapter);
     }
