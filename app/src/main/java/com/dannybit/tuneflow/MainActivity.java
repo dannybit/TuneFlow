@@ -189,5 +189,6 @@ public class MainActivity extends ActionBarActivity
     public void onNewPlaylistCreated(Playlist playlist) {
         dbHelper.createPlaylist(playlist);
         playlistListFragment.addPlaylist(playlist);
+        onPlaylistSelected(playlist);
     }
 }

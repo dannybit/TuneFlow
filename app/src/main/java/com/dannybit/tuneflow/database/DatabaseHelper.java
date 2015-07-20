@@ -236,8 +236,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + "tsp." + KEY_PLAYLIST_ID + " AND ts."  + KEY_ID + " = " + "tsp." + KEY_SONG_ID;
 
 
-        Log.v("HELLO", selectQuery);
-
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
 

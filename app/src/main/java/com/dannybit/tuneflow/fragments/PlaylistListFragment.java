@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
+import com.dannybit.tuneflow.MainActivity;
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.database.DatabaseHelper;
 import com.dannybit.tuneflow.models.Playlist;
@@ -23,6 +24,7 @@ public class PlaylistListFragment extends ListFragment {
     private PlaylistAdapter adapter;
     private OnPlaylistSelectedListener callback;
     private DatabaseHelper dbHelper;
+    private static final String PLAYLIST_FRAGMENT_TITLE = "Playlists";
 
 
     public interface OnPlaylistSelectedListener {
@@ -43,6 +45,7 @@ public class PlaylistListFragment extends ListFragment {
             adapter.add(playlists.get(i));
         }
         setListAdapter(adapter);
+        ((MainActivity) getActivity()).setActionBarTitle(PLAYLIST_FRAGMENT_TITLE);
     }
 
 
@@ -63,6 +66,11 @@ public class PlaylistListFragment extends ListFragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getActivity()).setActionBarTitle(PLAYLIST_FRAGMENT_TITLE);
+    }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {

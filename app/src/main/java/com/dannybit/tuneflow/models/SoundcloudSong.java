@@ -56,31 +56,6 @@ public class SoundcloudSong extends Song {
         }
     };
 
-    /*
-    public void load(final SongAdapter adapter){
-        RequestParams params = new RequestParams();
-        params.put("client_id", SoundcloudRestClient.CLIENT_ID);
-        SoundcloudRestClient.getTrack(getSoundcloudId(), params, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    setTrackName(response.getString("title"));
-                    setArtworkLink(response.getString("artwork_url"));
-                    setDuration(response.getString("duration"));
-                    setUrl(addClientIdToUrl(response.getString("stream_url")));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                adapter.add(SoundcloudSong.this);
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-            }
-        });
-    }
-    */
 
     public String addClientIdToUrl(String url){
         return url + "?client_id=" + SoundcloudRestClient.CLIENT_ID;
