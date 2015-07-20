@@ -1,5 +1,7 @@
 package com.dannybit.tuneflow.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.dannybit.tuneflow.network.SoundcloudRestClient;
@@ -22,6 +24,17 @@ public class SoundcloudSong extends Song {
         super();
     }
 
+    public SoundcloudSong(Parcel in){
+        super(in);
+        soundcloudId = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeString(soundcloudId);
+    }
+
     public void setSoundcloudId(String soundcloudId){
         this.soundcloudId = soundcloudId;
     }
@@ -30,31 +43,44 @@ public class SoundcloudSong extends Song {
         return this.soundcloudId;
     }
 
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<SoundcloudSong> CREATOR = new Parcelable.Creator<SoundcloudSong>() {
+        @Override
+        public SoundcloudSong createFromParcel(Parcel in) {
+            return new SoundcloudSong(in);
+        }
+
+        @Override
+        public SoundcloudSong[] newArray(int size) {
+            return new SoundcloudSong[size];
+        }
+    };
+
+    /*
     public void load(final SongAdapter adapter){
         RequestParams params = new RequestParams();
         params.put("client_id", SoundcloudRestClient.CLIENT_ID);
         SoundcloudRestClient.getTrack(getSoundcloudId(), params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Song song = new Song();
                 try {
-                    song.setTrackName(response.getString("title"));
-                    song.setArtworkLink(response.getString("artwork_url"));
-                    song.setDuration(response.getString("duration"));
-                    song.setUrl(addClientIdToUrl(response.getString("stream_url")));
+                    setTrackName(response.getString("title"));
+                    setArtworkLink(response.getString("artwork_url"));
+                    setDuration(response.getString("duration"));
+                    setUrl(addClientIdToUrl(response.getString("stream_url")));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                adapter.add(song);
+                adapter.add(SoundcloudSong.this);
                 adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                
             }
         });
     }
+    */
 
     public String addClientIdToUrl(String url){
         return url + "?client_id=" + SoundcloudRestClient.CLIENT_ID;

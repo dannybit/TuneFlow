@@ -69,9 +69,8 @@ public class SongsListFragment extends ListFragment {
         setListAdapter(adapter);
 
         for (int i = 0; i < songs.size(); i++){
-
-            songs.get(i).load(adapter);
-
+            adapter.add(songs.get(i));
+            adapter.notifyDataSetChanged();
         }
 
     }

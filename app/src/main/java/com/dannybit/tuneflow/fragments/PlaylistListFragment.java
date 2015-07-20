@@ -20,10 +20,10 @@ public class PlaylistListFragment extends ListFragment {
     private PlaylistAdapter adapter;
     private OnPlaylistSelectedListener callback;
 
+
     public interface OnPlaylistSelectedListener {
         public void onPlaylistSelected(Playlist playlist);
     }
-
 
     public PlaylistListFragment() {
     }
@@ -31,7 +31,6 @@ public class PlaylistListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Needed to intercept menu click
         setHasOptionsMenu(true);
         adapter = new PlaylistAdapter(getActivity());
         Playlist playlist = new Playlist("TEST");
@@ -50,6 +49,7 @@ public class PlaylistListFragment extends ListFragment {
         }
     }
 
+
     @Override
     public void onDetach() {
         super.onDetach();
@@ -61,8 +61,6 @@ public class PlaylistListFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         callback.onPlaylistSelected((Playlist) adapter.getItem(position));
-
-
     }
 
     @Override

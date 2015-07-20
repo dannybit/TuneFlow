@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.dannybit.tuneflow.database.DatabaseHelper;
 import com.dannybit.tuneflow.fragments.NavigationDrawerFragment;
 import com.dannybit.tuneflow.fragments.PlaylistListFragment;
 import com.dannybit.tuneflow.fragments.SongsListFragment;
@@ -38,6 +39,7 @@ public class MainActivity extends ActionBarActivity
     private Playlist currentPlaylist;
     private SongsListFragment currentSongsListFragment;
     public static final int FIND_SOUNDClOUD_SONG_REQUEST = 1;
+    private DatabaseHelper dbHelper;
 
 
     @Override
@@ -47,6 +49,7 @@ public class MainActivity extends ActionBarActivity
         initToolbar();
         setupDrawer();
         setupFragment();
+        dbHelper = new DatabaseHelper(getApplicationContext());
     }
 
     private void initToolbar(){
@@ -94,9 +97,6 @@ public class MainActivity extends ActionBarActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.main, menu);
             return true;
         }
@@ -170,6 +170,8 @@ public class MainActivity extends ActionBarActivity
         if (requestCode == FIND_SOUNDClOUD_SONG_REQUEST){
             if (resultCode == RESULT_OK){
                 Song addedSong = data.getParcelableExtra("result");
+                dbHelper.createSong(addedSong);
+                dbHelper.createPlaylistSong(currentPlaylist.getId(), addedSong.getId());
                 currentPlaylist.add(addedSong);
                 currentSongsListFragment.getAdapter().add(addedSong);
                 currentSongsListFragment.getAdapter().notifyDataSetChanged();

@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.dannybit.tuneflow.views.adapters.SongAdapter;
+
 import org.json.JSONObject;
 
 import java.util.concurrent.TimeUnit;
@@ -11,8 +13,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by danielnamdar on 6/27/15.
  */
-public class Song implements Parcelable {
-    private String trackId;
+public abstract class Song implements Parcelable {
+
+    private long id;
     private String trackName;
     private String duration;
     private String artworkLink;
@@ -22,12 +25,12 @@ public class Song implements Parcelable {
 
     }
 
-    public String getTrackId() {
-        return trackId;
+    public long getId() {
+        return id;
     }
 
-    public void setTrackId(String trackId) {
-        this.trackId = trackId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getTrackName() {
@@ -72,7 +75,7 @@ public class Song implements Parcelable {
     }
 
     protected Song(Parcel in) {
-        trackId = in.readString();
+        id = in.readLong();
         trackName = in.readString();
         duration = in.readString();
         artworkLink = in.readString();
@@ -86,28 +89,11 @@ public class Song implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(trackId);
+        dest.writeLong(id);
         dest.writeString(trackName);
         dest.writeString(duration);
         dest.writeString(artworkLink);
         dest.writeString(url);
     }
 
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Song> CREATOR = new Parcelable.Creator<Song>() {
-        @Override
-        public Song createFromParcel(Parcel in) {
-            return new Song(in);
-        }
-
-        @Override
-        public Song[] newArray(int size) {
-            return new Song[size];
-        }
-    };
-
-
-    public void load(){
-
-    }
 }

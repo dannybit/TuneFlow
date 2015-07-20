@@ -18,6 +18,7 @@ import com.dannybit.tuneflow.fragments.PlaylistListFragment;
 import com.dannybit.tuneflow.fragments.search.SearchSoundcloudFragment;
 import com.dannybit.tuneflow.fragments.search.WebsiteSelection;
 import com.dannybit.tuneflow.models.Song;
+import com.dannybit.tuneflow.models.SoundcloudSong;
 import com.dannybit.tuneflow.network.SoundcloudRestClient;
 import com.dannybit.tuneflow.views.adapters.SongAdapter;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -95,10 +96,10 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
                 int length = response.length();
                 searchSoundcloudFragment.getAdapter().clear();
                 for (int i = 0; i < length; i++){
-                    Song song = new Song();
+                    SoundcloudSong song = new SoundcloudSong();
                     try {
                         JSONObject jsonSong = response.getJSONObject(i);
-                        song.setTrackId(jsonSong.getString("id"));
+                        song.setSoundcloudId(jsonSong.getString("id"));
                         song.setDuration(jsonSong.getString("duration"));
                         song.setTrackName(jsonSong.getString("title"));
                         song.setArtworkLink(jsonSong.getString("artwork_url"));

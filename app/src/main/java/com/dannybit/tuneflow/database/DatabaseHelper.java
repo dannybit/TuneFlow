@@ -18,10 +18,10 @@ import java.util.Locale;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Database Version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Database Name
-    private static final String DATABASE_NAME = "tuneflow";
+    private static final String DATABASE_NAME = "tuneflow.db";
 
     private static final String TABLE_SONG = "songs";
     private static final String TABLE_PLAYLIST = "playlists";
@@ -42,19 +42,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_PLAYLIST_ID = "playlist_id";
     private static final String KEY_SONG_ID = "song_id";
 
-    private static final String CREATE_TABLE_PLAYLIST = "create table" +  TABLE_PLAYLIST + "(" + KEY_ID
+    private static final String CREATE_TABLE_PLAYLIST = "create table " +  TABLE_PLAYLIST + "(" + KEY_ID
             + " integer primary key autoincrement, " + KEY_PLAYLIST_NAME
             + " text not null, " + KEY_CREATED_AT + " DATETIME" + ")";
 
-    private static final String CREATE_TABLE_SONG = "create table" + TABLE_SONG + "(" + KEY_ID + " INTEGER PRIMARY KEY,"
+    private static final String CREATE_TABLE_SONG = "create table " + TABLE_SONG + "(" + KEY_ID + " INTEGER PRIMARY KEY, "
             + KEY_SONG_TRACK_ID + " TEXT, "
             + KEY_SONG_NAME + " TEXT, "
-            + KEY_SONG_DURATION + "TEXT, "
-            + KEY_SONG_ARTWORK_LINK + "TEXT, "
-            + KEY_SONG_URL + "TEXT" + ")";
+            + KEY_SONG_DURATION + " TEXT, "
+            + KEY_SONG_ARTWORK_LINK + " TEXT, "
+            + KEY_SONG_URL + " TEXT, "
+            + KEY_CREATED_AT + " DATETIME" + ")";
 
-    private static String CREATE_TABLE_PLAYLIST_SONG = "create table" + TABLE_PLAYLIST_SONG + "(" + KEY_ID + " INTEGER PRIMARY KEY, "
-            + KEY_SONG_ID + "(" + "INTEGER, " + KEY_PLAYLIST_ID + " INTEGER,"
+    private static String CREATE_TABLE_PLAYLIST_SONG = "create table " + TABLE_PLAYLIST_SONG + "(" + KEY_ID + " INTEGER PRIMARY KEY, "
+            + KEY_SONG_ID + " INTEGER, " + KEY_PLAYLIST_ID + " INTEGER,"
             + KEY_CREATED_AT + " DATETIME " + ")";
 
 
@@ -106,6 +107,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_CREATED_AT, getDateTime());
 
         long song_id = db.insert(TABLE_SONG, null, values);
+        song.setId(song_id);
         return song_id;
     }
 

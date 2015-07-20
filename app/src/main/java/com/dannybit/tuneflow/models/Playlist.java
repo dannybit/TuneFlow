@@ -8,6 +8,7 @@ import java.util.List;
  * Created by danielnamdar on 7/4/15.
  */
 public class Playlist {
+    private long id;
     private ArrayList<Song> songs;
     private String name;
     private String artworkLink;
@@ -15,6 +16,14 @@ public class Playlist {
     public Playlist(String name){
         this.name = name;
         songs = new ArrayList<Song>();
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public void add(Song song){
