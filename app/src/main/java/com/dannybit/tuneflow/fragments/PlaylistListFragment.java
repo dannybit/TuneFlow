@@ -2,6 +2,7 @@ package com.dannybit.tuneflow.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.MenuItem;
@@ -73,11 +74,22 @@ public class PlaylistListFragment extends ListFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_add:
-                Log.v("HELLO", "PLAYLIST");
+                addNewPlaylist();
                 return true;
             default:
                 return false;
         }
 
+    }
+
+    private void addNewPlaylist(){
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        NewPlaylistDialogFragment newPlaylistDialogFragment = new NewPlaylistDialogFragment();
+        newPlaylistDialogFragment.show(fm, "show");
+    }
+
+    public void addPlaylist(Playlist playlist){
+        adapter.add(playlist);
+        adapter.notifyDataSetChanged();
     }
 }

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.dannybit.tuneflow.database.DatabaseHelper;
 import com.dannybit.tuneflow.fragments.NavigationDrawerFragment;
+import com.dannybit.tuneflow.fragments.NewPlaylistDialogFragment;
 import com.dannybit.tuneflow.fragments.PlaylistListFragment;
 import com.dannybit.tuneflow.fragments.SongsListFragment;
 import com.dannybit.tuneflow.fragments.WebsiteSelectionDialogFragment;
@@ -28,7 +29,11 @@ import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerCallbacks, SongsListFragment.OnFragmentInteractionListener, PlaylistListFragment.OnPlaylistSelectedListener, WebsiteSelectionDialogFragment.OnWebsiteSelectionListner {
+        implements NavigationDrawerCallbacks,
+        SongsListFragment.OnFragmentInteractionListener,
+        PlaylistListFragment.OnPlaylistSelectedListener,
+        WebsiteSelectionDialogFragment.OnWebsiteSelectionListner,
+        NewPlaylistDialogFragment.OnNewPlaylistCreatedListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -182,5 +187,12 @@ public class MainActivity extends ActionBarActivity
             }
         }
 
+    }
+
+
+    @Override
+    public void onNewPlaylistCreated(Playlist playlist) {
+        dbHelper.createPlaylist(playlist);
+        playlistListFragment.addPlaylist(playlist);
     }
 }
