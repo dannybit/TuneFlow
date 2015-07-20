@@ -75,31 +75,9 @@ public class PlaylistAdapter extends BaseAdapter {
         final ViewHolder viewHolder = (ViewHolder) view.getTag();
         final Playlist playlist = playlists.get(position);
 
-        /*
-        if (playlist.getArtworkLink() == null){
-            SoundcloudRestClient.get(playlist.getSongsLinks().get(0), null, new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-
-                    try {
-
-                        playlist.setArtworkLink(response.getString("artwork_url"));
-                        Picasso.with(context).load(playlist.getArtworkLink()).error(R.drawable.soundcloud_icon).into(viewHolder.playlistArt);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                    Log.v("HELLO", "array");
-                }
-            });
+        if (playlist.getSize() > 0) {
+            Picasso.with(context).load(playlist.getSongs().get(0).getArtworkLink()).error(R.drawable.soundcloud_icon).into(viewHolder.playlistArt);
         }
-        */
-
         viewHolder.playlistName.setText(playlist.getName());
         viewHolder.playlistSize.setText(String.format("%d tunes", playlist.getSize()));
         return view;

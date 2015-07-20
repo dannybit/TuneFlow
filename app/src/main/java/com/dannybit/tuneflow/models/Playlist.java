@@ -11,7 +11,6 @@ public class Playlist {
     private long id;
     private ArrayList<Song> songs;
     private String name;
-    private String artworkLink;
 
     public Playlist(){
 

@@ -35,9 +35,7 @@ public class MainActivity extends ActionBarActivity
         WebsiteSelectionDialogFragment.OnWebsiteSelectionListner,
         NewPlaylistDialogFragment.OnNewPlaylistCreatedListener {
 
-    /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
+
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private Toolbar mToolbar;
     private PlaylistListFragment playlistListFragment;
@@ -55,9 +53,6 @@ public class MainActivity extends ActionBarActivity
         setupDrawer();
         setupFragment();
         dbHelper = DatabaseHelper.getInstance(this);
-
-        Playlist playlist = new Playlist("DB test");
-        dbHelper.createPlaylist(playlist);
 
     }
 
