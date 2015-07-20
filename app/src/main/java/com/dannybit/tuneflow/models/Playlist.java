@@ -43,6 +43,8 @@ public class Playlist {
         return name;
     }
 
+    public void setSongs(ArrayList<Song> songs){ this.songs = songs;}
+
     public ArrayList<Song> getSongs() {
         return songs;
     }

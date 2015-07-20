@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.dannybit.tuneflow.models.Playlist;
 import com.dannybit.tuneflow.models.Song;
@@ -20,6 +21,8 @@ import java.util.Locale;
  * Created by danielnamdar on 7/11/15.
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
+
+    private static DatabaseHelper dbInstance;
 
     // Database Version
     private static final int DATABASE_VERSION = 2;
@@ -63,7 +66,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + KEY_CREATED_AT + " DATETIME " + ")";
 
 
-    public DatabaseHelper(Context context){
+    public static synchronized DatabaseHelper getInstance(Context context) {
+
+        // Use the application context, which will ensure that you
+        // don't accidentally leak an Activity's context.
+        // See this article for more information: http://bit.ly/6LRzfx
+        if (dbInstance == null) {
+            dbInstance = new DatabaseHelper(context.getApplicationContext());
+        }
+        return dbInstance;
+    }
+
+
+    private DatabaseHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -202,10 +217,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do {
                 Playlist playlist = new Playlist();
                 playlist.setId(c.getInt(c.getColumnIndex(KEY_ID)));
-                playlist.setName(c.getString(c.getColumnIndex(KEY_SONG_NAME)));
+                playlist.setName(c.getString(c.getColumnIndex(KEY_PLAYLIST_NAME)));
+                playlist.setSongs((ArrayList) getAllSongsInPlaylist(playlist.getId()));
                 playlists.add(playlist);
             } while (c.moveToNext());
         }
+
+
         return playlists;
     }
 
@@ -213,9 +231,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<Song> getAllSongsInPlaylist(long playlist_id){
         List<Song> songs = new ArrayList<>();
         String selectQuery = "SELECT * FROM " +  TABLE_SONG + " ts, "
-                + TABLE_PLAYLIST + " tp, " + TABLE_PLAYLIST + " tsp WHERE tsp."
-                + KEY_PLAYLIST_ID + " = " + playlist_id + " AND ts." + KEY_ID + " = "
-                + "tsp." + KEY_SONG_ID;
+                + TABLE_PLAYLIST + " tp, " + TABLE_PLAYLIST_SONG + " tsp WHERE tp."
+                + KEY_ID + " = " + playlist_id + " AND tp." + KEY_ID + " = "
+                + "tsp." + KEY_PLAYLIST_ID + " AND ts."  + KEY_ID + " = " + "tsp." + KEY_SONG_ID;
+
+
+        Log.v("HELLO", selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);

@@ -49,7 +49,11 @@ public class MainActivity extends ActionBarActivity
         initToolbar();
         setupDrawer();
         setupFragment();
-        dbHelper = new DatabaseHelper(getApplicationContext());
+        dbHelper = DatabaseHelper.getInstance(this);
+
+        Playlist playlist = new Playlist("DB test");
+        dbHelper.createPlaylist(playlist);
+
     }
 
     private void initToolbar(){

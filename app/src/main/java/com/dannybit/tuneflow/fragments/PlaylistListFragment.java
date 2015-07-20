@@ -9,9 +9,11 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.dannybit.tuneflow.R;
+import com.dannybit.tuneflow.database.DatabaseHelper;
 import com.dannybit.tuneflow.models.Playlist;
 import com.dannybit.tuneflow.views.adapters.PlaylistAdapter;
 
+import java.util.List;
 
 
 public class PlaylistListFragment extends ListFragment {
@@ -19,6 +21,7 @@ public class PlaylistListFragment extends ListFragment {
 
     private PlaylistAdapter adapter;
     private OnPlaylistSelectedListener callback;
+    private DatabaseHelper dbHelper;
 
 
     public interface OnPlaylistSelectedListener {
@@ -33,8 +36,11 @@ public class PlaylistListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         adapter = new PlaylistAdapter(getActivity());
-        Playlist playlist = new Playlist("TEST");
-        adapter.add(playlist);
+        dbHelper = DatabaseHelper.getInstance(getActivity());
+        List<Playlist> playlists = dbHelper.getAllPlaylist();
+        for (int i = 0; i < playlists.size(); i++){
+            adapter.add(playlists.get(i));
+        }
         setListAdapter(adapter);
     }
 
