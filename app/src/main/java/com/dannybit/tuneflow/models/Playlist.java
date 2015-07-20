@@ -13,6 +13,10 @@ public class Playlist {
     private String name;
     private String artworkLink;
 
+    public Playlist(){
+
+    }
+
     public Playlist(String name){
         this.name = name;
         songs = new ArrayList<Song>();
@@ -25,6 +29,11 @@ public class Playlist {
     public long getId() {
         return id;
     }
+
+    public void setName(String name){
+        this.name = name;
+    }
+
 
     public void add(Song song){
         songs.add(song);

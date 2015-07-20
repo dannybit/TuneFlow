@@ -2,14 +2,18 @@ package com.dannybit.tuneflow.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.dannybit.tuneflow.models.Playlist;
 import com.dannybit.tuneflow.models.Song;
+import com.dannybit.tuneflow.models.SoundcloudSong;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -129,6 +133,107 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Date date = new Date();
         return dateFormat.format(date);
     }
+
+    public Song getSong(long song_id){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + TABLE_SONG + " WHERE " +
+                KEY_ID + " = " + song_id;
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null){
+            c.moveToFirst();
+        }
+
+        Song song = new SoundcloudSong();
+        song.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+        song.setTrackName(c.getString(c.getColumnIndex(KEY_SONG_NAME)));
+        song.setUrl(c.getString(c.getColumnIndex(KEY_SONG_URL)));
+        song.setDuration(c.getString(c.getColumnIndex(KEY_SONG_DURATION)));
+        song.setArtworkLink(c.getString(c.getColumnIndex(KEY_SONG_ARTWORK_LINK)));
+       // song.setCreatedAt(c.getString(c.getColumnIndex(KEY_CREATED_AT)));
+        return song;
+    }
+
+    public List<Song> getAllSongs(){
+        List<Song> songs = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + TABLE_SONG;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c.moveToFirst()){
+            do {
+                Song song = new SoundcloudSong();
+                song.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+                song.setTrackName(c.getString(c.getColumnIndex(KEY_SONG_NAME)));
+                song.setUrl(c.getString(c.getColumnIndex(KEY_SONG_URL)));
+                song.setDuration(c.getString(c.getColumnIndex(KEY_SONG_DURATION)));
+                song.setArtworkLink(c.getString(c.getColumnIndex(KEY_SONG_ARTWORK_LINK)));
+                songs.add(song);
+            } while (c.moveToNext());
+        }
+        return songs;
+    }
+
+    public Playlist getPlaylist(long playlist_id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + TABLE_PLAYLIST + " WHERE " + KEY_ID + " = " + playlist_id;
+
+        Cursor c = db.rawQuery(selectQuery, null);
+        if (c != null){
+            c.moveToFirst();
+        }
+        Playlist playlist = new Playlist();
+        playlist.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+        playlist.setName(c.getString(c.getColumnIndex(KEY_SONG_NAME)));
+        return playlist;
+    }
+
+    public List<Playlist> getAllPlaylist(){
+        List<Playlist> playlists = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + TABLE_PLAYLIST;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c.moveToFirst()){
+            do {
+                Playlist playlist = new Playlist();
+                playlist.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+                playlist.setName(c.getString(c.getColumnIndex(KEY_SONG_NAME)));
+                playlists.add(playlist);
+            } while (c.moveToNext());
+        }
+        return playlists;
+    }
+
+
+    public List<Song> getAllSongsInPlaylist(long playlist_id){
+        List<Song> songs = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " +  TABLE_SONG + " ts, "
+                + TABLE_PLAYLIST + " tp, " + TABLE_PLAYLIST + " tsp WHERE tsp."
+                + KEY_PLAYLIST_ID + " = " + playlist_id + " AND ts." + KEY_ID + " = "
+                + "tsp." + KEY_SONG_ID;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c.moveToFirst()){
+            do {
+                Song song = new SoundcloudSong();
+                song.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+                song.setTrackName(c.getString(c.getColumnIndex(KEY_SONG_NAME)));
+                song.setUrl(c.getString(c.getColumnIndex(KEY_SONG_URL)));
+                song.setDuration(c.getString(c.getColumnIndex(KEY_SONG_DURATION)));
+                song.setArtworkLink(c.getString(c.getColumnIndex(KEY_SONG_ARTWORK_LINK)));
+                songs.add(song);
+            } while (c.moveToNext());
+        }
+        return songs;
+    }
+
 
 
 
