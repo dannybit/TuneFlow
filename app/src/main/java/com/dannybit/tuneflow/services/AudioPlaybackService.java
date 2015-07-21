@@ -22,6 +22,7 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
     private int songPosition;
     private ArrayList<Song> songs;
     private final IBinder musicBind = new MusicBinder();
+    private SongCompletedListener songCompletedListener;
 
 
     public AudioPlaybackService() {
@@ -89,6 +90,14 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
         public AudioPlaybackService getService() {
             return AudioPlaybackService.this;
         }
+
+        public void setListener(SongCompletedListener listener){
+            songCompletedListener = listener;
+        }
+    }
+
+    public interface SongCompletedListener {
+        public void songCompleted(Song nextSongToPlay);
     }
 
     @Override
@@ -100,9 +109,17 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         songPosition++;
-        Log.v("HELLO", "s: " + songPosition);
-        mediaPlayer.setOnCompletionListener(null);
-        playSong();
+        if (songPosition > songs.size() - 1){
+            // terminate playlist playback
+        } else {
+            mediaPlayer.setOnCompletionListener(null);
+            playSong();
+            if (songCompletedListener != null){
+                //songCompletedListener.songCompleted(songs.get(songPosition));
+            }
+        }
+
+
     }
 
     @Override

@@ -39,7 +39,8 @@ public class MainActivity extends ActionBarActivity
         SongsListFragment.OnSongSelectedListener,
         PlaylistListFragment.OnPlaylistSelectedListener,
         WebsiteSelectionDialogFragment.OnWebsiteSelectionListner,
-        NewPlaylistDialogFragment.OnNewPlaylistCreatedListener {
+        NewPlaylistDialogFragment.OnNewPlaylistCreatedListener,
+        AudioPlaybackService.SongCompletedListener{
 
     public static final int FIND_SOUNDClOUD_SONG_REQUEST = 1;
     public static final int FIND_LOCAL_SONG_REQUEST = 2;
@@ -75,6 +76,7 @@ public class MainActivity extends ActionBarActivity
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             AudioPlaybackService.MusicBinder binder = (AudioPlaybackService.MusicBinder) iBinder;
             audioService = binder.getService();
+            binder.setListener(MainActivity.this);
             audioBound = true;
         }
 
@@ -174,6 +176,11 @@ public class MainActivity extends ActionBarActivity
         audioService.setSongPosition(position);
         audioService.playSong();
         startNowPlayingFragment(audioService.getCurrentSong());
+    }
+
+    @Override
+    public void songCompleted(Song nextSongToPlay) {
+        startNowPlayingFragment(nextSongToPlay);
     }
 
     private void startNowPlayingFragment(Song song){
@@ -285,4 +292,6 @@ public class MainActivity extends ActionBarActivity
         audioService=null;
         super.onDestroy();
     }
+
+
 }
