@@ -233,24 +233,33 @@ public class MainActivity extends ActionBarActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == FIND_SOUNDClOUD_SONG_REQUEST){
             if (resultCode == RESULT_OK){
-                Song addedSong = data.getParcelableExtra("result");
-                dbHelper.createSong(addedSong);
-                dbHelper.createPlaylistSong(currentPlaylist.getId(), addedSong.getId());
-                currentPlaylist.add(addedSong);
-                currentSongsListFragment.getAdapter().add(addedSong);
-                currentSongsListFragment.getAdapter().notifyDataSetChanged();
+                if (data != null) {
+                    Song addedSong = data.getParcelableExtra("result");
+                    if (addedSong != null) {
+                        addNewSong(addedSong);
+                    }
+                }
             }
         }
 
         else if (requestCode == FIND_LOCAL_SONG_REQUEST){
-            Song addedSong = data.getParcelableExtra("result");
-            dbHelper.createSong(addedSong);
-            dbHelper.createPlaylistSong(currentPlaylist.getId(), addedSong.getId());
-            currentPlaylist.add(addedSong);
-            currentSongsListFragment.getAdapter().add(addedSong);
-            currentSongsListFragment.getAdapter().notifyDataSetChanged();
+            if (data != null) {
+                Song addedSong = data.getParcelableExtra("result");
+                if (addedSong != null) {
+                    addNewSong(addedSong);
+                }
+            }
+
         }
 
+    }
+
+    private void addNewSong(Song addedSong){
+        dbHelper.createSong(addedSong);
+        dbHelper.createPlaylistSong(currentPlaylist.getId(), addedSong.getId());
+        currentPlaylist.add(addedSong);
+        currentSongsListFragment.getAdapter().add(addedSong);
+        currentSongsListFragment.getAdapter().notifyDataSetChanged();
     }
 
 
