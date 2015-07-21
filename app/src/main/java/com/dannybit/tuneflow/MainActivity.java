@@ -52,7 +52,7 @@ public class MainActivity extends ActionBarActivity
     private boolean audioBound = false;
     private MediaPlayer mediaPlayer;
     private NowPlayingFragment nowPlayingFragment;
-
+    private DrawerLayout drawerLayout;
 
 
     @Override
@@ -100,13 +100,18 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.fragment_drawer);
         // Set up the drawer.
-        mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        mNavigationDrawerFragment.setup(R.id.fragment_drawer, drawerLayout, mToolbar);
     }
 
     private void setupFragment(){
         //songsListFragment = new SongsListFragment();
         playlistListFragment = new PlaylistListFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.container, playlistListFragment).commit();
+    }
+
+    public void disableDrawer(){
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
 
 

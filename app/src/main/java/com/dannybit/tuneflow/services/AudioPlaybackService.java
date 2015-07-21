@@ -112,5 +112,19 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
         return mediaPlayer.isPlaying();
     }
 
+    public long getTotalDuration(){
+        return mediaPlayer.getDuration();
+    }
+
+    public long getCurrentDuration(){
+        return mediaPlayer.getCurrentPosition();
+    }
+
+    public void seekTo(int position){
+        mediaPlayer.seekTo(position);
+    }
+
+
+
 
 }
