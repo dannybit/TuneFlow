@@ -1,19 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="20dp">
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Local"/>
+        android:text="Local"
+        android:textColor="#FFFFFF"
+        android:textSize="25sp"
+        android:background="@drawable/website_selection_buttonshape"/>
 
 
     <Button
         android:id="@+id/soundcloud_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Soundcloud"/>
+        android:layout_marginTop="20dp"
+        android:text="Soundcloud"
+        android:textColor="#FFFFFF"
+        android:textSize="25sp"
+        android:background="@drawable/website_selection_buttonshape"
+        />
 
 
 

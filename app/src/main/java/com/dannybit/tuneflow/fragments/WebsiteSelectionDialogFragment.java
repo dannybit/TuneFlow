@@ -37,6 +37,8 @@ public class WebsiteSelectionDialogFragment extends DialogFragment {
 
 
 
+
+
     @Override
     public void onStart() {
         super.onStart();
@@ -67,7 +69,9 @@ public class WebsiteSelectionDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+       //getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        //getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        getDialog().setTitle("Choose library");
         View view = inflater.inflate(R.layout.fragment_website_selection_dialog, container, false);
         Button soundcloudButton = (Button) view.findViewById(R.id.soundcloud_button);
         soundcloudButton.setOnClickListener(new View.OnClickListener() {
