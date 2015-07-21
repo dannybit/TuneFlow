@@ -115,6 +115,16 @@ public class SongsListFragment extends ListFragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        setupActionBar();
+    }
+
+    private void setupActionBar(){
+        ((MainActivity) getActivity()).getSupportActionBar().show();
+    }
+
     private void addNewSong(){
         FragmentManager fm = getActivity().getSupportFragmentManager();
         webSelectionFragment.show(fm, "show");
@@ -133,7 +143,5 @@ public class SongsListFragment extends ListFragment {
     public SongAdapter getAdapter(){
         return this.adapter;
     }
-
-
 
 }

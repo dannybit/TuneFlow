@@ -41,7 +41,16 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         super.onCreate(savedInstanceState);
         Bundle extras = getArguments();
         currentSong = (Song) extras.getParcelable("SONG");
+        setupActionBar();
+        setupDrawer();
+
+    }
+
+    private void setupActionBar(){
         ((MainActivity) getActivity()).getSupportActionBar().hide();
+    }
+
+    private void setupDrawer(){
         ((MainActivity) getActivity()).disableDrawer();
     }
 
@@ -145,5 +154,11 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
         musicService.seekTo(currentPosition);
         updateProgressBar();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mHandler.removeCallbacks(updateTimeTask);
     }
 }
