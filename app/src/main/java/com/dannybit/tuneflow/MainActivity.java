@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.dannybit.tuneflow.database.DatabaseHelper;
 import com.dannybit.tuneflow.fragments.NavigationDrawerFragment;
 import com.dannybit.tuneflow.fragments.NewPlaylistDialogFragment;
+import com.dannybit.tuneflow.fragments.NowPlayingFragment;
 import com.dannybit.tuneflow.fragments.PlaylistListFragment;
 import com.dannybit.tuneflow.fragments.SongsListFragment;
 import com.dannybit.tuneflow.fragments.WebsiteSelectionDialogFragment;
@@ -29,9 +30,6 @@ import com.dannybit.tuneflow.models.Playlist;
 import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.services.AudioPlaybackService;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity
@@ -53,6 +51,7 @@ public class MainActivity extends ActionBarActivity
     private Intent playIntent;
     private boolean audioBound = false;
     private MediaPlayer mediaPlayer;
+    private NowPlayingFragment nowPlayingFragment;
 
 
 
@@ -147,7 +146,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-       
+
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -161,8 +160,21 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onSongSelected(Song song) {
+        /*
         audioService.setSong(song);
         audioService.playSong();
+        */
+        startNowPlayingFragment(song);
+    }
+
+    private void startNowPlayingFragment(Song song){
+        if (nowPlayingFragment == null){
+            nowPlayingFragment = new NowPlayingFragment();
+        }
+        Bundle extras = new Bundle();
+        extras.putParcelable("SONG", song);
+        nowPlayingFragment.setArguments(extras);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, nowPlayingFragment).addToBackStack(null).commit();
     }
 
     @Override
@@ -205,7 +217,6 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == FIND_SOUNDClOUD_SONG_REQUEST){
             if (resultCode == RESULT_OK){
                 Song addedSong = data.getParcelableExtra("result");
@@ -225,5 +236,12 @@ public class MainActivity extends ActionBarActivity
         dbHelper.createPlaylist(playlist);
         playlistListFragment.addPlaylist(playlist);
         onPlaylistSelected(playlist);
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopService(playIntent);
+        audioService=null;
+        super.onDestroy();
     }
 }
