@@ -54,7 +54,9 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         songName.setText(currentSong.getTrackName());
         songArtwork = (ImageView) view.findViewById(R.id.playerSongThumbnail);
 
-        Picasso.with(getActivity()).load(currentSong.getArtwork500x500()).error(R.drawable.soundcloud_icon).into(songArtwork);
+
+        currentSong.loadImage(getActivity(), songArtwork);
+
 
         bBackward = (ImageButton) view.findViewById(R.id.bBackward);
         bPlayOrPause = (ImageButton) view.findViewById(R.id.bPlayOrPause);

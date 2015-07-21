@@ -4,6 +4,9 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.provider.BaseColumns;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
@@ -17,6 +20,7 @@ import android.widget.ListView;
 import com.dannybit.tuneflow.fragments.PlaylistListFragment;
 import com.dannybit.tuneflow.fragments.search.SearchSoundcloudFragment;
 import com.dannybit.tuneflow.fragments.search.WebsiteSelection;
+import com.dannybit.tuneflow.models.LocalSong;
 import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.models.SoundcloudSong;
 import com.dannybit.tuneflow.network.SoundcloudRestClient;
@@ -35,6 +39,7 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
     private WebsiteSelection websiteSelection;
     private Toolbar toolbar;
     private SearchSoundcloudFragment searchSoundcloudFragment;
+    //private SearchLocalFragment searchLocalFragment;
 
 
     @Override
@@ -48,10 +53,14 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-
-        searchSoundcloudFragment = new SearchSoundcloudFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.search_container, searchSoundcloudFragment).commit();
-
+        if (websiteSelection.equals(WebsiteSelection.SOUNDCLOUD)) {
+            searchSoundcloudFragment = new SearchSoundcloudFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.search_container, searchSoundcloudFragment).commit();
+        }
+        else if (websiteSelection.equals(WebsiteSelection.LOCAL)){
+            searchSoundcloudFragment = new SearchSoundcloudFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.search_container, searchSoundcloudFragment).commit();
+        }
         // Get the intent, verify the action and get the query
         Intent intent = getIntent();
         handleIntent(intent);
@@ -69,13 +78,44 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            songSearch(query);
+            if (websiteSelection.equals(WebsiteSelection.SOUNDCLOUD)) {
+                soundcloudSongSearch(query);
+            }
+            else if (websiteSelection.equals(WebsiteSelection.LOCAL)){
+                localSongSearch(query);
+            }
         }
+    }
+
+    public void localSongSearch(String query){
+        searchSoundcloudFragment.getAdapter().clear();
+        String[] projection = {MediaStore.Audio.Media._ID,
+                 MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.DURATION, MediaStore.Audio.Media.DATA};
+        String where = MediaStore.Audio.Media.TITLE + " LIKE ?";
+        String[] params = new String[] {"%" + query + "%"};
+
+        Cursor q = managedQuery(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                projection, where, params, MediaStore.Audio.Media.TITLE);
+
+
+
+        try {
+            while (q.moveToNext()) {
+                Song song = new LocalSong();
+                song.setTrackName(q.getString(q.getColumnIndex(MediaStore.Audio.Media.TITLE)));
+                song.setDuration(q.getString(q.getColumnIndex(MediaStore.Audio.Media.DURATION)));
+                song.setUrl(q.getString(q.getColumnIndex(MediaStore.Audio.Media.DATA)));
+                searchSoundcloudFragment.getAdapter().add(song);
+            }
+        } finally {
+            q.close();
+        }
+        searchSoundcloudFragment.getAdapter().notifyDataSetChanged();
     }
 
 
 
-    public void songSearch(String query){
+    public void soundcloudSongSearch(String query){
         RequestParams params = new RequestParams();
         params.put("client_id", SoundcloudRestClient.CLIENT_ID);
         params.put("q", query);

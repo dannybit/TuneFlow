@@ -39,13 +39,14 @@ public class MainActivity extends ActionBarActivity
         WebsiteSelectionDialogFragment.OnWebsiteSelectionListner,
         NewPlaylistDialogFragment.OnNewPlaylistCreatedListener {
 
+    public static final int FIND_SOUNDClOUD_SONG_REQUEST = 1;
+    public static final int FIND_LOCAL_SONG_REQUEST = 2;
 
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private Toolbar mToolbar;
     private PlaylistListFragment playlistListFragment;
     private Playlist currentPlaylist;
     private SongsListFragment currentSongsListFragment;
-    public static final int FIND_SOUNDClOUD_SONG_REQUEST = 1;
     private DatabaseHelper dbHelper;
     private AudioPlaybackService audioService;
     private Intent playIntent;
@@ -199,6 +200,9 @@ public class MainActivity extends ActionBarActivity
         if (websiteSelection.equals(WebsiteSelection.SOUNDCLOUD)){
             startSoundcloudSearch();
         }
+        else if (websiteSelection.equals(WebsiteSelection.LOCAL)){
+            startLocalSearch();
+        }
     }
 
     public void startSoundcloudSearch(){
@@ -207,6 +211,13 @@ public class MainActivity extends ActionBarActivity
         intent.putExtra("SELECTION", WebsiteSelection.SOUNDCLOUD);
         startActivityForResult(intent, FIND_SOUNDClOUD_SONG_REQUEST);
 
+    }
+
+    public void startLocalSearch(){
+        currentSongsListFragment.closeSelectionDialog();
+        Intent intent = new Intent(this, SearchSongActivity.class);
+        intent.putExtra("SELECTION", WebsiteSelection.LOCAL);
+        startActivityForResult(intent, FIND_LOCAL_SONG_REQUEST);
     }
 
     public void setActionBarTitle(String newTitle){
@@ -229,6 +240,15 @@ public class MainActivity extends ActionBarActivity
                 currentSongsListFragment.getAdapter().add(addedSong);
                 currentSongsListFragment.getAdapter().notifyDataSetChanged();
             }
+        }
+
+        else if (requestCode == FIND_LOCAL_SONG_REQUEST){
+            Song addedSong = data.getParcelableExtra("result");
+            dbHelper.createSong(addedSong);
+            dbHelper.createPlaylistSong(currentPlaylist.getId(), addedSong.getId());
+            currentPlaylist.add(addedSong);
+            currentSongsListFragment.getAdapter().add(addedSong);
+            currentSongsListFragment.getAdapter().notifyDataSetChanged();
         }
 
     }

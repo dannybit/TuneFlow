@@ -73,6 +73,13 @@ public class WebsiteSelectionDialogFragment extends DialogFragment {
         //getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(0));
         getDialog().setTitle("Choose library");
         View view = inflater.inflate(R.layout.fragment_website_selection_dialog, container, false);
+        Button localButton = (Button) view.findViewById(R.id.local_button);
+        localButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.onWebsiteSelected(WebsiteSelection.LOCAL);
+            }
+        });
         Button soundcloudButton = (Button) view.findViewById(R.id.soundcloud_button);
         soundcloudButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +88,8 @@ public class WebsiteSelectionDialogFragment extends DialogFragment {
 
             }
         });
+
+
         return view;
     }
 

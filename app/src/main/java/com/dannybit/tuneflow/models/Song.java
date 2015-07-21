@@ -1,8 +1,10 @@
 package com.dannybit.tuneflow.models;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.dannybit.tuneflow.views.adapters.SongAdapter;
 
@@ -96,15 +98,8 @@ public abstract class Song implements Parcelable {
         dest.writeString(url);
     }
 
-    public String getArtwork500x500(){
-        return replaceLast(getArtworkLink(), "large", "t500x500");
-    }
 
-    private String replaceLast(String string, String from, String to) {
-        int lastIndex = string.lastIndexOf(from);
-        if (lastIndex < 0) return string;
-        String tail = string.substring(lastIndex).replaceFirst(from, to);
-        return string.substring(0, lastIndex) + tail;
-    }
+    public abstract void loadImage(Context context, ImageView imageView);
+
 
 }
