@@ -22,7 +22,7 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
     private int songPosition;
     private ArrayList<Song> songs;
     private final IBinder musicBind = new MusicBinder();
-    private Song currentSong;
+
 
     public AudioPlaybackService() {
         super();
@@ -51,10 +51,18 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
         return false;
     }
 
+    public void setSongPosition(int songPosition){
+        this.songPosition = songPosition;
+    }
+
+    public Song getCurrentSong(){
+        return songs.get(songPosition);
+    }
+
     public void playSong(){
         mediaPlayer.reset();
         try {
-            mediaPlayer.setDataSource(currentSong.getUrl());
+            mediaPlayer.setDataSource(getCurrentSong().getUrl());
         } catch (Exception e){
             Log.e("MUSIC SERVICE", "Error setting data source", e);
         }
@@ -67,7 +75,7 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
                 PowerManager.PARTIAL_WAKE_LOCK);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.setOnPreparedListener(this);
-        mediaPlayer.setOnCompletionListener(this);
+
         mediaPlayer.setOnErrorListener(this);
     }
 
@@ -75,9 +83,7 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
         this.songs = songs;
     }
 
-    public void setSong(Song song){
-        this.currentSong = song;
-    }
+
 
     public class MusicBinder extends Binder {
         public AudioPlaybackService getService() {
@@ -88,11 +94,15 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
         mediaPlayer.start();
+        mediaPlayer.setOnCompletionListener(this);
     }
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-
+        songPosition++;
+        Log.v("HELLO", "s: " + songPosition);
+        mediaPlayer.setOnCompletionListener(null);
+        playSong();
     }
 
     @Override

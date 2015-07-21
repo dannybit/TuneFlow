@@ -97,7 +97,7 @@ public class SongsListFragment extends ListFragment {
         if (callback != null) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            callback.onSongSelected(((Song)adapter.getItem(position)));
+            callback.onSongSelected(songs, position);
         }
     }
 
@@ -137,7 +137,7 @@ public class SongsListFragment extends ListFragment {
 
     public interface OnSongSelectedListener {
 
-        public void onSongSelected(Song song);
+        public void onSongSelected(ArrayList<Song> songs, int position);
     }
 
     public SongAdapter getAdapter(){

@@ -31,6 +31,7 @@ import com.dannybit.tuneflow.models.Playlist;
 import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.services.AudioPlaybackService;
 
+import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity
@@ -168,10 +169,11 @@ public class MainActivity extends ActionBarActivity
 
 
     @Override
-    public void onSongSelected(Song song) {
-        audioService.setSong(song);
+    public void onSongSelected(ArrayList<Song> songs, int position) {
+        audioService.setList(songs);
+        audioService.setSongPosition(position);
         audioService.playSong();
-        startNowPlayingFragment(song);
+        startNowPlayingFragment(audioService.getCurrentSong());
     }
 
     private void startNowPlayingFragment(Song song){
