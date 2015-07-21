@@ -2,9 +2,14 @@ package com.dannybit.tuneflow;
 
 import android.app.SearchManager;
 import android.content.ComponentName;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
@@ -32,6 +37,8 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.FileDescriptor;
 
 
 public class SearchSongActivity extends ActionBarActivity implements SearchSoundcloudFragment.OnFragmentInteractionListener {
@@ -90,7 +97,7 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
     public void localSongSearch(String query){
         searchSoundcloudFragment.getAdapter().clear();
         String[] projection = {MediaStore.Audio.Media._ID,
-                 MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.DURATION, MediaStore.Audio.Media.DATA};
+                 MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.DURATION, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM_ID};
         String where = MediaStore.Audio.Media.TITLE + " LIKE ?";
         String[] params = new String[] {"%" + query + "%"};
 
@@ -101,16 +108,49 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
 
         try {
             while (q.moveToNext()) {
+                long albumId =  q.getLong(q.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
+                Cursor imageCursor = managedQuery(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                        new String[] {MediaStore.Audio.AlbumColumns.ALBUM_ART},
+                        MediaStore.Audio.Media._ID+" =?",
+                        new String[]{String.valueOf(albumId)},
+                        null);
+
                 Song song = new LocalSong();
                 song.setTrackName(q.getString(q.getColumnIndex(MediaStore.Audio.Media.TITLE)));
                 song.setDuration(q.getString(q.getColumnIndex(MediaStore.Audio.Media.DURATION)));
                 song.setUrl(q.getString(q.getColumnIndex(MediaStore.Audio.Media.DATA)));
+                if (imageCursor.moveToFirst()){
+                    song.setArtworkLink(imageCursor.getString(imageCursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART)));
+                }
                 searchSoundcloudFragment.getAdapter().add(song);
             }
         } finally {
             q.close();
         }
         searchSoundcloudFragment.getAdapter().notifyDataSetChanged();
+    }
+
+    public Bitmap getAlbumart(Long album_id)
+    {
+        Bitmap bm = null;
+        try
+        {
+            final Uri sArtworkUri = Uri
+                    .parse("content://media/external/audio/albumart");
+
+            Uri uri = ContentUris.withAppendedId(sArtworkUri, album_id);
+
+            ParcelFileDescriptor pfd = getContentResolver()
+                    .openFileDescriptor(uri, "r");
+
+            if (pfd != null)
+            {
+                FileDescriptor fd = pfd.getFileDescriptor();
+                bm = BitmapFactory.decodeFileDescriptor(fd);
+            }
+        } catch (Exception e) {
+        }
+        return bm;
     }
 
 
