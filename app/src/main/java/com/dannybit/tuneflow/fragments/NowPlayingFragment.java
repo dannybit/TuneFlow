@@ -7,12 +7,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dannybit.tuneflow.MainActivity;
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.models.Song;
+import com.dannybit.tuneflow.services.AudioPlaybackService;
 import com.squareup.picasso.Picasso;
 
 
@@ -21,6 +23,9 @@ public class NowPlayingFragment extends Fragment {
     private Song currentSong;
     private ImageView songArtwork;
     private TextView songName;
+    private ImageButton bBackward;
+    private ImageButton bForward;
+    private ImageButton bPlayOrPause;
 
     public NowPlayingFragment() {
         // Required empty public constructor
@@ -42,7 +47,30 @@ public class NowPlayingFragment extends Fragment {
         songName = (TextView) view.findViewById(R.id.playerSongTitle);
         songName.setText(currentSong.getTrackName());
         songArtwork = (ImageView) view.findViewById(R.id.playerSongThumbnail);
+
         Picasso.with(getActivity()).load(currentSong.getArtwork500x500()).error(R.drawable.soundcloud_icon).into(songArtwork);
+
+        bBackward = (ImageButton) view.findViewById(R.id.bBackward);
+        bPlayOrPause = (ImageButton) view.findViewById(R.id.bPlayOrPause);
+
+        bPlayOrPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AudioPlaybackService musicService = ((MainActivity) getActivity()).getMusicService();
+                if (musicService.isPlaying()){
+                    musicService.pauseSong();
+                    bPlayOrPause.setImageResource(R.drawable.btn_play);
+
+
+                } else {
+                    musicService.resumeSong();
+                    bPlayOrPause.setImageResource(R.drawable.btn_pause);
+                }
+
+            }
+        });
+
+        bForward = (ImageButton) view.findViewById(R.id.bForward);
       return view;
     }
 

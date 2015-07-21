@@ -52,6 +52,7 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
     }
 
     public void playSong(){
+        mediaPlayer.reset();
         try {
             mediaPlayer.setDataSource(currentSong.getUrl());
         } catch (Exception e){
@@ -86,7 +87,6 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
 
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
-
         mediaPlayer.start();
     }
 
@@ -100,6 +100,17 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
         return false;
     }
 
+    public void pauseSong(){
+        mediaPlayer.pause();
+    }
+
+    public void resumeSong(){
+        mediaPlayer.start();
+    }
+
+    public boolean isPlaying(){
+        return mediaPlayer.isPlaying();
+    }
 
 
 }

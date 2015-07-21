@@ -53,24 +53,30 @@
         android:orientation="horizontal"
         android:layout_marginTop="10dp">
 
-        <ImageView
+        <ImageButton
+            android:id="@+id/bBackward"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/btn_previous"
+            android:background="@android:color/transparent"
 
             />
 
-        <ImageView
+        <ImageButton
+            android:id="@+id/bPlayOrPause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:src="@drawable/btn_play"/>
+            android:src="@drawable/btn_pause"
+            android:background="@android:color/transparent"/>
 
-        <ImageView
+        <ImageButton
+            android:id="@+id/bForward"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/btn_next"/>
+            android:src="@drawable/btn_next"
+            android:background="@android:color/transparent"/>
 
 
 

@@ -160,10 +160,8 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onSongSelected(Song song) {
-        /*
         audioService.setSong(song);
         audioService.playSong();
-        */
         startNowPlayingFragment(song);
     }
 
@@ -236,6 +234,10 @@ public class MainActivity extends ActionBarActivity
         dbHelper.createPlaylist(playlist);
         playlistListFragment.addPlaylist(playlist);
         onPlaylistSelected(playlist);
+    }
+
+    public AudioPlaybackService getMusicService(){
+        return audioService;
     }
 
     @Override
