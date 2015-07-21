@@ -28,16 +28,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
- * interface.
- */
+
 public class SongsListFragment extends ListFragment {
 
-    private OnFragmentInteractionListener mListener;
+    private OnSongSelectedListener callback;
     private SongAdapter adapter;
     private ArrayList<Song> songs;
     private String playListName;
@@ -80,7 +74,7 @@ public class SongsListFragment extends ListFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            callback = (OnSongSelectedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -92,7 +86,7 @@ public class SongsListFragment extends ListFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        callback = null;
     }
 
 
@@ -100,10 +94,10 @@ public class SongsListFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        if (null != mListener) {
+        if (callback != null) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(((Song)adapter.getItem(position)).getUrl());
+            callback.onSongSelected(((Song)adapter.getItem(position)));
         }
     }
 
@@ -129,9 +123,9 @@ public class SongsListFragment extends ListFragment {
     }
 
 
-    public interface OnFragmentInteractionListener {
+    public interface OnSongSelectedListener {
 
-        public void onFragmentInteraction(String id);
+        public void onSongSelected(Song song);
     }
 
     public SongAdapter getAdapter(){

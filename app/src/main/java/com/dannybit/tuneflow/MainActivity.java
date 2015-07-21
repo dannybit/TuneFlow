@@ -1,9 +1,14 @@
 package com.dannybit.tuneflow;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.PowerManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -22,6 +27,7 @@ import com.dannybit.tuneflow.fragments.WebsiteSelectionDialogFragment;
 import com.dannybit.tuneflow.fragments.search.WebsiteSelection;
 import com.dannybit.tuneflow.models.Playlist;
 import com.dannybit.tuneflow.models.Song;
+import com.dannybit.tuneflow.services.AudioPlaybackService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,7 +36,7 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerCallbacks,
-        SongsListFragment.OnFragmentInteractionListener,
+        SongsListFragment.OnSongSelectedListener,
         PlaylistListFragment.OnPlaylistSelectedListener,
         WebsiteSelectionDialogFragment.OnWebsiteSelectionListner,
         NewPlaylistDialogFragment.OnNewPlaylistCreatedListener {
@@ -43,6 +49,11 @@ public class MainActivity extends ActionBarActivity
     private SongsListFragment currentSongsListFragment;
     public static final int FIND_SOUNDClOUD_SONG_REQUEST = 1;
     private DatabaseHelper dbHelper;
+    private AudioPlaybackService audioService;
+    private Intent playIntent;
+    private boolean audioBound = false;
+    private MediaPlayer mediaPlayer;
+
 
 
     @Override
@@ -54,6 +65,31 @@ public class MainActivity extends ActionBarActivity
         setupFragment();
         dbHelper = DatabaseHelper.getInstance(this);
 
+
+    }
+
+    private ServiceConnection audioConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            AudioPlaybackService.MusicBinder binder = (AudioPlaybackService.MusicBinder) iBinder;
+            audioService = binder.getService();
+            audioBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            audioBound = false;
+        }
+    };
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (playIntent == null){
+            playIntent = new Intent(this, AudioPlaybackService.class);
+            bindService(playIntent, audioConnection, Context.BIND_AUTO_CREATE);
+            startService(playIntent);
+        }
     }
 
     private void initToolbar(){
@@ -111,9 +147,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+       
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -126,8 +160,9 @@ public class MainActivity extends ActionBarActivity
 
 
     @Override
-    public void onFragmentInteraction(String url) {
-
+    public void onSongSelected(Song song) {
+        audioService.setSong(song);
+        audioService.playSong();
     }
 
     @Override

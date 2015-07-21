@@ -79,6 +79,7 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
         RequestParams params = new RequestParams();
         params.put("client_id", SoundcloudRestClient.CLIENT_ID);
         params.put("q", query);
+
         SoundcloudRestClient.get(params, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -95,7 +96,9 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
                 super.onSuccess(statusCode, headers, response);
                 int length = response.length();
                 searchSoundcloudFragment.getAdapter().clear();
+
                 for (int i = 0; i < length; i++){
+
                     SoundcloudSong song = new SoundcloudSong();
                     try {
                         JSONObject jsonSong = response.getJSONObject(i);
@@ -103,7 +106,9 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
                         song.setDuration(jsonSong.getString("duration"));
                         song.setTrackName(jsonSong.getString("title"));
                         song.setArtworkLink(jsonSong.getString("artwork_url"));
-                        song.setUrl(jsonSong.getString("url"));
+                        song.setUrl(addClientIdToUrl(jsonSong.getString("stream_url")));
+
+
                     } catch (JSONException e){
                         e.printStackTrace();
                     }
@@ -112,13 +117,6 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
 
                 }
                 searchSoundcloudFragment.getAdapter().notifyDataSetChanged();
-                try {
-                    Log.v("hello", response.getJSONObject(0).getString("title"));
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
-
 
             }
         });
@@ -167,5 +165,9 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
 
 
 
+    }
+
+    public String addClientIdToUrl(String url){
+        return url + "?client_id=" + SoundcloudRestClient.CLIENT_ID;
     }
 }
