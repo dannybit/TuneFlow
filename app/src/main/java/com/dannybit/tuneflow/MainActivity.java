@@ -65,11 +65,14 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
         initToolbar();
         setupDrawer();
-        setupFragment();
+        if (savedInstanceState == null) {
+            setupFragment();
+        }
         dbHelper = DatabaseHelper.getInstance(this);
 
 
     }
+
 
     private ServiceConnection audioConnection = new ServiceConnection() {
         @Override

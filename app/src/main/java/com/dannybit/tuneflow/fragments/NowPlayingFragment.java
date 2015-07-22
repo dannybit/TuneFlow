@@ -4,6 +4,7 @@ package com.dannybit.tuneflow.fragments;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
@@ -41,9 +42,15 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         super.onCreate(savedInstanceState);
         Bundle extras = getArguments();
         currentSong = (Song) extras.getParcelable("SONG");
+     
+
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         setupActionBar();
         setupDrawer();
-
     }
 
     private void setupActionBar(){
