@@ -180,7 +180,15 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void songCompleted(Song nextSongToPlay) {
-        startNowPlayingFragment(nextSongToPlay);
+        nextSongNowPlayingFragment(nextSongToPlay);
+    }
+
+    private void nextSongNowPlayingFragment(Song nextSongToPlay){
+        if (nowPlayingFragment != null){
+            nowPlayingFragment.nextSong(nextSongToPlay);
+        } else {
+            startNowPlayingFragment(nextSongToPlay);
+        }
     }
 
     private void startNowPlayingFragment(Song song){

@@ -115,11 +115,9 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
             mediaPlayer.setOnCompletionListener(null);
             playSong();
             if (songCompletedListener != null){
-                //songCompletedListener.songCompleted(songs.get(songPosition));
+                songCompletedListener.songCompleted(songs.get(songPosition));
             }
         }
-
-
     }
 
     @Override

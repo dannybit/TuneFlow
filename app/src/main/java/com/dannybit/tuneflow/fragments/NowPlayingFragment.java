@@ -97,6 +97,15 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         return view;
     }
 
+    public void nextSong(Song nextSong){
+        currentSong = nextSong;
+        songName.setText(currentSong.getTrackName());
+        currentSong.loadImage(getActivity(), songArtwork);
+        songProgressBar.setProgress(0);
+        songProgressBar.setMax(100);
+
+    }
+
     public void updateProgressBar() {
         mHandler.postDelayed(updateTimeTask, 100);
     }
