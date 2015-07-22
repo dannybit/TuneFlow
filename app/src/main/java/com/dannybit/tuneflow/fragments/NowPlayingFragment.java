@@ -68,6 +68,16 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
 
 
         bBackward = (ImageButton) view.findViewById(R.id.bBackward);
+
+        bBackward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity) getActivity()).getMusicService().playBackwardSong();
+                nextSong(((MainActivity) getActivity()).getMusicService().getCurrentSong());
+            }
+        });
+
+
         bPlayOrPause = (ImageButton) view.findViewById(R.id.bPlayOrPause);
 
         bPlayOrPause.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +98,16 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         });
 
         bForward = (ImageButton) view.findViewById(R.id.bForward);
+
+        bForward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean result = ((MainActivity) getActivity()).getMusicService().playForwardSong();
+                if (result) {
+                    nextSong(((MainActivity) getActivity()).getMusicService().getCurrentSong());
+                }
+            }
+        });
 
         songProgressBar = (SeekBar) view.findViewById(R.id.songProgressBar);
         songProgressBar.setOnSeekBarChangeListener(this);

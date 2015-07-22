@@ -120,6 +120,26 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
         }
     }
 
+    public void playBackwardSong(){
+        songPosition--;
+        if (songPosition < 0){
+            songPosition++;
+        }
+        mediaPlayer.setOnCompletionListener(null);
+        playSong();
+    }
+
+    public boolean playForwardSong(){
+        songPosition++;
+        if (songPosition > songs.size() - 1){
+            return false;
+        } else {
+            mediaPlayer.setOnCompletionListener(null);
+            playSong();
+        }
+        return true;
+    }
+
     @Override
     public boolean onError(MediaPlayer mediaPlayer, int i, int i2) {
         return false;
