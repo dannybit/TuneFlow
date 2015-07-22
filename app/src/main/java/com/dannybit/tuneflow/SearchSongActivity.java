@@ -76,8 +76,6 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
         // Get the intent, verify the action and get the query
         Intent intent = getIntent();
         handleIntent(intent);
-
-
     }
 
     @Override
