@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
+import android.os.PersistableBundle;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
@@ -54,26 +55,36 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_song);
         toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar_search);
-        websiteSelection = (WebsiteSelection) getIntent().getSerializableExtra("SELECTION");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        if (savedInstanceState == null) {
+            websiteSelection = (WebsiteSelection) getIntent().getSerializableExtra("SELECTION");
+        }
+        else {
+            websiteSelection = (WebsiteSelection) savedInstanceState.getSerializable("SELECTION");
+        }
         if (websiteSelection.equals(WebsiteSelection.SOUNDCLOUD)) {
             searchSoundcloudFragment = new SearchSoundcloudFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.search_container, searchSoundcloudFragment).commit();
-        }
-        else if (websiteSelection.equals(WebsiteSelection.LOCAL)){
+        } else if (websiteSelection.equals(WebsiteSelection.LOCAL)) {
             searchSoundcloudFragment = new SearchSoundcloudFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.search_container, searchSoundcloudFragment).commit();
         }
         // Get the intent, verify the action and get the query
         Intent intent = getIntent();
         handleIntent(intent);
+
+
     }
 
-
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable("SELECTION", websiteSelection);
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {

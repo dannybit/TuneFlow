@@ -42,7 +42,7 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         super.onCreate(savedInstanceState);
         Bundle extras = getArguments();
         currentSong = (Song) extras.getParcelable("SONG");
-     
+
 
     }
 
