@@ -95,8 +95,6 @@ public class SongsListFragment extends ListFragment {
         super.onListItemClick(l, v, position, id);
 
         if (callback != null) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
             callback.onSongSelected(songs, position);
         }
     }
@@ -142,6 +140,13 @@ public class SongsListFragment extends ListFragment {
 
     public SongAdapter getAdapter(){
         return this.adapter;
+    }
+
+    public void addSongToList(Song song){
+        Log.v("HELLO", "added song: " + song.toString());
+        getAdapter().add(song);
+        getAdapter().notifyDataSetChanged();
+        songs.add(song);
     }
 
 }

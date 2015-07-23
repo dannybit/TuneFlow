@@ -35,6 +35,7 @@ import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.services.AudioPlaybackService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class MainActivity extends ActionBarActivity
@@ -179,7 +180,7 @@ public class MainActivity extends ActionBarActivity
     public void onSongSelected(ArrayList<Song> songs, int position) {
         audioService.setList(songs);
         audioService.setSongPosition(position);
-        // Only start the nowplayingfragment if there was no error setting hte data source for the mediaplayer
+        // Only start the nowplayingfragment if there was no error setting the data source for the mediaplayer
         if (audioService.playSong()) {
             startNowPlayingFragment(audioService.getCurrentSong());
             startNotification(audioService.getCurrentSong());
@@ -286,8 +287,8 @@ public class MainActivity extends ActionBarActivity
         dbHelper.createSong(addedSong);
         dbHelper.createPlaylistSong(currentPlaylist.getId(), addedSong.getId());
         currentPlaylist.add(addedSong);
-        currentSongsListFragment.getAdapter().add(addedSong);
-        currentSongsListFragment.getAdapter().notifyDataSetChanged();
+        currentSongsListFragment.addSongToList(addedSong);
+
     }
 
 

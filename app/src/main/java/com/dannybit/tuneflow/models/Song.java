@@ -102,4 +102,8 @@ public abstract class Song implements Parcelable {
     public abstract void loadImage(Context context, ImageView imageView);
 
 
+    @Override
+    public String toString() {
+        return getTrackName();
+    }
 }

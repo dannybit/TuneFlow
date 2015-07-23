@@ -61,14 +61,17 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
     }
 
     public boolean playSong(){
+        // Need when selecting a new song
+        mediaPlayer.setOnCompletionListener(null);
         mediaPlayer.reset();
+
         try {
             mediaPlayer.setDataSource(getCurrentSong().getUrl());
         } catch (Exception e){
             Log.e("MUSIC SERVICE", "Error setting data source", e);
             return false;
         }
-        Log.v("HELLO", "set data");
+
         mediaPlayer.prepareAsync();
         return true;
     }
@@ -105,6 +108,7 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
         mediaPlayer.start();
+
         mediaPlayer.setOnCompletionListener(this);
     }
 
@@ -112,7 +116,7 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
     public void onCompletion(MediaPlayer mediaPlayer) {
         songPosition++;
         if (songPosition > songs.size() - 1){
-            // terminate playlist playback
+            songPosition--;
         } else {
             mediaPlayer.setOnCompletionListener(null);
             playSong();
