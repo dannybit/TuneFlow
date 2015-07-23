@@ -60,15 +60,17 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
         return songs.get(songPosition);
     }
 
-    public void playSong(){
+    public boolean playSong(){
         mediaPlayer.reset();
         try {
             mediaPlayer.setDataSource(getCurrentSong().getUrl());
         } catch (Exception e){
             Log.e("MUSIC SERVICE", "Error setting data source", e);
+            return false;
         }
         Log.v("HELLO", "set data");
         mediaPlayer.prepareAsync();
+        return true;
     }
 
     private void initMediaPlayer(){

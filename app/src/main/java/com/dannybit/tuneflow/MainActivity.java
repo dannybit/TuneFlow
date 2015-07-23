@@ -1,5 +1,8 @@
 package com.dannybit.tuneflow;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -70,7 +73,6 @@ public class MainActivity extends ActionBarActivity
         }
         dbHelper = DatabaseHelper.getInstance(this);
 
-
     }
 
 
@@ -97,6 +99,8 @@ public class MainActivity extends ActionBarActivity
             bindService(playIntent, audioConnection, Context.BIND_AUTO_CREATE);
             startService(playIntent);
         }
+
+
     }
 
     private void initToolbar(){
@@ -175,8 +179,11 @@ public class MainActivity extends ActionBarActivity
     public void onSongSelected(ArrayList<Song> songs, int position) {
         audioService.setList(songs);
         audioService.setSongPosition(position);
-        audioService.playSong();
-        startNowPlayingFragment(audioService.getCurrentSong());
+        // Only start the nowplayingfragment if there was no error setting hte data source for the mediaplayer
+        if (audioService.playSong()) {
+            startNowPlayingFragment(audioService.getCurrentSong());
+            startNotification(audioService.getCurrentSong());
+        }
     }
 
     @Override
@@ -302,7 +309,21 @@ public class MainActivity extends ActionBarActivity
         super.onDestroy();
     }
 
-    
+
+    private void startNotification(Song song){
+        Intent intent = new Intent(this, MainActivity.class);
+        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        Notification notification = new Notification.Builder(this).setContentTitle(song.getTrackName()).setSmallIcon(R.drawable.soundcloud_icon).build();
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(0, notification);
+    }
+
+
+
+
+
 
 
 }
