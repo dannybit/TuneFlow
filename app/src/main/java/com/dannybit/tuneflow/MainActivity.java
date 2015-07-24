@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -81,10 +83,15 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
         initToolbar();
         setupDrawer();
-        if (savedInstanceState == null) {
-            startPlaylistsFragment();
+        if (isNetworkAvailable()) {
+            Log.v("HELLO", "connected");
+            if (savedInstanceState == null) {
+                startPlaylistsFragment();
+            }
+            dbHelper = DatabaseHelper.getInstance(this);
+        } else {
+            Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG);
         }
-        dbHelper = DatabaseHelper.getInstance(this);
 
     }
 
@@ -340,6 +347,23 @@ public class MainActivity extends ActionBarActivity
         stopService(playIntent);
         audioService=null;
         super.onDestroy();
+    }
+
+    private boolean isNetworkAvailable(){
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
     }
 
 
