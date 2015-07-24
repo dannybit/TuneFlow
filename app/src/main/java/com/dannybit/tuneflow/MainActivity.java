@@ -46,21 +46,32 @@ public class MainActivity extends ActionBarActivity
         NewPlaylistDialogFragment.OnNewPlaylistCreatedListener,
         AudioPlaybackService.SongCompletedListener{
 
+    /* Used for ActivityResult when starting the SearchActivity */
     public static final int FIND_SOUNDClOUD_SONG_REQUEST = 1;
     public static final int FIND_LOCAL_SONG_REQUEST = 2;
+
+    /* A notification id allows the app to modify the current running notification rather than starting a new one */
     public static final int PLAYING_SONG_NOTIFICATION_ID = 1;
 
-    private NavigationDrawerFragment mNavigationDrawerFragment;
+    public static final int DRAWER_NOW_PLAYING_POS = 0;
+    public static final int DRAWER_PLAYLISTS_POS = 1;
+    public static final int DRAWER_SETTINGS_POS = 2;
+
+
     private Toolbar mToolbar;
-    private PlaylistListFragment playlistListFragment;
-    private Playlist currentPlaylist;
-    private SongsListFragment currentSongsListFragment;
     private DatabaseHelper dbHelper;
+
+    private Playlist currentPlaylist;
+
+    /* Fragments */
+    private NavigationDrawerFragment mNavigationDrawerFragment;
+    private PlaylistListFragment playlistListFragment;
+    private SongsListFragment currentSongsListFragment;
+    private NowPlayingFragment nowPlayingFragment;
+
     private AudioPlaybackService audioService;
     private Intent playIntent;
-    private boolean audioBound = false;
-    private MediaPlayer mediaPlayer;
-    private NowPlayingFragment nowPlayingFragment;
+
     private DrawerLayout drawerLayout;
 
 
@@ -71,27 +82,11 @@ public class MainActivity extends ActionBarActivity
         initToolbar();
         setupDrawer();
         if (savedInstanceState == null) {
-            setupFragment();
+            startPlaylistsFragment();
         }
         dbHelper = DatabaseHelper.getInstance(this);
 
     }
-
-
-    private ServiceConnection audioConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            AudioPlaybackService.MusicBinder binder = (AudioPlaybackService.MusicBinder) iBinder;
-            audioService = binder.getService();
-            binder.setListener(MainActivity.this);
-            audioBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            audioBound = false;
-        }
-    };
 
     @Override
     protected void onStart() {
@@ -101,9 +96,23 @@ public class MainActivity extends ActionBarActivity
             bindService(playIntent, audioConnection, Context.BIND_AUTO_CREATE);
             startService(playIntent);
         }
-
-
     }
+
+
+    private ServiceConnection audioConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            AudioPlaybackService.MusicBinder binder = (AudioPlaybackService.MusicBinder) iBinder;
+            audioService = binder.getService();
+            binder.setListener(MainActivity.this);
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+        }
+    };
+
 
     private void initToolbar(){
         mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
@@ -113,17 +122,16 @@ public class MainActivity extends ActionBarActivity
     private void setupDrawer(){
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.fragment_drawer);
-        // Set up the drawer.
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         mNavigationDrawerFragment.setup(R.id.fragment_drawer, drawerLayout, mToolbar);
     }
 
-    private void setupFragment(){
-        //songsListFragment = new SongsListFragment();
+    private void startPlaylistsFragment(){
         playlistListFragment = new PlaylistListFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.container, playlistListFragment).commit();
     }
 
+    /* Used by NowPlayingFragment to disable the drawer */
     public void disableDrawer(){
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
@@ -131,8 +139,32 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
-        Toast.makeText(this, "Menu item selected -> " + position, Toast.LENGTH_SHORT).show();
+        if (position == DRAWER_NOW_PLAYING_POS){
+            switchToNowPlayingFragment();
+        }
+        else if (position == DRAWER_PLAYLISTS_POS){
+            switchToPlaylistsFragment();
+
+        }
+        else if (position == DRAWER_SETTINGS_POS){
+            switchToSettingsFragment();
+        }
+    }
+
+    private void switchToNowPlayingFragment(){
+        if (nowPlayingFragment != null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, nowPlayingFragment).addToBackStack(null).commit();
+        }
+    }
+
+    private void switchToPlaylistsFragment(){
+        if (playlistListFragment != null){
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, playlistListFragment).commit();
+        }
+    }
+
+    private void switchToSettingsFragment(){
+
     }
 
 
@@ -142,7 +174,6 @@ public class MainActivity extends ActionBarActivity
             mNavigationDrawerFragment.closeDrawer();
         else {
             FragmentManager fm = getSupportFragmentManager();
-            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.container);
 
             if (fm.getBackStackEntryCount() > 0){
                 fm.popBackStack();
