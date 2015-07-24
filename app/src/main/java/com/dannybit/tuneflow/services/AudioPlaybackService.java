@@ -108,7 +108,6 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
         mediaPlayer.start();
-
         mediaPlayer.setOnCompletionListener(this);
     }
 

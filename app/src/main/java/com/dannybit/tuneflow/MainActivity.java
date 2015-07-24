@@ -48,6 +48,7 @@ public class MainActivity extends ActionBarActivity
 
     public static final int FIND_SOUNDClOUD_SONG_REQUEST = 1;
     public static final int FIND_LOCAL_SONG_REQUEST = 2;
+    public static final int PLAYING_SONG_NOTIFICATION_ID = 1;
 
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private Toolbar mToolbar;
@@ -318,13 +319,7 @@ public class MainActivity extends ActionBarActivity
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(0, notification);
+        notificationManager.notify(PLAYING_SONG_NOTIFICATION_ID, notification);
     }
-
-
-
-
-
-
 
 }
