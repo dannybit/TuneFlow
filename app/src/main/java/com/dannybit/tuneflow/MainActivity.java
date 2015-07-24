@@ -7,21 +7,26 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.dannybit.tuneflow.database.DatabaseHelper;
@@ -35,7 +40,10 @@ import com.dannybit.tuneflow.fragments.search.WebsiteSelection;
 import com.dannybit.tuneflow.models.Playlist;
 import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.services.AudioPlaybackService;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -228,6 +236,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void songCompleted(Song nextSongToPlay) {
+        startNotification(nextSongToPlay);
         nextSongNowPlayingFragment(nextSongToPlay);
     }
 
@@ -370,11 +379,40 @@ public class MainActivity extends ActionBarActivity
     private void startNotification(Song song){
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        Notification notification = new Notification.Builder(this).setContentTitle(song.getTrackName()).setSmallIcon(R.drawable.soundcloud_icon).build();
+        createNowPlayingNotification(song);
+
+
+
+
+    }
+
+    private void createNowPlayingNotification(Song song){
+        RemoteViews remoteViews =
+                new RemoteViews(getPackageName(), R.layout.notification_view);
+        Notification.Builder builder = new Notification.Builder(MainActivity.this)
+                .setSmallIcon(R.drawable.soundcloud_icon)
+                .setContent(remoteViews);
+
+        remoteViews.setTextViewText(R.id.notification_song_name, song.getTrackName());
+
+        Notification notification = builder.getNotification();
+        // Bug in NotificationCompat that does not set the content.
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+            notification.contentView = remoteViews;
+        }
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(PLAYING_SONG_NOTIFICATION_ID, notification);
+
+        Picasso.with(this)
+                .load(song.getArtworkLink())
+                .into(remoteViews, R.id.notification_artwork, PLAYING_SONG_NOTIFICATION_ID, notification);
+
     }
+
+
+
+
 
 }
