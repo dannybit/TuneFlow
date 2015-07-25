@@ -109,8 +109,9 @@ public class MainActivity extends ActionBarActivity
         super.onStart();
         if (playIntent == null){
             playIntent = new Intent(this, AudioPlaybackService.class);
-            bindService(playIntent, audioConnection, Context.BIND_AUTO_CREATE);
             startService(playIntent);
+            bindService(playIntent, audioConnection, Context.BIND_AUTO_CREATE);
+
         }
     }
 
@@ -354,8 +355,9 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     protected void onDestroy() {
-        stopService(playIntent);
-        audioService=null;
+        if (audioService != null){
+            unbindService(audioConnection);
+        }
         super.onDestroy();
     }
 
@@ -421,4 +423,6 @@ public class MainActivity extends ActionBarActivity
     public void onBackwardClicked() {
         startNotification(audioService.getCurrentSong());
     }
+
+
 }

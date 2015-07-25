@@ -40,6 +40,7 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
         initMediaPlayer();
     }
 
+
     @Override
     public IBinder onBind(Intent intent) {
         return musicBind;
@@ -47,8 +48,6 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
 
     @Override
     public boolean onUnbind(Intent intent) {
-        mediaPlayer.stop();
-        mediaPlayer.release();
         return false;
     }
 

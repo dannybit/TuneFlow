@@ -168,7 +168,6 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
             long currentDuration = musicService.getCurrentDuration();
             int progress = (int) getProgressPercentage(currentDuration, totalDuration);
             songProgressBar.setProgress(progress);
-
             mHandler.postDelayed(this, 100);
         }
     };
