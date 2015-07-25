@@ -150,6 +150,7 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
     public boolean playForwardSong(){
         songPosition++;
         if (songPosition > songs.size() - 1){
+            songPosition--;
             return false;
         } else {
             mediaPlayer.setOnCompletionListener(null);
