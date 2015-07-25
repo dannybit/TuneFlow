@@ -337,7 +337,7 @@ public class MainActivity extends ActionBarActivity
     private void addNewSong(Song addedSong){
         dbHelper.createSong(addedSong);
         dbHelper.createPlaylistSong(currentPlaylist.getId(), addedSong.getId());
-        currentPlaylist.add(addedSong);
+        //currentPlaylist.add(addedSong);
         currentSongsListFragment.addSongToList(addedSong);
 
     }
