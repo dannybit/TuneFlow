@@ -131,8 +131,9 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
                 boolean result = ((MainActivity) getActivity()).getMusicService().playForwardSong();
                 if (result) {
                     nextSong(((MainActivity) getActivity()).getMusicService().getCurrentSong());
+                    callback.onForwardClicked();
                 }
-                callback.onForwardClicked();
+
 
             }
         });
