@@ -140,6 +140,7 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
 
         songProgressBar = (SeekBar) view.findViewById(R.id.songProgressBar);
         songProgressBar.setOnSeekBarChangeListener(this);
+        songProgressBar.setEnabled(false);
         songProgressBar.setProgress(0);
         songProgressBar.setMax(100);
         updateProgressBar();
@@ -152,6 +153,7 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         currentSong.loadImage(getActivity(), songArtwork);
         songProgressBar.setProgress(0);
         songProgressBar.setMax(100);
+        disableProgressBar();
 
 
     }
@@ -192,6 +194,18 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
 
         // return current duration in milliseconds
         return currentDuration * 1000;
+    }
+
+    public void enableProgressBar(){
+        if (songProgressBar != null){
+            songProgressBar.setEnabled(true);
+        }
+    }
+
+    public void disableProgressBar(){
+        if (songProgressBar != null){
+            songProgressBar.setEnabled(false);
+        }
     }
 
     @Override

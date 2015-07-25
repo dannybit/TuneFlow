@@ -23,6 +23,7 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
     private ArrayList<Song> songs;
     private final IBinder musicBind = new MusicBinder();
     private SongCompletedListener songCompletedListener;
+    private SongPreparedListener songPreparedListener;
 
 
     public AudioPlaybackService() {
@@ -50,6 +51,8 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
     public boolean onUnbind(Intent intent) {
         return false;
     }
+
+
 
     public void setSongPosition(int songPosition){
         this.songPosition = songPosition;
@@ -95,8 +98,12 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
             return AudioPlaybackService.this;
         }
 
-        public void setListener(SongCompletedListener listener){
+        public void setSongCompletedListener(SongCompletedListener listener){
             songCompletedListener = listener;
+        }
+
+        public void setSongPreparedListener(SongPreparedListener listener){
+            songPreparedListener = listener;
         }
     }
 
@@ -104,10 +111,17 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
         public void songCompleted(Song nextSongToPlay);
     }
 
+    public interface SongPreparedListener {
+        public void songPrepared(Song song);
+    }
+
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
         mediaPlayer.start();
         mediaPlayer.setOnCompletionListener(this);
+        if (songPreparedListener != null){
+            songPreparedListener.songPrepared(getCurrentSong());
+        }
     }
 
     @Override
@@ -119,7 +133,7 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
             mediaPlayer.setOnCompletionListener(null);
             playSong();
             if (songCompletedListener != null){
-                songCompletedListener.songCompleted(songs.get(songPosition));
+                songCompletedListener.songCompleted(getCurrentSong());
             }
         }
     }

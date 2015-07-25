@@ -55,7 +55,7 @@ public class MainActivity extends ActionBarActivity
         WebsiteSelectionDialogFragment.OnWebsiteSelectionListner,
         NewPlaylistDialogFragment.OnNewPlaylistCreatedListener,
         AudioPlaybackService.SongCompletedListener,
-        NowPlayingFragment.OnMediaPlayerButtonClickedListener{
+        NowPlayingFragment.OnMediaPlayerButtonClickedListener, AudioPlaybackService.SongPreparedListener{
 
     /* Used for ActivityResult when starting the SearchActivity */
     public static final int FIND_SOUNDClOUD_SONG_REQUEST = 1;
@@ -121,7 +121,8 @@ public class MainActivity extends ActionBarActivity
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             AudioPlaybackService.MusicBinder binder = (AudioPlaybackService.MusicBinder) iBinder;
             audioService = binder.getService();
-            binder.setListener(MainActivity.this);
+            binder.setSongCompletedListener(MainActivity.this);
+            binder.setSongPreparedListener(MainActivity.this);
 
         }
 
@@ -361,6 +362,11 @@ public class MainActivity extends ActionBarActivity
         super.onDestroy();
     }
 
+    @Override
+    public void songPrepared(Song song) {
+        nowPlayingFragment.enableProgressBar();
+    }
+
     private boolean isNetworkAvailable(){
         boolean haveConnectedWifi = false;
         boolean haveConnectedMobile = false;
@@ -383,8 +389,6 @@ public class MainActivity extends ActionBarActivity
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
         createNowPlayingNotification(song);
-
-
 
 
     }
