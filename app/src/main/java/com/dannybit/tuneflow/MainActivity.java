@@ -54,7 +54,8 @@ public class MainActivity extends ActionBarActivity
         PlaylistListFragment.OnPlaylistSelectedListener,
         WebsiteSelectionDialogFragment.OnWebsiteSelectionListner,
         NewPlaylistDialogFragment.OnNewPlaylistCreatedListener,
-        AudioPlaybackService.SongCompletedListener{
+        AudioPlaybackService.SongCompletedListener,
+        NowPlayingFragment.OnMediaPlayerButtonClickedListener{
 
     /* Used for ActivityResult when starting the SearchActivity */
     public static final int FIND_SOUNDClOUD_SONG_REQUEST = 1;
@@ -411,8 +412,13 @@ public class MainActivity extends ActionBarActivity
 
     }
 
+    @Override
+    public void onForwardClicked() {
+        startNotification(audioService.getCurrentSong());
+    }
 
-
-
-
+    @Override
+    public void onBackwardClicked() {
+        startNotification(audioService.getCurrentSong());
+    }
 }

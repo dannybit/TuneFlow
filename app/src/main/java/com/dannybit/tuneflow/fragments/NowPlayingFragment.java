@@ -1,6 +1,7 @@
 package com.dannybit.tuneflow.fragments;
 
 
+import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,6 +33,7 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
     private ImageButton bPlayOrPause;
     private SeekBar songProgressBar;
     private Handler mHandler = new Handler();
+    private OnMediaPlayerButtonClickedListener callback;
 
     public NowPlayingFragment() {
         // Required empty public constructor
@@ -51,6 +53,22 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         super.onActivityCreated(savedInstanceState);
         setupActionBar();
         setupDrawer();
+    }
+
+    public interface OnMediaPlayerButtonClickedListener {
+        public void onForwardClicked();
+        public void onBackwardClicked();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            callback = (OnMediaPlayerButtonClickedListener) activity;
+        } catch (ClassCastException e ){
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnMediaPlayerButtonClickedListener");
+        }
     }
 
     private void setupActionBar(){
@@ -81,6 +99,7 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
             public void onClick(View view) {
                 ((MainActivity) getActivity()).getMusicService().playBackwardSong();
                 nextSong(((MainActivity) getActivity()).getMusicService().getCurrentSong());
+                callback.onBackwardClicked();
             }
         });
 
@@ -113,6 +132,8 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
                 if (result) {
                     nextSong(((MainActivity) getActivity()).getMusicService().getCurrentSong());
                 }
+                callback.onForwardClicked();
+
             }
         });
 
@@ -130,6 +151,7 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         currentSong.loadImage(getActivity(), songArtwork);
         songProgressBar.setProgress(0);
         songProgressBar.setMax(100);
+
 
     }
 
