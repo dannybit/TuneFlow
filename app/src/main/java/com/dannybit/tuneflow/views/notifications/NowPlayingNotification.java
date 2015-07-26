@@ -1,0 +1,62 @@
+package com.dannybit.tuneflow.views.notifications;
+
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.widget.RemoteViews;
+
+import com.dannybit.tuneflow.MainActivity;
+import com.dannybit.tuneflow.R;
+import com.dannybit.tuneflow.models.Song;
+import com.squareup.picasso.Picasso;
+
+/**
+ * Created by danielnamdar on 7/26/15.
+ */
+public class NowPlayingNotification  {
+
+    private Context context;
+
+    public NowPlayingNotification(Context context){
+        this.context = context;
+    }
+
+    public Notification createNowPlayingNotification(Song song){
+        RemoteViews remoteViews =
+                new RemoteViews(context.getPackageName(), R.layout.notification_view);
+        Notification.Builder builder = new Notification.Builder(context)
+                .setSmallIcon(R.drawable.soundcloud_icon)
+                .setWhen(0)
+                .setContent(remoteViews);
+
+        remoteViews.setTextViewText(R.id.notification_song_name, song.getTrackName());
+
+
+        Intent playPauseTrackIntent = new Intent();
+        playPauseTrackIntent.setAction(MainActivity.PLAY_PAUSE_ACTION);
+        PendingIntent playPauseTrackPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), 0, playPauseTrackIntent, 0);
+
+        remoteViews.setOnClickPendingIntent(R.id.bNotificationPlayOrPause, playPauseTrackPendingIntent);
+
+        Notification notification = builder.getNotification();
+        // Bug in NotificationCompat that does not set the content.
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+            notification.contentView = remoteViews;
+        }
+
+
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+        notificationManager.notify(MainActivity.PLAYING_SONG_NOTIFICATION_ID, notification);
+
+
+        Picasso.with(context)
+                .load(song.getArtworkLink())
+                .into(remoteViews, R.id.notification_artwork, MainActivity.PLAYING_SONG_NOTIFICATION_ID, notification);
+
+        return notification;
+    }
+}

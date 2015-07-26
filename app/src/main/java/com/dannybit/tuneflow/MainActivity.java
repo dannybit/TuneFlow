@@ -40,6 +40,7 @@ import com.dannybit.tuneflow.fragments.search.WebsiteSelection;
 import com.dannybit.tuneflow.models.Playlist;
 import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.services.AudioPlaybackService;
+import com.dannybit.tuneflow.views.notifications.NowPlayingNotification;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -393,49 +394,10 @@ public class MainActivity extends ActionBarActivity
     private void startNotification(Song song){
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        createNowPlayingNotification(song);
-
-
+        NowPlayingNotification nowPlayingNotification = new NowPlayingNotification(this);
+        nowPlayingNotification.createNowPlayingNotification(song);
     }
 
-    private void createNowPlayingNotification(Song song){
-        RemoteViews remoteViews =
-                new RemoteViews(getPackageName(), R.layout.notification_view);
-        Notification.Builder builder = new Notification.Builder(MainActivity.this)
-                .setSmallIcon(R.drawable.soundcloud_icon)
-                .setWhen(0)
-                .setContent(remoteViews);
-
-        remoteViews.setTextViewText(R.id.notification_song_name, song.getTrackName());
-
-
-        Intent playPauseTrackIntent = new Intent();
-        playPauseTrackIntent.setAction(PLAY_PAUSE_ACTION);
-        PendingIntent playPauseTrackPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, playPauseTrackIntent, 0);
-
-        remoteViews.setOnClickPendingIntent(R.id.bNotificationPlayOrPause, playPauseTrackPendingIntent);
-
-        Notification notification = builder.getNotification();
-        // Bug in NotificationCompat that does not set the content.
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
-            notification.contentView = remoteViews;
-        }
-
-
-
-
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(PLAYING_SONG_NOTIFICATION_ID, notification);
-
-
-        Picasso.with(this)
-                .load(song.getArtworkLink())
-                .into(remoteViews, R.id.notification_artwork, PLAYING_SONG_NOTIFICATION_ID, notification);
-
-
-    }
 
     @Override
     public void onForwardClicked() {
