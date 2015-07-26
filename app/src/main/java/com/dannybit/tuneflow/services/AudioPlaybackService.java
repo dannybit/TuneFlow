@@ -159,6 +159,15 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
         return true;
     }
 
+    public void togglePlayOrPause(){
+        if (mediaPlayer.isPlaying()){
+            pauseSong();
+        }
+        else {
+            resumeSong();
+        }
+    }
+
     @Override
     public boolean onError(MediaPlayer mediaPlayer, int i, int i2) {
         return false;

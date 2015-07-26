@@ -1,21 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
 
     <ImageView
         android:id="@+id/notification_artwork"
-        android:layout_width="80dp"
-        android:layout_height="80dp" />
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:gravity="center"/>
 
-    <TextView
-        android:id="@+id/notification_song_name"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginLeft="8dp"
         android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
+
+        <TextView
+            android:id="@+id/notification_song_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
+            android:textColor="@android:color/white"
+            android:layout_gravity="center_vertical"
+            android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent.Title"
+            />
+
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/bNotificationBackward"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/btn_previous"
+        android:background="@android:color/transparent"
         />
+
+    <ImageButton
+        android:id="@+id/bNotificationPlayOrPause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/btn_pause"
+        android:background="@android:color/transparent"/>
+
+
 
 </LinearLayout>

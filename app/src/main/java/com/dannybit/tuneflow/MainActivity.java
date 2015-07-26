@@ -68,6 +68,10 @@ public class MainActivity extends ActionBarActivity
     public static final int DRAWER_PLAYLISTS_POS = 1;
     public static final int DRAWER_SETTINGS_POS = 2;
 
+    public static final String PLAY_PAUSE_ACTION = "com.dannybit.PLAY_PAUSE_ACTION";
+    public static final String LAUNCH_NOW_PLAYING_ACTION = "com.dannybit.LAUNCH_NOW_PLAYING_ACTION";
+
+
 
     private Toolbar mToolbar;
     private DatabaseHelper dbHelper;
@@ -84,12 +88,14 @@ public class MainActivity extends ActionBarActivity
     private Intent playIntent;
 
     private DrawerLayout drawerLayout;
+    public static MainActivity instance;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        instance = this;
         initToolbar();
         setupDrawer();
         if (isNetworkAvailable()) {
@@ -337,7 +343,6 @@ public class MainActivity extends ActionBarActivity
     private void addNewSong(Song addedSong){
         dbHelper.createSong(addedSong);
         dbHelper.createPlaylistSong(currentPlaylist.getId(), addedSong.getId());
-        //currentPlaylist.add(addedSong);
         currentSongsListFragment.addSongToList(addedSong);
 
     }
@@ -398,9 +403,17 @@ public class MainActivity extends ActionBarActivity
                 new RemoteViews(getPackageName(), R.layout.notification_view);
         Notification.Builder builder = new Notification.Builder(MainActivity.this)
                 .setSmallIcon(R.drawable.soundcloud_icon)
+                .setWhen(0)
                 .setContent(remoteViews);
 
         remoteViews.setTextViewText(R.id.notification_song_name, song.getTrackName());
+
+
+        Intent playPauseTrackIntent = new Intent();
+        playPauseTrackIntent.setAction(PLAY_PAUSE_ACTION);
+        PendingIntent playPauseTrackPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, playPauseTrackIntent, 0);
+
+        remoteViews.setOnClickPendingIntent(R.id.bNotificationPlayOrPause, playPauseTrackPendingIntent);
 
         Notification notification = builder.getNotification();
         // Bug in NotificationCompat that does not set the content.
@@ -408,13 +421,19 @@ public class MainActivity extends ActionBarActivity
             notification.contentView = remoteViews;
         }
 
+
+
+
+
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(PLAYING_SONG_NOTIFICATION_ID, notification);
 
+
         Picasso.with(this)
                 .load(song.getArtworkLink())
                 .into(remoteViews, R.id.notification_artwork, PLAYING_SONG_NOTIFICATION_ID, notification);
+
 
     }
 
