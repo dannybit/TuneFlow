@@ -2,7 +2,6 @@ package com.dannybit.tuneflow.fragments;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.provider.ContactsContract;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -11,22 +10,12 @@ import android.view.View;
 import android.widget.ListView;
 
 
-import com.dannybit.tuneflow.MainActivity;
+import com.dannybit.tuneflow.activities.MainActivity;
 import com.dannybit.tuneflow.R;
-import com.dannybit.tuneflow.network.SoundcloudRestClient;
-import com.dannybit.tuneflow.models.Playlist;
 import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.views.adapters.SongAdapter;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
-import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class SongsListFragment extends ListFragment {

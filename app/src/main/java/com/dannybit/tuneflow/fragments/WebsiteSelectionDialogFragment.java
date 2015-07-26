@@ -3,22 +3,16 @@ package com.dannybit.tuneflow.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 
 import com.dannybit.tuneflow.R;
-import com.dannybit.tuneflow.SearchSongActivity;
 import com.dannybit.tuneflow.fragments.search.WebsiteSelection;
-import com.dannybit.tuneflow.models.Playlist;
 
 /**
  * A simple {@link Fragment} subclass.

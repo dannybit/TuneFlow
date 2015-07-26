@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,12 +25,11 @@
         <service
             android:name=".services.AudioPlaybackService"
             android:enabled="true"
-            android:exported="true"
-            >
+            android:exported="true" >
         </service>
 
         <activity
-            android:name=".SearchSongActivity"
+            android:name=".activities.SearchSongActivity"
             android:label="@string/title_activity_search_song"
             android:launchMode="singleTop" >
             <meta-data
@@ -42,13 +41,21 @@
             </intent-filter>
         </activity>
 
-        <receiver
-            android:name=".broadcastReceivers.PlayPauseBroadcastReceiver"
-             >
+        <receiver android:name=".broadcastReceivers.PlayPauseBroadcastReceiver" >
             <intent-filter>
                 <action android:name="com.dannybit.PLAY_PAUSE_ACTION" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".broadcastReceivers.LaunchNowPlayingBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="com.dannybit.LAUNCH_NOW_PLAYING_ACTION" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".activities.NowPlayingActivity"
+            android:label="@string/title_activity_now_playing" >
+        </activity>
     </application>
 
 </manifest>

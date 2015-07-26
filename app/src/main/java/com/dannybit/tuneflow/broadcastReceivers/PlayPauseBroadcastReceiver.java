@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.dannybit.tuneflow.MainActivity;
+import com.dannybit.tuneflow.activities.MainActivity;
 
 public class PlayPauseBroadcastReceiver extends BroadcastReceiver {
     public PlayPauseBroadcastReceiver() {

@@ -1,4 +1,4 @@
-package com.dannybit.tuneflow;
+package com.dannybit.tuneflow.activities;
 
 import android.app.SearchManager;
 import android.content.ComponentName;
@@ -10,8 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
-import android.os.PersistableBundle;
-import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -20,17 +18,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ListView;
 
-import com.dannybit.tuneflow.fragments.PlaylistListFragment;
+import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.fragments.search.SearchSoundcloudFragment;
 import com.dannybit.tuneflow.fragments.search.WebsiteSelection;
 import com.dannybit.tuneflow.models.LocalSong;
 import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.models.SoundcloudSong;
 import com.dannybit.tuneflow.network.SoundcloudRestClient;
-import com.dannybit.tuneflow.views.adapters.SongAdapter;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 

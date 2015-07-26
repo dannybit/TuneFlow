@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.dannybit.tuneflow.SearchSongActivity">
+    tools:context="com.dannybit.tuneflow.activities.SearchSongActivity">
 
     <item android:id="@+id/search_view"
         android:title="@string/search_title"

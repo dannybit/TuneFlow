@@ -4,12 +4,11 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
-import com.dannybit.tuneflow.MainActivity;
+import com.dannybit.tuneflow.activities.MainActivity;
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.database.DatabaseHelper;
 import com.dannybit.tuneflow.models.Playlist;

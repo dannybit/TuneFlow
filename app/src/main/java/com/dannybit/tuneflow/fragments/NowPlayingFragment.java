@@ -2,12 +2,10 @@ package com.dannybit.tuneflow.fragments;
 
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +14,10 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.dannybit.tuneflow.MainActivity;
+import com.dannybit.tuneflow.activities.MainActivity;
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.services.AudioPlaybackService;
-import com.squareup.picasso.Picasso;
 
 
 public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {

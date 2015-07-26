@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.widget.RemoteViews;
 
-import com.dannybit.tuneflow.MainActivity;
+import com.dannybit.tuneflow.activities.MainActivity;
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.models.Song;
 import com.squareup.picasso.Picasso;
@@ -33,6 +33,11 @@ public class NowPlayingNotification  {
                 .setContent(remoteViews);
 
         remoteViews.setTextViewText(R.id.notification_song_name, song.getTrackName());
+
+        Intent launchNowPlayingIntent = new Intent();
+        launchNowPlayingIntent.setAction(MainActivity.LAUNCH_NOW_PLAYING_ACTION);
+        PendingIntent launchNowPlayingPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), 0, launchNowPlayingIntent, 0);
+        builder.setContentIntent(launchNowPlayingPendingIntent);
 
 
         Intent playPauseTrackIntent = new Intent();

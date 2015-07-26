@@ -1,34 +1,25 @@
-package com.dannybit.tuneflow;
+package com.dannybit.tuneflow.activities;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.PowerManager;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.dannybit.tuneflow.NavigationDrawerCallbacks;
+import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.database.DatabaseHelper;
 import com.dannybit.tuneflow.fragments.NavigationDrawerFragment;
 import com.dannybit.tuneflow.fragments.NewPlaylistDialogFragment;
@@ -41,12 +32,8 @@ import com.dannybit.tuneflow.models.Playlist;
 import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.services.AudioPlaybackService;
 import com.dannybit.tuneflow.views.notifications.NowPlayingNotification;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
 public class MainActivity extends ActionBarActivity
