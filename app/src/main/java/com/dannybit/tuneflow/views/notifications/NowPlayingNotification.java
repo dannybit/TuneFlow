@@ -54,6 +54,11 @@ public class NowPlayingNotification  {
 
         remoteViews.setOnClickPendingIntent(R.id.bNotificationPlayOrPause, playPauseTrackPendingIntent);
 
+        Intent backwardTrackIntent = new Intent();
+        backwardTrackIntent.setAction(MainActivity.BACKWARD_ACTION);
+        PendingIntent backwardTrackPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), 0, backwardTrackIntent, 0);
+        remoteViews.setOnClickPendingIntent(R.id.bNotificationBackward, backwardTrackPendingIntent);
+
         Notification notification = builder.getNotification();
         // Bug in NotificationCompat that does not set the content.
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {

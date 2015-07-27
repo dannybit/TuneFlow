@@ -60,7 +60,7 @@ public class MainActivity extends ActionBarActivity
     /* Notification Actions */
     public static final String PLAY_PAUSE_ACTION = "com.dannybit.PLAY_PAUSE_ACTION";
     public static final String LAUNCH_NOW_PLAYING_ACTION = "com.dannybit.LAUNCH_NOW_PLAYING_ACTION";
-
+    public static final String BACKWARD_ACTION = "com.dannybit.BACKWARD_TRACK_ACTION";
     public static final String SWITCH_TO_NOW_PLAYING_ACTION = "com.dannybit.START_NOW_PLAYING_ACTION";
 
     public static final String PLAYLIST_FRAGMENT_TAG = "PLAYLIST_FRAGMENT_TAG";
@@ -477,6 +477,14 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onBackwardClicked() {
         startNotification(audioService.getCurrentSong());
+    }
+
+    public void notificationBackwardClicked(){
+        audioService.playBackwardSong();
+        onBackwardClicked();
+        if (getSupportFragmentManager().findFragmentById(R.id.container) instanceof NowPlayingFragment){
+            nowPlayingFragment.nextSong(getMusicService().getCurrentSong());
+        }
     }
 
 
