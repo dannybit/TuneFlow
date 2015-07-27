@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.dannybit.tuneflow.activities.MainActivity;
 import com.dannybit.tuneflow.activities.NowPlayingActivity;
 
 public class LaunchNowPlayingBroadcastReceiver extends BroadcastReceiver {
@@ -12,8 +13,9 @@ public class LaunchNowPlayingBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent activityIntent = new Intent(context, NowPlayingActivity.class);
+        Intent activityIntent = new Intent(context, MainActivity.class);
         activityIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
+        activityIntent.setAction(MainActivity.SWITCH_TO_NOW_PLAYING_ACTION);
         context.startActivity(activityIntent);
     }
 }

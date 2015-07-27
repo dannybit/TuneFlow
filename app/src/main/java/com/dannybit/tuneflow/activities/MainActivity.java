@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -60,8 +61,12 @@ public class MainActivity extends ActionBarActivity
     public static final String PLAY_PAUSE_ACTION = "com.dannybit.PLAY_PAUSE_ACTION";
     public static final String LAUNCH_NOW_PLAYING_ACTION = "com.dannybit.LAUNCH_NOW_PLAYING_ACTION";
 
+    public static final String SWITCH_TO_NOW_PLAYING_ACTION = "com.dannybit.START_NOW_PLAYING_ACTION";
+
     public static final String PLAYLIST_FRAGMENT_TAG = "PLAYLIST_FRAGMENT_TAG";
     public static final String SONGS_LIST_FRAGMENT_TAG = "SONGS_LIST_FRAGMENT_TAG";
+
+    private boolean startFromNotification;
 
     private Toolbar mToolbar;
     private DatabaseHelper dbHelper;
@@ -89,15 +94,23 @@ public class MainActivity extends ActionBarActivity
         instance = this;
         initToolbar();
         setupDrawer();
-        if (isNetworkAvailable()) {
-            if (savedInstanceState == null) {
-                startPlaylistsFragment();
-            } else {
-                restorePlaylistsFragment();
-            }
-            dbHelper = DatabaseHelper.getInstance(this);
+        dbHelper = DatabaseHelper.getInstance(this);
+        if (getIntent().getAction().equals(SWITCH_TO_NOW_PLAYING_ACTION)){
+            startFromNotification = true;
         } else {
-            Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG);
+
+            if (isNetworkAvailable()) {
+
+                if (savedInstanceState == null) {
+                    startPlaylistsFragment();
+                } else {
+                    restorePlaylistsFragment();
+                }
+
+            } else {
+                Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG);
+            }
+
         }
 
         if (currentSongsListFragment == null){
@@ -118,6 +131,7 @@ public class MainActivity extends ActionBarActivity
             bindService(playIntent, audioConnection, Context.BIND_AUTO_CREATE);
 
         }
+
     }
 
 
@@ -128,6 +142,17 @@ public class MainActivity extends ActionBarActivity
             audioService = binder.getService();
             binder.setSongCompletedListener(MainActivity.this);
             binder.setSongPreparedListener(MainActivity.this);
+
+
+            if (getIntent().getAction().equals(SWITCH_TO_NOW_PLAYING_ACTION)){
+                if (nowPlayingFragment != null) {
+                    switchToNowPlayingFragmentFromNotification();
+                } else {
+                    nowPlayingFragment = new NowPlayingFragment();
+
+                    startNowPlaylingFragmentFromNotification(audioService.getCurrentSong());
+                }
+            }
 
         }
 
@@ -192,6 +217,12 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
+    private void switchToNowPlayingFragmentFromNotification(){
+        if (nowPlayingFragment != null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, nowPlayingFragment).commit();
+        }
+    }
+
     private void switchToPlaylistsFragment(){
         if (playlistListFragment != null){
             getSupportFragmentManager().beginTransaction().replace(R.id.container, playlistListFragment).commit();
@@ -214,7 +245,14 @@ public class MainActivity extends ActionBarActivity
                 fm.popBackStack();
             }
             else {
-                super.onBackPressed();
+                if (startFromNotification){
+                    startFromNotification = false;
+                    getSupportActionBar().show();
+                    fm.beginTransaction().remove(fm.findFragmentById(R.id.container)).commit();
+                    startPlaylistsFragment();
+                } else {
+                    super.onBackPressed();
+                }
             }
         }
     }
@@ -278,6 +316,16 @@ public class MainActivity extends ActionBarActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.container, nowPlayingFragment).addToBackStack(null).commit();
     }
 
+    private void startNowPlaylingFragmentFromNotification(Song song){
+        if (nowPlayingFragment == null){
+            nowPlayingFragment = new NowPlayingFragment();
+        }
+        Bundle extras = new Bundle();
+        extras.putParcelable("SONG", song);
+        nowPlayingFragment.setArguments(extras);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, nowPlayingFragment).commit();
+    }
+
     @Override
     public void onPlaylistSelected(Playlist playlist) {
         currentPlaylistId = playlist.getId();
@@ -324,6 +372,7 @@ public class MainActivity extends ActionBarActivity
     protected void onResumeFragments() {
         super.onResumeFragments();
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
