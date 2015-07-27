@@ -67,7 +67,7 @@ public class MainActivity extends ActionBarActivity
     private DatabaseHelper dbHelper;
 
 
-    private Playlist currentPlaylist;
+    private long currentPlaylistId;
 
     /* Fragments */
     private NavigationDrawerFragment mNavigationDrawerFragment;
@@ -102,6 +102,9 @@ public class MainActivity extends ActionBarActivity
 
         if (currentSongsListFragment == null){
             restoreSongsListFragment();
+        }
+        if (savedInstanceState != null) {
+            currentPlaylistId = savedInstanceState.getLong("CURRENT_PLAYLIST_ID");
         }
 
     }
@@ -277,7 +280,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onPlaylistSelected(Playlist playlist) {
-        currentPlaylist = playlist;
+        currentPlaylistId = playlist.getId();
         currentSongsListFragment = new SongsListFragment();
         Bundle extras = new Bundle();
         extras.putParcelableArrayList("SONGS", playlist.getSongs());
@@ -349,7 +352,7 @@ public class MainActivity extends ActionBarActivity
 
     private void addNewSong(Song addedSong){
         dbHelper.createSong(addedSong);
-        dbHelper.createPlaylistSong(currentPlaylist.getId(), addedSong.getId());
+        dbHelper.createPlaylistSong(currentPlaylistId, addedSong.getId());
         currentSongsListFragment.addSongToList(addedSong);
 
     }
@@ -416,4 +419,9 @@ public class MainActivity extends ActionBarActivity
     }
 
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable("CURRENT_PLAYLIST_ID", currentPlaylistId);
+        super.onSaveInstanceState(outState);
+    }
 }

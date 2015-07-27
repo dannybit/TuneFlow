@@ -42,12 +42,14 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
     private WebsiteSelection websiteSelection;
     private Toolbar toolbar;
     private SearchSoundcloudFragment searchSoundcloudFragment;
-    //private SearchLocalFragment searchLocalFragment;
+    private static final String TAG = "SEARCH_SONG_ACTIVITY";
+    private static final String SEARCH_LIST_FRAGMENT_TAG = "SEARCH_LIST_FRAGMENT";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v(TAG, "oncreate");
         setContentView(R.layout.activity_search_song);
         toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar_search);
         setSupportActionBar(toolbar);
@@ -61,16 +63,16 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
         else {
             websiteSelection = (WebsiteSelection) savedInstanceState.getSerializable("SELECTION");
         }
-        if (websiteSelection.equals(WebsiteSelection.SOUNDCLOUD)) {
+        if (savedInstanceState == null) {
+            Log.v(TAG, "soundcloud add fragment");
             searchSoundcloudFragment = new SearchSoundcloudFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.search_container, searchSoundcloudFragment).commit();
-        } else if (websiteSelection.equals(WebsiteSelection.LOCAL)) {
-            searchSoundcloudFragment = new SearchSoundcloudFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.search_container, searchSoundcloudFragment).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.search_container, searchSoundcloudFragment, SEARCH_LIST_FRAGMENT_TAG).commit();
+            // Get the intent, verify the action and get the query
+            Intent intent = getIntent();
+            handleIntent(intent);
+        } else {
+            searchSoundcloudFragment = (SearchSoundcloudFragment) getSupportFragmentManager().findFragmentByTag(SEARCH_LIST_FRAGMENT_TAG);
         }
-        // Get the intent, verify the action and get the query
-        Intent intent = getIntent();
-        handleIntent(intent);
     }
 
     @Override
@@ -88,6 +90,7 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
 
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            Log.v(TAG, "ACTION_SEARCH");
             String query = intent.getStringExtra(SearchManager.QUERY);
             if (websiteSelection.equals(WebsiteSelection.SOUNDCLOUD)) {
                 soundcloudSongSearch(query);
@@ -134,32 +137,8 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
         searchSoundcloudFragment.getAdapter().notifyDataSetChanged();
     }
 
-    public Bitmap getAlbumart(Long album_id)
-    {
-        Bitmap bm = null;
-        try
-        {
-            final Uri sArtworkUri = Uri
-                    .parse("content://media/external/audio/albumart");
-
-            Uri uri = ContentUris.withAppendedId(sArtworkUri, album_id);
-
-            ParcelFileDescriptor pfd = getContentResolver()
-                    .openFileDescriptor(uri, "r");
-
-            if (pfd != null)
-            {
-                FileDescriptor fd = pfd.getFileDescriptor();
-                bm = BitmapFactory.decodeFileDescriptor(fd);
-            }
-        } catch (Exception e) {
-        }
-        return bm;
-    }
-
-
-
     public void soundcloudSongSearch(String query){
+        Log.v(TAG, "souncdloudsearch");
         RequestParams params = new RequestParams();
         params.put("client_id", SoundcloudRestClient.CLIENT_ID);
         params.put("q", query);

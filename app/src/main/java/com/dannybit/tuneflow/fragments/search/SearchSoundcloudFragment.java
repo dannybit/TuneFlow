@@ -32,6 +32,7 @@ public class SearchSoundcloudFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         adapter = new SearchSoundcloudAdapter(getActivity());
         setListAdapter(adapter);
 
