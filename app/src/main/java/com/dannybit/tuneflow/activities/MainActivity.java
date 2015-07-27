@@ -18,7 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.dannybit.tuneflow.NavigationDrawerCallbacks;
+import com.dannybit.tuneflow.fragments.NavigationDrawerCallbacks;
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.database.DatabaseHelper;
 import com.dannybit.tuneflow.fragments.NavigationDrawerFragment;
@@ -56,13 +56,15 @@ public class MainActivity extends ActionBarActivity
     public static final int DRAWER_PLAYLISTS_POS = 1;
     public static final int DRAWER_SETTINGS_POS = 2;
 
+    /* Notification Actions */
     public static final String PLAY_PAUSE_ACTION = "com.dannybit.PLAY_PAUSE_ACTION";
     public static final String LAUNCH_NOW_PLAYING_ACTION = "com.dannybit.LAUNCH_NOW_PLAYING_ACTION";
 
-
+    public static final String PLAYLIST_FRAGMENT_TAG = "PLAYLIST_FRAGMENT_TAG";
 
     private Toolbar mToolbar;
     private DatabaseHelper dbHelper;
+
 
     private Playlist currentPlaylist;
 
@@ -87,9 +89,10 @@ public class MainActivity extends ActionBarActivity
         initToolbar();
         setupDrawer();
         if (isNetworkAvailable()) {
-            Log.v("HELLO", "connected");
             if (savedInstanceState == null) {
                 startPlaylistsFragment();
+            } else {
+                restorePlaylistsFragment();
             }
             dbHelper = DatabaseHelper.getInstance(this);
         } else {
@@ -140,7 +143,11 @@ public class MainActivity extends ActionBarActivity
 
     private void startPlaylistsFragment(){
         playlistListFragment = new PlaylistListFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.container, playlistListFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.container, playlistListFragment, PLAYLIST_FRAGMENT_TAG).commit();
+    }
+
+    private void restorePlaylistsFragment(){
+        playlistListFragment = (PlaylistListFragment) getSupportFragmentManager().findFragmentByTag(PLAYLIST_FRAGMENT_TAG);
     }
 
     /* Used by NowPlayingFragment to disable the drawer */

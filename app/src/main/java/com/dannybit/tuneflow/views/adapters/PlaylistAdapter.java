@@ -78,7 +78,7 @@ public class PlaylistAdapter extends BaseAdapter {
         if (playlist.getSize() > 0) {
             Picasso.with(context).load(playlist.getSongs().get(0).getArtworkLink()).error(R.drawable.soundcloud_icon).into(viewHolder.playlistArt);
         } else {
-           // Add placeholder
+           viewHolder.playlistArt.setImageResource(R.drawable.default_playlist);
         }
         viewHolder.playlistName.setText(playlist.getName());
         viewHolder.playlistSize.setText(String.format("%d tunes", playlist.getSize()));

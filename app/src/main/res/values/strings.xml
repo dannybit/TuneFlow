@@ -13,5 +13,7 @@
     <string name="search_title">Search</string>
     <string name="add"> Add </string>
     <string name="title_activity_now_playing">NowPlayingActivity</string>
+    <string name="website_selection_dialog_title">Choose library</string>
+    <string name="new_playlist_dialog_title">New Playlist</string>
 
 </resources>

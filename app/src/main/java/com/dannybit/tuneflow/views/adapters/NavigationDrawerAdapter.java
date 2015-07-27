@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.dannybit.tuneflow.NavigationDrawerCallbacks;
+import com.dannybit.tuneflow.fragments.NavigationDrawerCallbacks;
 import com.dannybit.tuneflow.models.NavigationItem;
 import com.dannybit.tuneflow.R;
 

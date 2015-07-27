@@ -62,10 +62,8 @@ public class WebsiteSelectionDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-       //getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        //getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(0));
-        getDialog().setTitle("Choose library");
+
+        getDialog().setTitle(R.string.website_selection_dialog_title);
         View view = inflater.inflate(R.layout.fragment_website_selection_dialog, container, false);
         Button localButton = (Button) view.findViewById(R.id.local_button);
         localButton.setOnClickListener(new View.OnClickListener() {

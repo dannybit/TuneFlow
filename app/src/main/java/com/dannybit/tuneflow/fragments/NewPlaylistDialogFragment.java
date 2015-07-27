@@ -64,8 +64,7 @@ public class NewPlaylistDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        getDialog().setTitle(R.string.new_playlist_dialog_title);
         View view = inflater.inflate(R.layout.fragment_new_playlist_dialog, container, false);
         editName = (EditText) view.findViewById(R.id.editPlaylistName);
         Button addButton = (Button) view.findViewById(R.id.bAddNewPlaylist);
