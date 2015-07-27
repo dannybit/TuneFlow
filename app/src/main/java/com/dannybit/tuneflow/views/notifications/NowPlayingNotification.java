@@ -30,7 +30,7 @@ public class NowPlayingNotification  {
         RemoteViews remoteViews =
                 new RemoteViews(context.getPackageName(), R.layout.notification_view);
         Notification.Builder builder = new Notification.Builder(context)
-                .setSmallIcon(R.drawable.soundcloud_icon)
+                .setSmallIcon(R.drawable.ic_notification_icon)
                 .setWhen(0)
                 .setContent(remoteViews);
 
