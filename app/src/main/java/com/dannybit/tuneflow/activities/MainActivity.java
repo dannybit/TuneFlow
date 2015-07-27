@@ -65,6 +65,7 @@ public class MainActivity extends ActionBarActivity
 
     public static final String PLAYLIST_FRAGMENT_TAG = "PLAYLIST_FRAGMENT_TAG";
     public static final String SONGS_LIST_FRAGMENT_TAG = "SONGS_LIST_FRAGMENT_TAG";
+    public static final String NOW_PLAYING_FRAGMENT_TAG = "NOW_PLAYING_FRAGMENT_TAG";
 
     private boolean startFromNotification;
 
@@ -118,6 +119,10 @@ public class MainActivity extends ActionBarActivity
         }
         if (savedInstanceState != null) {
             currentPlaylistId = savedInstanceState.getLong("CURRENT_PLAYLIST_ID");
+            NowPlayingFragment restoredNowPlayingFragment = (NowPlayingFragment) getSupportFragmentManager().findFragmentByTag(NOW_PLAYING_FRAGMENT_TAG);
+            if (restoredNowPlayingFragment != null){
+                nowPlayingFragment = restoredNowPlayingFragment;
+            }
         }
 
     }
@@ -313,7 +318,7 @@ public class MainActivity extends ActionBarActivity
         Bundle extras = new Bundle();
         extras.putParcelable("SONG", song);
         nowPlayingFragment.setArguments(extras);
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, nowPlayingFragment).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, nowPlayingFragment, NOW_PLAYING_FRAGMENT_TAG).addToBackStack(null).commit();
     }
 
     private void startNowPlaylingFragmentFromNotification(Song song){

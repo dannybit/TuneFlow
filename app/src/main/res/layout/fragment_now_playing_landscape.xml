@@ -24,9 +24,24 @@
 
             />
 
-        </LinearLayout>
+    </LinearLayout>
 
+    <!-- Song Thumbnail Image -->
+    <LinearLayout
+        android:id="@+id/songThumbnailLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/player_header"
+        android:layout_alignParentLeft="true"
 
+        >
+        <ImageView
+            android:id="@+id/playerSongThumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            />
+    </LinearLayout>
 
 
 
@@ -39,7 +54,8 @@
         android:gravity="center"
         android:background="@color/myPrimaryColor"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:layout_alignParentRight="true">
 
 
 
@@ -90,19 +106,4 @@
 
     </LinearLayout>
 
-    <!-- Song Thumbnail Image -->
-    <LinearLayout
-        android:id="@+id/songThumbnailLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-
-        >
-        <ImageView
-            android:id="@+id/playerSongThumbnail"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-            />
-    </LinearLayout>
 </RelativeLayout>

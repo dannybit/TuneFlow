@@ -2,6 +2,7 @@ package com.dannybit.tuneflow.fragments;
 
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -142,6 +143,19 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         songProgressBar.setMax(100);
         updateProgressBar();
         return view;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        //LayoutInflater inflater = LayoutInflater.from(getActivity());
+        //populateViewForOrientation(inflater, (ViewGroup) getView());
+    }
+
+    private void populateViewForOrientation(LayoutInflater inflater, ViewGroup viewGroup){
+        viewGroup.removeAllViewsInLayout();
+        View subview = inflater.inflate(R.layout.fragment_now_playing_landscape, viewGroup);
+
     }
 
     public void nextSong(Song nextSong){
