@@ -61,6 +61,7 @@ public class MainActivity extends ActionBarActivity
     public static final String LAUNCH_NOW_PLAYING_ACTION = "com.dannybit.LAUNCH_NOW_PLAYING_ACTION";
 
     public static final String PLAYLIST_FRAGMENT_TAG = "PLAYLIST_FRAGMENT_TAG";
+    public static final String SONGS_LIST_FRAGMENT_TAG = "SONGS_LIST_FRAGMENT_TAG";
 
     private Toolbar mToolbar;
     private DatabaseHelper dbHelper;
@@ -97,6 +98,10 @@ public class MainActivity extends ActionBarActivity
             dbHelper = DatabaseHelper.getInstance(this);
         } else {
             Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG);
+        }
+
+        if (currentSongsListFragment == null){
+            restoreSongsListFragment();
         }
 
     }
@@ -148,6 +153,14 @@ public class MainActivity extends ActionBarActivity
 
     private void restorePlaylistsFragment(){
         playlistListFragment = (PlaylistListFragment) getSupportFragmentManager().findFragmentByTag(PLAYLIST_FRAGMENT_TAG);
+
+    }
+
+    private void restoreSongsListFragment(){
+        SongsListFragment songsListFragment = (SongsListFragment) getSupportFragmentManager().findFragmentByTag(SONGS_LIST_FRAGMENT_TAG);
+        if (songsListFragment != null){
+            currentSongsListFragment = songsListFragment;
+        }
     }
 
     /* Used by NowPlayingFragment to disable the drawer */
@@ -265,13 +278,12 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onPlaylistSelected(Playlist playlist) {
         currentPlaylist = playlist;
-        SongsListFragment songsListFragment = new SongsListFragment();
+        currentSongsListFragment = new SongsListFragment();
         Bundle extras = new Bundle();
         extras.putParcelableArrayList("SONGS", playlist.getSongs());
         extras.putString("PLAYLIST_NAME", playlist.getName());
-        songsListFragment.setArguments(extras);
-        currentSongsListFragment = songsListFragment;
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, songsListFragment).addToBackStack(null).commit();
+        currentSongsListFragment.setArguments(extras);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, currentSongsListFragment, SONGS_LIST_FRAGMENT_TAG).addToBackStack(null).commit();
     }
 
 
