@@ -95,6 +95,8 @@
         android:id="@+id/songThumbnailLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/player_header"
+        android:layout_above="@id/player_footer"
 
 
         >

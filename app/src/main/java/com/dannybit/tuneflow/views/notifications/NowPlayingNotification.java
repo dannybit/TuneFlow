@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.dannybit.tuneflow.activities.MainActivity;
@@ -24,7 +25,8 @@ public class NowPlayingNotification  {
         this.context = context;
     }
 
-    public Notification createNowPlayingNotification(Song song){
+    public Notification createNowPlayingNotification(Song song, boolean songPlaying){
+        Log.v("HELLO", "create: " + songPlaying);
         RemoteViews remoteViews =
                 new RemoteViews(context.getPackageName(), R.layout.notification_view);
         Notification.Builder builder = new Notification.Builder(context)
@@ -33,6 +35,12 @@ public class NowPlayingNotification  {
                 .setContent(remoteViews);
 
         remoteViews.setTextViewText(R.id.notification_song_name, song.getTrackName());
+
+        if (songPlaying){
+            remoteViews.setImageViewResource(R.id.bNotificationPlayOrPause, R.drawable.btn_pause);
+        } else {
+            remoteViews.setImageViewResource(R.id.bNotificationPlayOrPause, R.drawable.btn_play);
+        }
 
         Intent launchNowPlayingIntent = new Intent();
         launchNowPlayingIntent.setAction(MainActivity.LAUNCH_NOW_PLAYING_ACTION);

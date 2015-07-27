@@ -342,6 +342,11 @@ public class MainActivity extends ActionBarActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.container, currentSongsListFragment, SONGS_LIST_FRAGMENT_TAG).addToBackStack(null).commit();
     }
 
+    public void togglePlayOrPause(){
+        getMusicService().togglePlayOrPause();
+        startNotification(getMusicService().getCurrentSong());
+    }
+
 
 
     @Override
@@ -434,6 +439,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void songPrepared(Song song) {
         nowPlayingFragment.enableProgressBar();
+        startNotification(getMusicService().getCurrentSong());
     }
 
     private boolean isNetworkAvailable(){
@@ -457,8 +463,9 @@ public class MainActivity extends ActionBarActivity
     private void startNotification(Song song){
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
         NowPlayingNotification nowPlayingNotification = new NowPlayingNotification(this);
-        nowPlayingNotification.createNowPlayingNotification(song);
+        nowPlayingNotification.createNowPlayingNotification(song, getMusicService().isPlaying());
     }
 
 

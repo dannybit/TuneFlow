@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -148,13 +149,15 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        //LayoutInflater inflater = LayoutInflater.from(getActivity());
-        //populateViewForOrientation(inflater, (ViewGroup) getView());
+        Log.v("HELLO", "configuration changed");
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        populateViewForOrientation(inflater, (ViewGroup) getView());
     }
 
     private void populateViewForOrientation(LayoutInflater inflater, ViewGroup viewGroup){
         viewGroup.removeAllViewsInLayout();
         View subview = inflater.inflate(R.layout.fragment_now_playing_landscape, viewGroup);
+
 
     }
 

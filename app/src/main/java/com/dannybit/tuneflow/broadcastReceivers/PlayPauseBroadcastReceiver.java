@@ -12,6 +12,6 @@ public class PlayPauseBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        MainActivity.instance.getMusicService().togglePlayOrPause();
+        MainActivity.instance.togglePlayOrPause();
     }
 }
