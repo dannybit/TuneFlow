@@ -1,6 +1,7 @@
 package com.dannybit.tuneflow.services;
 
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.drm.DrmManagerClient;
@@ -63,6 +64,9 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
     }
 
     public boolean playSong(){
+        if (!stopOtherMusicApps()){
+            return false;
+        }
         // Need when selecting a new song
         mediaPlayer.setOnCompletionListener(null);
         mediaPlayer.reset();
@@ -114,6 +118,8 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
     public interface SongPreparedListener {
         public void songPrepared(Song song);
     }
+
+
 
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
@@ -169,6 +175,50 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
 
     }
 
+    public boolean stopOtherMusicApps(){
+        AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+
+        // Request audio focus for playback
+        int result = am.requestAudioFocus(focusChangeListener,
+                // Use the music stream.
+                AudioManager.STREAM_MUSIC,
+                // Request permanent focus.
+                AudioManager.AUDIOFOCUS_GAIN);
+
+
+        return result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
+
+    }
+
+    private AudioManager.OnAudioFocusChangeListener focusChangeListener =
+            new AudioManager.OnAudioFocusChangeListener() {
+                public void onAudioFocusChange(int focusChange) {
+                    AudioManager am =(AudioManager)getSystemService(Context.AUDIO_SERVICE);
+                    switch (focusChange) {
+
+                        case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) :
+                            // Lower the volume while ducking.
+                            mediaPlayer.setVolume(0.2f, 0.2f);
+                            break;
+                        case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) :
+                            pauseSong();
+                            break;
+
+                        case (AudioManager.AUDIOFOCUS_LOSS) :
+                            mediaPlayer.stop();
+                            
+                            break;
+
+                        case (AudioManager.AUDIOFOCUS_GAIN) :
+                            // Return the volume to normal and resume if paused.
+                            mediaPlayer.setVolume(1f, 1f);
+                            mediaPlayer.start();
+                            break;
+                        default: break;
+                    }
+                }
+            };
+
     @Override
     public boolean onError(MediaPlayer mediaPlayer, int i, int i2) {
         return false;
@@ -179,7 +229,9 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
     }
 
     public void resumeSong(){
-        mediaPlayer.start();
+        if (stopOtherMusicApps()) {
+            mediaPlayer.start();
+        }
     }
 
     public boolean isPlaying(){

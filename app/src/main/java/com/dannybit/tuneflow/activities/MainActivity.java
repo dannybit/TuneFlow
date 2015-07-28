@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -295,7 +296,11 @@ public class MainActivity extends ActionBarActivity
             startNowPlayingFragment(audioService.getCurrentSong());
             startNotification(audioService.getCurrentSong());
         }
+
+
     }
+
+
 
     @Override
     public void songCompleted(Song nextSongToPlay) {
