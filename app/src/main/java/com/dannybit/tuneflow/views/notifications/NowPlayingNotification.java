@@ -26,12 +26,11 @@ public class NowPlayingNotification  {
     }
 
     public Notification createNowPlayingNotification(Song song, boolean songPlaying){
-        Log.v("HELLO", "create: " + songPlaying);
         RemoteViews remoteViews =
                 new RemoteViews(context.getPackageName(), R.layout.notification_view);
         Notification.Builder builder = new Notification.Builder(context)
                 .setSmallIcon(R.drawable.ic_notification_icon)
-                .setWhen(0)
+                .setWhen(System.currentTimeMillis())
                 .setContent(remoteViews);
 
         remoteViews.setTextViewText(R.id.notification_song_name, song.getTrackName());
@@ -64,6 +63,8 @@ public class NowPlayingNotification  {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
             notification.contentView = remoteViews;
         }
+
+        notification.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
 
 
         NotificationManager notificationManager =
