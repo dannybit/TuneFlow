@@ -1,4 +1,15 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sliding_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    sothree:umanoPanelHeight="50dp"
+
+    >
+
+<RelativeLayout
     xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -21,3 +32,117 @@
             app:layout="@layout/fragment_navigation_drawer" />
     </android.support.v4.widget.DrawerLayout>
 </RelativeLayout>
+
+
+    <RelativeLayout
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.dannybit.tuneflow.fragments.NowPlayingFragment">
+
+
+
+        <LinearLayout
+            android:id="@+id/player_header"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:orientation="horizontal"
+            android:background="@color/myPrimaryColor"
+            >
+
+            <TextView
+                android:id="@+id/playerSongTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="16dp"
+                android:padding="5dp"
+                android:textStyle="bold"
+
+                />
+
+        </LinearLayout>
+
+
+
+
+
+
+        <LinearLayout
+            android:id="@+id/player_footer"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:background="@color/myPrimaryColor"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+
+
+
+
+            <ImageButton
+                android:id="@+id/bBackward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_previous"
+                android:background="@android:color/transparent"
+
+                />
+
+            <ImageButton
+                android:id="@+id/bPlayOrPause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/btn_pause"
+                android:background="@android:color/transparent"/>
+
+            <ImageButton
+                android:id="@+id/bForward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_next"
+                android:background="@android:color/transparent"/>
+
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/seekBarLayout"
+            android:layout_above="@id/player_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+
+            <SeekBar
+                android:id="@+id/songProgressBar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+        <!-- Song Thumbnail Image -->
+        <LinearLayout
+            android:id="@+id/songThumbnailLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/player_header"
+            android:layout_above="@id/player_footer"
+
+
+            >
+            <ImageView
+                android:id="@+id/playerSongThumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                />
+        </LinearLayout>
+    </RelativeLayout>
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

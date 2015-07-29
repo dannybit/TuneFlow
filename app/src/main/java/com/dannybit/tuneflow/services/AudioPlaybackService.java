@@ -206,7 +206,7 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
 
                         case (AudioManager.AUDIOFOCUS_LOSS) :
                             mediaPlayer.stop();
-                            
+
                             break;
 
                         case (AudioManager.AUDIOFOCUS_GAIN) :
