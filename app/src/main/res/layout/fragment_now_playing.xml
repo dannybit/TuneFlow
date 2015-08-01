@@ -38,8 +38,9 @@
 
                 />
 
+
             <ImageButton
-                android:id="@+id/bPlayOrPause"
+                android:id="@+id/bSlidingPlayerPlayOrPause"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -66,7 +67,8 @@
         android:gravity="center"
         android:background="@color/myPrimaryColor"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:paddingBottom="5dp">
 
 
 
@@ -78,7 +80,16 @@
             android:layout_height="wrap_content"
             android:src="@drawable/btn_previous"
             android:background="@android:color/transparent"
+            />
 
+        <ImageButton
+            android:id="@+id/bPlayOrPause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/btn_pause"
+            android:background="@android:color/transparent"
             />
 
 
