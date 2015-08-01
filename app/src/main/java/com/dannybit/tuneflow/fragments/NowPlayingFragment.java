@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -35,6 +36,7 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
     private Handler mHandler = new Handler();
     private OnMediaPlayerButtonClickedListener callback;
     private ImageView slidingPlayerSongThumbnail;
+    private ImageButton bSlidingPlayerPlayOrPause;
 
     public NowPlayingFragment() {
         // Required empty public constructor
@@ -84,6 +86,7 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
 
 
         slidingPlayerSongThumbnail = (ImageView) view.findViewById(R.id.slidingPlayerSongThumbnail);
+        bSlidingPlayerPlayOrPause = (ImageButton) view.findViewById(R.id.bSlidingPlayerPlayOrPause);
         songName = (TextView) view.findViewById(R.id.playerSongTitle);
         songArtwork = (ImageView) view.findViewById(R.id.playerSongThumbnail);
         bBackward = (ImageButton) view.findViewById(R.id.bBackward);
@@ -126,6 +129,21 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
             }
         });
 
+        bSlidingPlayerPlayOrPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AudioPlaybackService musicService = ((MainActivity) getActivity()).getMusicService();
+                if (musicService.isPlaying()) {
+                    musicService.pauseSong();
+                    bSlidingPlayerPlayOrPause.setImageResource(R.drawable.btn_play);
+
+
+                } else {
+                    musicService.resumeSong();
+                    bSlidingPlayerPlayOrPause.setImageResource(R.drawable.btn_pause);
+                }
+            }
+        });
 
         bForward.setOnClickListener(new View.OnClickListener() {
             @Override
