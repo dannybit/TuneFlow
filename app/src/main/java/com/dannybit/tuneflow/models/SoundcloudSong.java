@@ -80,4 +80,9 @@ public class SoundcloudSong extends Song {
     public void loadImage(Context context, ImageView imageView) {
            Picasso.with(context).load(getArtwork500x500()).error(R.drawable.soundcloud_icon).into(imageView);
     }
+
+    @Override
+    public void loadThumbnail(Context context, ImageView imageView){
+            Picasso.with(context).load(getArtworkLink()).error(R.drawable.soundcloud_icon).into(imageView);
+    }
 }

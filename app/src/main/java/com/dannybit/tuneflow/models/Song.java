@@ -100,6 +100,7 @@ public abstract class Song implements Parcelable {
 
 
     public abstract void loadImage(Context context, ImageView imageView);
+    public abstract void loadThumbnail(Context context, ImageView imageView);
 
 
     @Override

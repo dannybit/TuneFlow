@@ -20,6 +20,7 @@ import com.dannybit.tuneflow.activities.MainActivity;
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.services.AudioPlaybackService;
+import com.squareup.picasso.Picasso;
 
 
 public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
@@ -33,6 +34,7 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
     private SeekBar songProgressBar;
     private Handler mHandler = new Handler();
     private OnMediaPlayerButtonClickedListener callback;
+    private ImageView slidingPlayerSongThumbnail;
 
     public NowPlayingFragment() {
         // Required empty public constructor
@@ -43,15 +45,11 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         super.onCreate(savedInstanceState);
         Bundle extras = getArguments();
         currentSong = (Song) extras.getParcelable("SONG");
-
-
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setupActionBar();
-        setupDrawer();
     }
 
     public interface OnMediaPlayerButtonClickedListener {
@@ -83,27 +81,33 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_now_playing, container, false);
+
+
+        slidingPlayerSongThumbnail = (ImageView) view.findViewById(R.id.slidingPlayerSongThumbnail);
         songName = (TextView) view.findViewById(R.id.playerSongTitle);
-        songName.setText(currentSong.getTrackName());
         songArtwork = (ImageView) view.findViewById(R.id.playerSongThumbnail);
-
-
-        currentSong.loadImage(getActivity(), songArtwork);
-
-
         bBackward = (ImageButton) view.findViewById(R.id.bBackward);
+        bPlayOrPause = (ImageButton) view.findViewById(R.id.bPlayOrPause);
+        bForward = (ImageButton) view.findViewById(R.id.bForward);
+        songProgressBar = (SeekBar) view.findViewById(R.id.songProgressBar);
+        songProgressBar.setEnabled(false);
+        songProgressBar.setOnSeekBarChangeListener(this);
+
+        songName.setText(currentSong.getTrackName());
+        currentSong.loadImage(getActivity(), songArtwork);
+        currentSong.loadThumbnail(getActivity(), slidingPlayerSongThumbnail);
+        songProgressBar = (SeekBar) view.findViewById(R.id.songProgressBar);
+        songProgressBar.setEnabled(false);
+
 
         bBackward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ((MainActivity) getActivity()).getMusicService().playBackwardSong();
-                nextSong(((MainActivity) getActivity()).getMusicService().getCurrentSong());
+                setSong(((MainActivity) getActivity()).getMusicService().getCurrentSong());
                 callback.onBackwardClicked();
             }
         });
-
-
-        bPlayOrPause = (ImageButton) view.findViewById(R.id.bPlayOrPause);
 
         bPlayOrPause.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,14 +126,13 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
             }
         });
 
-        bForward = (ImageButton) view.findViewById(R.id.bForward);
 
         bForward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 boolean result = ((MainActivity) getActivity()).getMusicService().playForwardSong();
                 if (result) {
-                    nextSong(((MainActivity) getActivity()).getMusicService().getCurrentSong());
+                    setSong(((MainActivity) getActivity()).getMusicService().getCurrentSong());
                     callback.onForwardClicked();
                 }
 
@@ -137,12 +140,11 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
             }
         });
 
-        songProgressBar = (SeekBar) view.findViewById(R.id.songProgressBar);
-        songProgressBar.setOnSeekBarChangeListener(this);
-        songProgressBar.setEnabled(false);
+
         songProgressBar.setProgress(0);
         songProgressBar.setMax(100);
         updateProgressBar();
+
         return view;
     }
 
@@ -161,15 +163,13 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
 
     }
 
-    public void nextSong(Song nextSong){
-        currentSong = nextSong;
+    public void setSong(Song newSong){
+        currentSong = newSong;
         songName.setText(currentSong.getTrackName());
         currentSong.loadImage(getActivity(), songArtwork);
         songProgressBar.setProgress(0);
         songProgressBar.setMax(100);
         disableProgressBar();
-
-
     }
 
     public void updateProgressBar() {

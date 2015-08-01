@@ -43,4 +43,11 @@ public class LocalSong extends Song {
     }
 
 
+    @Override
+    public void loadThumbnail(Context context, ImageView imageView) {
+        Picasso.with(context).load(new File(getArtworkLink())).into(imageView);
+    }
+
+
+
 }

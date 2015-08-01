@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.dannybit.tuneflow.Utils.MainUtils;
 import com.dannybit.tuneflow.fragments.NavigationDrawerCallbacks;
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.database.DatabaseHelper;
@@ -34,6 +35,7 @@ import com.dannybit.tuneflow.models.Playlist;
 import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.services.AudioPlaybackService;
 import com.dannybit.tuneflow.views.notifications.NowPlayingNotification;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 
@@ -76,6 +78,8 @@ public class MainActivity extends ActionBarActivity
 
     private long currentPlaylistId;
 
+    private SlidingUpPanelLayout slidingUpPanelLayout;
+
     /* Fragments */
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private PlaylistListFragment playlistListFragment;
@@ -94,9 +98,16 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         instance = this;
+        dbHelper = DatabaseHelper.getInstance(this);
+        slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         initToolbar();
         setupDrawer();
-        dbHelper = DatabaseHelper.getInstance(this);
+        setupPlaylistsFragment();
+        setupDragableFragment();
+
+
+
+        /*
         if (getIntent().getAction().equals(SWITCH_TO_NOW_PLAYING_ACTION)){
             startFromNotification = true;
         } else {
@@ -126,6 +137,32 @@ public class MainActivity extends ActionBarActivity
             }
         }
 
+        */
+
+
+
+    }
+
+    private void startPlaylistsFragment(){
+        playlistListFragment = new PlaylistListFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.container, playlistListFragment, PLAYLIST_FRAGMENT_TAG).commit();
+    }
+
+    private void setupPlaylistsFragment(){
+        playlistListFragment = new PlaylistListFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.container, playlistListFragment, PLAYLIST_FRAGMENT_TAG).commit();
+    }
+
+    private void setupNowPlayingFragment(){
+        Bundle extras = new Bundle();
+        extras.putParcelable("SONG", null);
+        nowPlayingFragment.setArguments(extras);
+        getSupportFragmentManager().beginTransaction().replace(R.id.sliding_container, nowPlayingFragment, NOW_PLAYING_FRAGMENT_TAG).addToBackStack(null).commit();
+    }
+
+    private void setupDragableFragment(){
+        slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        slidingUpPanelLayout.setPanelHeight(0);
     }
 
     @Override
@@ -180,10 +217,7 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setup(R.id.fragment_drawer, drawerLayout, mToolbar);
     }
 
-    private void startPlaylistsFragment(){
-        playlistListFragment = new PlaylistListFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.container, playlistListFragment, PLAYLIST_FRAGMENT_TAG).commit();
-    }
+
 
     private void restorePlaylistsFragment(){
         playlistListFragment = (PlaylistListFragment) getSupportFragmentManager().findFragmentByTag(PLAYLIST_FRAGMENT_TAG);
@@ -293,10 +327,22 @@ public class MainActivity extends ActionBarActivity
         audioService.setSongPosition(position);
         // Only start the nowplayingfragment if there was no error setting the data source for the mediaplayer
         if (audioService.playSong()) {
-            startNowPlayingFragment(audioService.getCurrentSong());
+            openNowPlayingFragment(audioService.getCurrentSong());
             startNotification(audioService.getCurrentSong());
         }
 
+
+    }
+
+    private void openNowPlayingFragment(Song song){
+        slidingUpPanelLayout.setPanelHeight((int) MainUtils.convertDpToPixel((int) getResources().getDimension(R.dimen.draggable_header) / getResources().getDisplayMetrics().density, this));
+        if (nowPlayingFragment == null){
+            nowPlayingFragment = new NowPlayingFragment();
+        }
+        Bundle extras = new Bundle();
+        extras.putParcelable("SONG", song);
+        nowPlayingFragment.setArguments(extras);
+        getSupportFragmentManager().beginTransaction().replace(R.id.sliding_container, nowPlayingFragment, NOW_PLAYING_FRAGMENT_TAG).addToBackStack(null).commit();
 
     }
 
@@ -310,7 +356,7 @@ public class MainActivity extends ActionBarActivity
 
     private void nextSongNowPlayingFragment(Song nextSongToPlay){
         if (nowPlayingFragment != null){
-            nowPlayingFragment.nextSong(nextSongToPlay);
+            nowPlayingFragment.setSong(nextSongToPlay);
         } else {
             startNowPlayingFragment(nextSongToPlay);
         }
@@ -488,7 +534,7 @@ public class MainActivity extends ActionBarActivity
         audioService.playBackwardSong();
         onBackwardClicked();
         if (getSupportFragmentManager().findFragmentById(R.id.container) instanceof NowPlayingFragment){
-            nowPlayingFragment.nextSong(getMusicService().getCurrentSong());
+            nowPlayingFragment.setSong(getMusicService().getCurrentSong());
         }
     }
 

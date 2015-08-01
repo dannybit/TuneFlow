@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.dannybit.tuneflow.activities.MainActivity;
-import com.dannybit.tuneflow.activities.NowPlayingActivity;
 
 public class LaunchNowPlayingBroadcastReceiver extends BroadcastReceiver {
     public LaunchNowPlayingBroadcastReceiver() {

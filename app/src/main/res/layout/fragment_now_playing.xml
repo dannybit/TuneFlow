@@ -3,26 +3,53 @@
     android:layout_height="match_parent"
     tools:context="com.dannybit.tuneflow.fragments.NowPlayingFragment">
 
-
-
     <LinearLayout
         android:id="@+id/player_header"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/draggable_header"
         android:layout_alignParentTop="true"
         android:orientation="horizontal"
-        android:background="@color/myPrimaryColor">
+        android:background="@color/myPrimaryColor"
+        android:weightSum="3">
 
-        <TextView
-            android:id="@+id/playerSongTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:textSize="16dp"
+        <ImageView
+            android:id="@+id/slidingPlayerSongThumbnail"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:padding="5dp"
-            android:textStyle="bold"
-
+            android:layout_marginLeft="5dp"
             />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:weightSum="3">
+
+            <TextView
+                android:id="@+id/playerSongTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="16dp"
+                android:padding="5dp"
+                android:textStyle="bold"
+                android:layout_weight="2"
+
+                />
+
+            <ImageButton
+                android:id="@+id/bPlayOrPause"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="0dp"
+                android:src="@drawable/btn_pause"
+                android:background="@android:color/transparent"
+                android:layout_weight="1"/>
+
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -54,14 +81,7 @@
 
             />
 
-        <ImageButton
-            android:id="@+id/bPlayOrPause"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/btn_pause"
-            android:background="@android:color/transparent"/>
+
 
         <ImageButton
             android:id="@+id/bForward"
