@@ -5,17 +5,14 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -97,17 +94,16 @@ public class MainActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         instance = this;
         dbHelper = DatabaseHelper.getInstance(this);
+
+        /* Initial setup */
         slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         initToolbar();
         setupDrawer();
-        setupPlaylistsFragment();
         setupDragableFragment();
 
-
-
-        /*
         if (getIntent().getAction().equals(SWITCH_TO_NOW_PLAYING_ACTION)){
             startFromNotification = true;
         } else {
@@ -137,28 +133,15 @@ public class MainActivity extends ActionBarActivity
             }
         }
 
-        */
-
-
-
     }
+
 
     private void startPlaylistsFragment(){
         playlistListFragment = new PlaylistListFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.container, playlistListFragment, PLAYLIST_FRAGMENT_TAG).commit();
     }
 
-    private void setupPlaylistsFragment(){
-        playlistListFragment = new PlaylistListFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.container, playlistListFragment, PLAYLIST_FRAGMENT_TAG).commit();
-    }
 
-    private void setupNowPlayingFragment(){
-        Bundle extras = new Bundle();
-        extras.putParcelable("SONG", null);
-        nowPlayingFragment.setArguments(extras);
-        getSupportFragmentManager().beginTransaction().replace(R.id.sliding_container, nowPlayingFragment, NOW_PLAYING_FRAGMENT_TAG).addToBackStack(null).commit();
-    }
 
     private void setupDragableFragment(){
         slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
@@ -338,12 +321,19 @@ public class MainActivity extends ActionBarActivity
         slidingUpPanelLayout.setPanelHeight((int) MainUtils.convertDpToPixel((int) getResources().getDimension(R.dimen.draggable_header) / getResources().getDisplayMetrics().density, this));
         if (nowPlayingFragment == null){
             nowPlayingFragment = new NowPlayingFragment();
+            Bundle extras = new Bundle();
+            extras.putParcelable("SONG", song);
+            nowPlayingFragment.setArguments(extras);
+            getSupportFragmentManager().beginTransaction().replace(R.id.sliding_container, nowPlayingFragment, NOW_PLAYING_FRAGMENT_TAG).addToBackStack(null).commit();
+        } else {
+            updateNowPlayingFragment(song);
         }
-        Bundle extras = new Bundle();
-        extras.putParcelable("SONG", song);
-        nowPlayingFragment.setArguments(extras);
-        getSupportFragmentManager().beginTransaction().replace(R.id.sliding_container, nowPlayingFragment, NOW_PLAYING_FRAGMENT_TAG).addToBackStack(null).commit();
 
+
+    }
+
+    private void updateNowPlayingFragment(Song song){
+        nowPlayingFragment.updateSong(song);
     }
 
 
@@ -356,7 +346,7 @@ public class MainActivity extends ActionBarActivity
 
     private void nextSongNowPlayingFragment(Song nextSongToPlay){
         if (nowPlayingFragment != null){
-            nowPlayingFragment.setSong(nextSongToPlay);
+            nowPlayingFragment.updateSong(nextSongToPlay);
         } else {
             startNowPlayingFragment(nextSongToPlay);
         }
@@ -534,7 +524,7 @@ public class MainActivity extends ActionBarActivity
         audioService.playBackwardSong();
         onBackwardClicked();
         if (getSupportFragmentManager().findFragmentById(R.id.container) instanceof NowPlayingFragment){
-            nowPlayingFragment.setSong(getMusicService().getCurrentSong());
+            nowPlayingFragment.updateSong(getMusicService().getCurrentSong());
         }
     }
 

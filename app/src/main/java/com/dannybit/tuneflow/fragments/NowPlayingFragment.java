@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -21,7 +20,6 @@ import com.dannybit.tuneflow.activities.MainActivity;
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.services.AudioPlaybackService;
-import com.squareup.picasso.Picasso;
 
 
 public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
@@ -107,7 +105,7 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
             @Override
             public void onClick(View view) {
                 ((MainActivity) getActivity()).getMusicService().playBackwardSong();
-                setSong(((MainActivity) getActivity()).getMusicService().getCurrentSong());
+                updateSong(((MainActivity) getActivity()).getMusicService().getCurrentSong());
                 callback.onBackwardClicked();
             }
         });
@@ -150,7 +148,7 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
             public void onClick(View view) {
                 boolean result = ((MainActivity) getActivity()).getMusicService().playForwardSong();
                 if (result) {
-                    setSong(((MainActivity) getActivity()).getMusicService().getCurrentSong());
+                    updateSong(((MainActivity) getActivity()).getMusicService().getCurrentSong());
                     callback.onForwardClicked();
                 }
 
@@ -181,10 +179,11 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
 
     }
 
-    public void setSong(Song newSong){
+    public void updateSong(Song newSong){
         currentSong = newSong;
         songName.setText(currentSong.getTrackName());
         currentSong.loadImage(getActivity(), songArtwork);
+        currentSong.loadThumbnail(getActivity(), slidingPlayerSongThumbnail);
         songProgressBar.setProgress(0);
         songProgressBar.setMax(100);
         disableProgressBar();
