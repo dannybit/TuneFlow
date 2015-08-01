@@ -13,8 +13,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.dannybit.tuneflow.Utils.MainUtils;
@@ -99,7 +101,7 @@ public class MainActivity extends ActionBarActivity
         dbHelper = DatabaseHelper.getInstance(this);
 
         /* Initial setup */
-        slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        setupSlidingPlayer();
         initToolbar();
         setupDrawer();
         setupDragableFragment();
@@ -135,10 +137,47 @@ public class MainActivity extends ActionBarActivity
 
     }
 
+    private void setupSlidingPlayer(){
+        slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        slidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View view, float v) {
+
+            }
+
+            @Override
+            public void onPanelCollapsed(View view) {
+                hidePlayOrPauseButton();
+            }
+
+            @Override
+            public void onPanelExpanded(View view) {
+                showPlayOrPauseButton();
+            }
+
+            @Override
+            public void onPanelAnchored(View view) {
+
+            }
+
+            @Override
+            public void onPanelHidden(View view) {
+
+            }
+        });
+    }
 
     private void startPlaylistsFragment(){
         playlistListFragment = new PlaylistListFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.container, playlistListFragment, PLAYLIST_FRAGMENT_TAG).commit();
+    }
+
+    private void showPlayOrPauseButton(){
+        nowPlayingFragment.hideSlidingPlayOrPauseButton();
+    }
+
+    private void hidePlayOrPauseButton(){
+        nowPlayingFragment.showSlidingPlayOrPauseButton();
     }
 
 
@@ -335,6 +374,8 @@ public class MainActivity extends ActionBarActivity
     private void updateNowPlayingFragment(Song song){
         nowPlayingFragment.updateSong(song);
     }
+
+
 
 
 

@@ -179,6 +179,14 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
 
     }
 
+    public void hideSlidingPlayOrPauseButton(){
+        bSlidingPlayerPlayOrPause.setVisibility(View.GONE);
+    }
+
+    public void showSlidingPlayOrPauseButton(){
+        bSlidingPlayerPlayOrPause.setVisibility(View.VISIBLE);
+    }
+
     public void updateSong(Song newSong){
         currentSong = newSong;
         songName.setText(currentSong.getTrackName());
