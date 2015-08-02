@@ -61,10 +61,7 @@
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".activities.NowPlayingActivity"
-            android:label="@string/title_activity_now_playing" >
-        </activity>
+
 
 
     </application>

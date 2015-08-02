@@ -5,19 +5,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.dannybit.tuneflow.Utils.MainUtils;
 import com.dannybit.tuneflow.fragments.NavigationDrawerCallbacks;
@@ -55,9 +51,8 @@ public class MainActivity extends ActionBarActivity
     /* A notification id allows the app to modify the current running notification rather than starting a new one */
     public static final int PLAYING_SONG_NOTIFICATION_ID = 1;
 
-    public static final int DRAWER_NOW_PLAYING_POS = 0;
-    public static final int DRAWER_PLAYLISTS_POS = 1;
-    public static final int DRAWER_SETTINGS_POS = 2;
+    public static final int DRAWER_PLAYLISTS_POS = 0;
+    public static final int DRAWER_SETTINGS_POS = 1;
 
     /* Notification Actions */
     public static final String PLAY_PAUSE_ACTION = "com.dannybit.PLAY_PAUSE_ACTION";
@@ -68,7 +63,6 @@ public class MainActivity extends ActionBarActivity
     public static final String SONGS_LIST_FRAGMENT_TAG = "SONGS_LIST_FRAGMENT_TAG";
     public static final String NOW_PLAYING_FRAGMENT_TAG = "NOW_PLAYING_FRAGMENT_TAG";
 
-    private boolean startFromNotification;
 
     private Toolbar mToolbar;
     private DatabaseHelper dbHelper;
@@ -129,10 +123,6 @@ public class MainActivity extends ActionBarActivity
                 slidingUpPanelLayout.setPanelHeight((int) MainUtils.convertDpToPixel((int) getResources().getDimension(R.dimen.draggable_header) / getResources().getDisplayMetrics().density, this));
             }
         }
-
-
-
-
     }
 
     private void setupSlidingPlayer(){
@@ -255,10 +245,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        if (position == DRAWER_NOW_PLAYING_POS){
-            switchToNowPlayingFragment();
-        }
-        else if (position == DRAWER_PLAYLISTS_POS){
+        if (position == DRAWER_PLAYLISTS_POS){
             switchToPlaylistsFragment();
 
         }
@@ -270,12 +257,6 @@ public class MainActivity extends ActionBarActivity
     private void switchToNowPlayingFragment(){
         if (nowPlayingFragment != null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, nowPlayingFragment).addToBackStack(null).commit();
-        }
-    }
-
-    private void switchToNowPlayingFragmentFromNotification(){
-        if (nowPlayingFragment != null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, nowPlayingFragment).commit();
         }
     }
 
@@ -520,24 +501,6 @@ public class MainActivity extends ActionBarActivity
         startNotification(getMusicService().getCurrentSong());
     }
 
-    private boolean isNetworkAvailable(){
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
-
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
-    }
-
-
     private void startNotification(Song song){
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
@@ -545,7 +508,6 @@ public class MainActivity extends ActionBarActivity
         NowPlayingNotification nowPlayingNotification = new NowPlayingNotification(this);
         nowPlayingNotification.createNowPlayingNotification(song, getMusicService().isPlaying());
     }
-
 
     @Override
     public void onForwardClicked() {
@@ -564,7 +526,6 @@ public class MainActivity extends ActionBarActivity
             nowPlayingFragment.updateSong(getMusicService().getCurrentSong());
         }
     }
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
