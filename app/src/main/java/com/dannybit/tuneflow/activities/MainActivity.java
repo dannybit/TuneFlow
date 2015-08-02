@@ -91,6 +91,9 @@ public class MainActivity extends ActionBarActivity
     private DrawerLayout drawerLayout;
     public static MainActivity instance;
 
+    private boolean nowPlayingFragmentExpanded;
+    private boolean songSelected;
+
 
 
     @Override
@@ -105,36 +108,33 @@ public class MainActivity extends ActionBarActivity
         setupSlidingPlayer();
         initToolbar();
         setupDrawer();
-        setupDragableFragment();
+        setupDraggableFragment();
+
+        if (savedInstanceState == null) {
+            // Create a new playlist fragment and add it to the activity
+            startPlaylistsFragment();
+        } else {
+            // Get PlaylistListFragment reference
+            restorePlaylistsFragment();
+            // Get SongsListFragment reference
+            restoreSongsListFragment();
+            // Get NowPlayingFramgnet reference
+            restoreNowPlayingFragment();
+
+            // Restore variables
+            currentPlaylistId = savedInstanceState.getLong("CURRENT_PLAYLIST_ID");
+            songSelected = savedInstanceState.getBoolean("SONG_SELECTED");
+
+            // If a song was selected before runtime change, show the sliding player.
+            if (songSelected){
+                slidingUpPanelLayout.setPanelHeight((int) MainUtils.convertDpToPixel((int) getResources().getDimension(R.dimen.draggable_header) / getResources().getDisplayMetrics().density, this));
+            }
+        }
 
         if (getIntent().getAction().equals(SWITCH_TO_NOW_PLAYING_ACTION)){
             startFromNotification = true;
-        } else {
-
-            if (isNetworkAvailable()) {
-
-                if (savedInstanceState == null) {
-                    startPlaylistsFragment();
-                } else {
-                    restorePlaylistsFragment();
-                }
-
-            } else {
-                Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG);
-            }
-
         }
 
-        if (currentSongsListFragment == null){
-            restoreSongsListFragment();
-        }
-        if (savedInstanceState != null) {
-            currentPlaylistId = savedInstanceState.getLong("CURRENT_PLAYLIST_ID");
-            NowPlayingFragment restoredNowPlayingFragment = (NowPlayingFragment) getSupportFragmentManager().findFragmentByTag(NOW_PLAYING_FRAGMENT_TAG);
-            if (restoredNowPlayingFragment != null){
-                nowPlayingFragment = restoredNowPlayingFragment;
-            }
-        }
 
     }
 
@@ -149,11 +149,13 @@ public class MainActivity extends ActionBarActivity
             @Override
             public void onPanelCollapsed(View view) {
                 hidePlayOrPauseButton();
+                nowPlayingFragmentExpanded = false;
             }
 
             @Override
             public void onPanelExpanded(View view) {
                 showPlayOrPauseButton();
+                nowPlayingFragmentExpanded = true;
             }
 
             @Override
@@ -183,7 +185,7 @@ public class MainActivity extends ActionBarActivity
 
 
 
-    private void setupDragableFragment(){
+    private void setupDraggableFragment(){
         slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         slidingUpPanelLayout.setPanelHeight(0);
     }
@@ -254,6 +256,13 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
+    private void restoreNowPlayingFragment(){
+        NowPlayingFragment restoredNowPlayingFragment = (NowPlayingFragment) getSupportFragmentManager().findFragmentByTag(NOW_PLAYING_FRAGMENT_TAG);
+        if (restoredNowPlayingFragment != null){
+            nowPlayingFragment = restoredNowPlayingFragment;
+        }
+    }
+
     /* Used by NowPlayingFragment to disable the drawer */
     public void disableDrawer(){
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -299,8 +308,13 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onBackPressed() {
-        if (mNavigationDrawerFragment.isDrawerOpen())
+        if (mNavigationDrawerFragment.isDrawerOpen()) {
             mNavigationDrawerFragment.closeDrawer();
+        }
+        else if (nowPlayingFragmentExpanded){
+            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            nowPlayingFragmentExpanded = false;
+        }
         else {
             FragmentManager fm = getSupportFragmentManager();
 
@@ -318,6 +332,8 @@ public class MainActivity extends ActionBarActivity
                 }
             }
         }
+
+
     }
 
 
@@ -353,6 +369,7 @@ public class MainActivity extends ActionBarActivity
             openNowPlayingFragment(audioService.getCurrentSong());
             startNotification(audioService.getCurrentSong());
         }
+        songSelected = true;
 
 
     }
@@ -574,6 +591,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putSerializable("CURRENT_PLAYLIST_ID", currentPlaylistId);
+        outState.putBoolean("SONG_SELECTED", songSelected);
         super.onSaveInstanceState(outState);
     }
 }

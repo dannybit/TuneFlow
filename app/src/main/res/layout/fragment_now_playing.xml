@@ -130,7 +130,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/player_header"
-        android:layout_above="@id/player_footer"
+        android:layout_above="@id/seekBarLayout"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
 
 
         >
