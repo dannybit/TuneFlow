@@ -63,7 +63,6 @@ public class MainActivity extends ActionBarActivity
     public static final String PLAY_PAUSE_ACTION = "com.dannybit.PLAY_PAUSE_ACTION";
     public static final String LAUNCH_NOW_PLAYING_ACTION = "com.dannybit.LAUNCH_NOW_PLAYING_ACTION";
     public static final String BACKWARD_ACTION = "com.dannybit.BACKWARD_TRACK_ACTION";
-    public static final String SWITCH_TO_NOW_PLAYING_ACTION = "com.dannybit.START_NOW_PLAYING_ACTION";
 
     public static final String PLAYLIST_FRAGMENT_TAG = "PLAYLIST_FRAGMENT_TAG";
     public static final String SONGS_LIST_FRAGMENT_TAG = "SONGS_LIST_FRAGMENT_TAG";
@@ -131,9 +130,7 @@ public class MainActivity extends ActionBarActivity
             }
         }
 
-        if (getIntent().getAction().equals(SWITCH_TO_NOW_PLAYING_ACTION)){
-            startFromNotification = true;
-        }
+
 
 
     }
@@ -210,16 +207,8 @@ public class MainActivity extends ActionBarActivity
             audioService = binder.getService();
             binder.setSongCompletedListener(MainActivity.this);
             binder.setSongPreparedListener(MainActivity.this);
-
-
-            if (getIntent().getAction().equals(SWITCH_TO_NOW_PLAYING_ACTION)){
-                if (nowPlayingFragment != null) {
-                    switchToNowPlayingFragmentFromNotification();
-                } else {
-                    nowPlayingFragment = new NowPlayingFragment();
-
-                    startNowPlaylingFragmentFromNotification(audioService.getCurrentSong());
-                }
+            if (audioService.isPlaying()){
+                openNowPlayingFragment(audioService.getCurrentSong(), true);
             }
 
         }
@@ -261,11 +250,6 @@ public class MainActivity extends ActionBarActivity
         if (restoredNowPlayingFragment != null){
             nowPlayingFragment = restoredNowPlayingFragment;
         }
-    }
-
-    /* Used by NowPlayingFragment to disable the drawer */
-    public void disableDrawer(){
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
 
 
@@ -322,14 +306,7 @@ public class MainActivity extends ActionBarActivity
                 fm.popBackStack();
             }
             else {
-                if (startFromNotification){
-                    startFromNotification = false;
-                    getSupportActionBar().show();
-                    fm.beginTransaction().remove(fm.findFragmentById(R.id.container)).commit();
-                    startPlaylistsFragment();
-                } else {
-                    super.onBackPressed();
-                }
+                 super.onBackPressed();
             }
         }
 
@@ -366,7 +343,7 @@ public class MainActivity extends ActionBarActivity
         audioService.setSongPosition(position);
         // Only start the nowplayingfragment if there was no error setting the data source for the mediaplayer
         if (audioService.playSong()) {
-            openNowPlayingFragment(audioService.getCurrentSong());
+            openNowPlayingFragment(audioService.getCurrentSong(), false);
             startNotification(audioService.getCurrentSong());
         }
         songSelected = true;
@@ -374,12 +351,13 @@ public class MainActivity extends ActionBarActivity
 
     }
 
-    private void openNowPlayingFragment(Song song){
+    private void openNowPlayingFragment(Song song, boolean isPlaying){
         slidingUpPanelLayout.setPanelHeight((int) MainUtils.convertDpToPixel((int) getResources().getDimension(R.dimen.draggable_header) / getResources().getDisplayMetrics().density, this));
         if (nowPlayingFragment == null){
             nowPlayingFragment = new NowPlayingFragment();
             Bundle extras = new Bundle();
             extras.putParcelable("SONG", song);
+            extras.putBoolean("IS_PLAYING", isPlaying);
             nowPlayingFragment.setArguments(extras);
             getSupportFragmentManager().beginTransaction().replace(R.id.sliding_container, nowPlayingFragment, NOW_PLAYING_FRAGMENT_TAG).commit();
         } else {

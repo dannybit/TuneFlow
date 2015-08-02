@@ -44,7 +44,7 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle extras = getArguments();
-        currentSong = (Song) extras.getParcelable("SONG");
+        currentSong = extras.getParcelable("SONG");
     }
 
     @Override
@@ -68,14 +68,6 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         }
     }
 
-    private void setupActionBar(){
-        ((MainActivity) getActivity()).getSupportActionBar().hide();
-    }
-
-    private void setupDrawer(){
-        ((MainActivity) getActivity()).disableDrawer();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -91,14 +83,15 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         bPlayOrPause = (ImageButton) view.findViewById(R.id.bPlayOrPause);
         bForward = (ImageButton) view.findViewById(R.id.bForward);
         songProgressBar = (SeekBar) view.findViewById(R.id.songProgressBar);
-        songProgressBar.setEnabled(false);
-        songProgressBar.setOnSeekBarChangeListener(this);
+
 
         songName.setText(currentSong.getTrackName());
         currentSong.loadImage(getActivity(), songArtwork);
         currentSong.loadThumbnail(getActivity(), slidingPlayerSongThumbnail);
-        songProgressBar = (SeekBar) view.findViewById(R.id.songProgressBar);
-        songProgressBar.setEnabled(false);
+        if (!getArguments().getBoolean("IS_PLAYING")) {
+            songProgressBar.setEnabled(false);
+        }
+        songProgressBar.setOnSeekBarChangeListener(this);
 
 
         bBackward.setOnClickListener(new View.OnClickListener() {
@@ -162,21 +155,6 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         updateProgressBar();
 
         return view;
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        Log.v("HELLO", "configuration changed");
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        populateViewForOrientation(inflater, (ViewGroup) getView());
-    }
-
-    private void populateViewForOrientation(LayoutInflater inflater, ViewGroup viewGroup){
-        viewGroup.removeAllViewsInLayout();
-        View subview = inflater.inflate(R.layout.fragment_now_playing_landscape, viewGroup);
-
-
     }
 
     public void hideSlidingPlayOrPauseButton(){

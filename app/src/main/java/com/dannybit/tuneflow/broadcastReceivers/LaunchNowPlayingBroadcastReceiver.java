@@ -14,7 +14,6 @@ public class LaunchNowPlayingBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Intent activityIntent = new Intent(context, MainActivity.class);
         activityIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
-        activityIntent.setAction(MainActivity.SWITCH_TO_NOW_PLAYING_ACTION);
         context.startActivity(activityIntent);
     }
 }
