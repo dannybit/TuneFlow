@@ -142,6 +142,7 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
         RequestParams params = new RequestParams();
         params.put("client_id", SoundcloudRestClient.CLIENT_ID);
         params.put("q", query);
+        params.put("limit", 200);
 
         SoundcloudRestClient.get(params, new JsonHttpResponseHandler(){
             @Override
