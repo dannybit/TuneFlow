@@ -92,6 +92,7 @@ public class MainActivity extends ActionBarActivity
     public static MainActivity instance;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -363,7 +364,7 @@ public class MainActivity extends ActionBarActivity
             Bundle extras = new Bundle();
             extras.putParcelable("SONG", song);
             nowPlayingFragment.setArguments(extras);
-            getSupportFragmentManager().beginTransaction().replace(R.id.sliding_container, nowPlayingFragment, NOW_PLAYING_FRAGMENT_TAG).addToBackStack(null).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.sliding_container, nowPlayingFragment, NOW_PLAYING_FRAGMENT_TAG).commit();
         } else {
             updateNowPlayingFragment(song);
         }
