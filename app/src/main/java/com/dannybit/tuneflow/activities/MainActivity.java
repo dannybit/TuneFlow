@@ -342,14 +342,14 @@ public class MainActivity extends ActionBarActivity
             nowPlayingFragment.setArguments(extras);
             getSupportFragmentManager().beginTransaction().replace(R.id.sliding_container, nowPlayingFragment, NOW_PLAYING_FRAGMENT_TAG).commit();
         } else {
-            updateNowPlayingFragment(song);
+            updateNowPlayingFragment(song, isPlaying);
         }
 
 
     }
 
-    private void updateNowPlayingFragment(Song song){
-        nowPlayingFragment.updateSong(song);
+    private void updateNowPlayingFragment(Song song, boolean isPlaying){
+        nowPlayingFragment.updateSong(song, isPlaying);
     }
 
 
@@ -364,7 +364,7 @@ public class MainActivity extends ActionBarActivity
 
     private void nextSongNowPlayingFragment(Song nextSongToPlay){
         if (nowPlayingFragment != null){
-            nowPlayingFragment.updateSong(nextSongToPlay);
+            nowPlayingFragment.updateSong(nextSongToPlay, false);
         } else {
             startNowPlayingFragment(nextSongToPlay);
         }
@@ -523,7 +523,7 @@ public class MainActivity extends ActionBarActivity
         audioService.playBackwardSong();
         onBackwardClicked();
         if (getSupportFragmentManager().findFragmentById(R.id.container) instanceof NowPlayingFragment){
-            nowPlayingFragment.updateSong(getMusicService().getCurrentSong());
+            nowPlayingFragment.updateSong(getMusicService().getCurrentSong(), false);
         }
     }
 

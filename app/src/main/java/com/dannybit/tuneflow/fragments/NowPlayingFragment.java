@@ -89,7 +89,7 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         currentSong.loadImage(getActivity(), songArtwork);
         currentSong.loadThumbnail(getActivity(), slidingPlayerSongThumbnail);
         if (!getArguments().getBoolean("IS_PLAYING")) {
-            songProgressBar.setEnabled(false);
+            songProgressBar.setEnabled(true);
         }
         songProgressBar.setOnSeekBarChangeListener(this);
 
@@ -98,7 +98,7 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
             @Override
             public void onClick(View view) {
                 ((MainActivity) getActivity()).getMusicService().playBackwardSong();
-                updateSong(((MainActivity) getActivity()).getMusicService().getCurrentSong());
+                updateSong(((MainActivity) getActivity()).getMusicService().getCurrentSong(), false);
                 callback.onBackwardClicked();
             }
         });
@@ -141,7 +141,7 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
             public void onClick(View view) {
                 boolean result = ((MainActivity) getActivity()).getMusicService().playForwardSong();
                 if (result) {
-                    updateSong(((MainActivity) getActivity()).getMusicService().getCurrentSong());
+                    updateSong(((MainActivity) getActivity()).getMusicService().getCurrentSong(), false);
                     callback.onForwardClicked();
                 }
 
@@ -165,14 +165,16 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         bSlidingPlayerPlayOrPause.setVisibility(View.VISIBLE);
     }
 
-    public void updateSong(Song newSong){
+    public void updateSong(Song newSong, boolean isPlaying){
         currentSong = newSong;
         songName.setText(currentSong.getTrackName());
         currentSong.loadImage(getActivity(), songArtwork);
         currentSong.loadThumbnail(getActivity(), slidingPlayerSongThumbnail);
         songProgressBar.setProgress(0);
         songProgressBar.setMax(100);
-        disableProgressBar();
+        if (!isPlaying) {
+            disableProgressBar();
+        }
     }
 
     public void updateProgressBar() {
