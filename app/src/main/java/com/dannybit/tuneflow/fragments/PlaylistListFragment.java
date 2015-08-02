@@ -2,10 +2,16 @@ package com.dannybit.tuneflow.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ListView;
 
 import com.dannybit.tuneflow.activities.MainActivity;
@@ -17,13 +23,14 @@ import com.dannybit.tuneflow.views.adapters.PlaylistAdapter;
 import java.util.List;
 
 
-public class PlaylistListFragment extends ListFragment {
+public class PlaylistListFragment extends Fragment implements AdapterView.OnItemClickListener {
 
 
     private PlaylistAdapter adapter;
     private OnPlaylistSelectedListener callback;
     private DatabaseHelper dbHelper;
     private static final String PLAYLIST_FRAGMENT_TITLE = "Playlists";
+    private GridView playlistsGridView;
 
 
     public interface OnPlaylistSelectedListener {
@@ -43,10 +50,18 @@ public class PlaylistListFragment extends ListFragment {
         for (int i = 0; i < playlists.size(); i++){
             adapter.add(playlists.get(i));
         }
-        setListAdapter(adapter);
+
         ((MainActivity) getActivity()).setActionBarTitle(PLAYLIST_FRAGMENT_TITLE);
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_playlists, container, false);
+        playlistsGridView = (GridView) view.findViewById(R.id.playlistsGridview);
+        playlistsGridView.setAdapter(adapter);
+        playlistsGridView.setOnItemClickListener(this);
+        return view;
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -72,8 +87,8 @@ public class PlaylistListFragment extends ListFragment {
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+
         callback.onPlaylistSelected((Playlist) adapter.getItem(position));
     }
 

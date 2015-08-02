@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.network.SoundcloudRestClient;
 import com.dannybit.tuneflow.models.Playlist;
+import com.dannybit.tuneflow.views.SquareImageView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
@@ -31,9 +32,9 @@ public class PlaylistAdapter extends BaseAdapter {
     private Activity context;
 
     static class ViewHolder{
-        public ImageView playlistArt;
+        public SquareImageView playlistArt;
         public TextView playlistName;
-        public TextView playlistSize;
+       // public TextView playlistSize;
 
     }
 
@@ -64,11 +65,11 @@ public class PlaylistAdapter extends BaseAdapter {
 
         if (view == null){
             LayoutInflater vi = LayoutInflater.from(context);
-            view = vi.inflate(R.layout.playlist_row, null);
+            view = vi.inflate(R.layout.playlist_item_grid, null);
             ViewHolder viewHolder = new ViewHolder();
-            viewHolder.playlistArt = (ImageView) view.findViewById(R.id.playlistArt);
-            viewHolder.playlistName = (TextView) view.findViewById(R.id.playlistName);
-            viewHolder.playlistSize = (TextView) view.findViewById(R.id.playlistSize);
+            viewHolder.playlistArt = (SquareImageView) view.findViewById(R.id.playlistArtGridItem);
+            viewHolder.playlistName = (TextView) view.findViewById(R.id.playlistNameGridItem);
+            //viewHolder.playlistSize = (TextView) view.findViewById(R.id.playlistSize);
             view.setTag(viewHolder);
         }
 
@@ -76,12 +77,12 @@ public class PlaylistAdapter extends BaseAdapter {
         final Playlist playlist = playlists.get(position);
 
         if (playlist.getSize() > 0) {
-            Picasso.with(context).load(playlist.getSongs().get(0).getArtworkLink()).error(R.drawable.soundcloud_icon).into(viewHolder.playlistArt);
+            playlist.getSongs().get(0).loadImage(context, viewHolder.playlistArt);
         } else {
-           viewHolder.playlistArt.setImageResource(R.drawable.default_playlist);
+           viewHolder.playlistArt.setImageResource(R.drawable.web_hi_res_512);
         }
         viewHolder.playlistName.setText(playlist.getName());
-        viewHolder.playlistSize.setText(String.format("%d tunes", playlist.getSize()));
+        //viewHolder.playlistSize.setText(String.format("%d tunes", playlist.getSize()));
         return view;
     }
 
