@@ -380,15 +380,7 @@ public class MainActivity extends ActionBarActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.container, nowPlayingFragment, NOW_PLAYING_FRAGMENT_TAG).addToBackStack(null).commit();
     }
 
-    private void startNowPlaylingFragmentFromNotification(Song song){
-        if (nowPlayingFragment == null){
-            nowPlayingFragment = new NowPlayingFragment();
-        }
-        Bundle extras = new Bundle();
-        extras.putParcelable("SONG", song);
-        nowPlayingFragment.setArguments(extras);
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, nowPlayingFragment).commit();
-    }
+
 
     @Override
     public void onPlaylistSelected(Playlist playlist) {
