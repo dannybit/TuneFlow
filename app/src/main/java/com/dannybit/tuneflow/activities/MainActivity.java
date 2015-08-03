@@ -254,15 +254,10 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    private void switchToNowPlayingFragment(){
-        if (nowPlayingFragment != null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, nowPlayingFragment).addToBackStack(null).commit();
-        }
-    }
-
     private void switchToPlaylistsFragment(){
         if (playlistListFragment != null){
             getSupportFragmentManager().beginTransaction().replace(R.id.container, playlistListFragment).commit();
+
         }
     }
 
