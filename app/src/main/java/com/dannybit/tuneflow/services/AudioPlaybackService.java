@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 public class AudioPlaybackService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
 
+    public static final String TAG = "AudioPlaybackService";
     private Context context;
     private MediaPlayer mediaPlayer;
     private int songPosition;
@@ -25,6 +26,8 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
     private final IBinder musicBind = new MusicBinder();
     private SongCompletedListener songCompletedListener;
     private SongPreparedListener songPreparedListener;
+    private boolean duckedFromPlaying;
+
 
 
     public AudioPlaybackService() {
@@ -198,21 +201,31 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
 
                         case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) :
                             // Lower the volume while ducking.
+                            Log.v(TAG, "AUDIO_FOCUS_LOSS_TRANSIENT_CAN_DUCK");
                             mediaPlayer.setVolume(0.2f, 0.2f);
+                            if (isPlaying()) {
+                                duckedFromPlaying = true;
+                            }
                             break;
                         case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) :
+                            Log.v(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
                             pauseSong();
                             break;
 
                         case (AudioManager.AUDIOFOCUS_LOSS) :
+                            Log.v(TAG, "AUDIOFOCUS_LOSS");
                             mediaPlayer.stop();
 
                             break;
 
                         case (AudioManager.AUDIOFOCUS_GAIN) :
+                            Log.v(TAG, "AUDIOFOCUS_GAIN");
                             // Return the volume to normal and resume if paused.
-                            mediaPlayer.setVolume(1f, 1f);
-                            mediaPlayer.start();
+                            if (duckedFromPlaying) {
+                                mediaPlayer.setVolume(1f, 1f);
+                                mediaPlayer.start();
+                                duckedFromPlaying = false;
+                            }
                             break;
                         default: break;
                     }
