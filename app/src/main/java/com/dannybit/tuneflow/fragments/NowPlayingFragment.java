@@ -91,6 +91,7 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         if (!getArguments().getBoolean("IS_PLAYING")) {
             songProgressBar.setEnabled(true);
         }
+
         songProgressBar.setOnSeekBarChangeListener(this);
 
 
@@ -175,6 +176,7 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         if (!isPlaying) {
             disableProgressBar();
         }
+        updateProgressBar();
     }
 
     public void updateProgressBar() {

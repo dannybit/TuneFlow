@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,6 +45,7 @@ public class MainActivity extends ActionBarActivity
         AudioPlaybackService.SongCompletedListener,
         NowPlayingFragment.OnMediaPlayerButtonClickedListener, AudioPlaybackService.SongPreparedListener{
 
+    public static final String TAG = "MainActivityTag";
     /* Used for ActivityResult when starting the SearchActivity */
     public static final int FIND_SOUNDClOUD_SONG_REQUEST = 1;
     public static final int FIND_LOCAL_SONG_REQUEST = 2;
@@ -135,12 +137,14 @@ public class MainActivity extends ActionBarActivity
 
             @Override
             public void onPanelCollapsed(View view) {
+                Log.v(TAG, "Panel Collapsed");
                 hidePlayOrPauseButton();
                 nowPlayingFragmentExpanded = false;
             }
 
             @Override
             public void onPanelExpanded(View view) {
+                Log.v(TAG, "Panel Expanded");
                 showPlayOrPauseButton();
                 nowPlayingFragmentExpanded = true;
             }

@@ -64,7 +64,6 @@ public class SongAdapter extends BaseAdapter {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
         Song song = songs.get(position);
         song.loadImage(context, viewHolder.songArt);
-       // Picasso.with(context).load(song.getArtworkLink()).error(R.drawable.soundcloud_icon).into(viewHolder.songArt);
         viewHolder.songName.setText(song.getTrackName());
         viewHolder.songDuration.setText(song.getDurationInMins());
         return view;

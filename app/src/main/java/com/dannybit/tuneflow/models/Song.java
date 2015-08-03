@@ -10,6 +10,8 @@ import com.dannybit.tuneflow.views.adapters.SongAdapter;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -45,11 +47,7 @@ public abstract class Song implements Parcelable {
 
     public String getDurationInMins(){
         int durationInInt = Integer.parseInt(duration);
-        return String.format("%d:%d",
-                TimeUnit.MILLISECONDS.toMinutes(durationInInt),
-                TimeUnit.MILLISECONDS.toSeconds(durationInInt) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(durationInInt))
-        );
+        return new SimpleDateFormat("mm:ss").format(new Date(durationInInt));
     }
 
     public String getDuration() {

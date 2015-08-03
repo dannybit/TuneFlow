@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class AudioPlaybackService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
 
-    public static final String TAG = "AudioPlaybackService";
+    public static final String TAG = "AudioPlaybackServiceTag";
     private Context context;
     private MediaPlayer mediaPlayer;
     private int songPosition;

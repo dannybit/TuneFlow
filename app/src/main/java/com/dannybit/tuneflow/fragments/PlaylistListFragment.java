@@ -100,7 +100,6 @@ public class PlaylistListFragment extends Fragment implements AdapterView.OnItem
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-
             default:
                 return false;
         }
