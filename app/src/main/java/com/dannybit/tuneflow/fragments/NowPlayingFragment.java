@@ -35,6 +35,8 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
     private OnMediaPlayerButtonClickedListener callback;
     private ImageView slidingPlayerSongThumbnail;
     private ImageButton bSlidingPlayerPlayOrPause;
+    private TextView songCurrentDurationText;
+    private TextView songTotalDurationText;
 
     public NowPlayingFragment() {
         // Required empty public constructor
@@ -83,9 +85,13 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         bPlayOrPause = (ImageButton) view.findViewById(R.id.bPlayOrPause);
         bForward = (ImageButton) view.findViewById(R.id.bForward);
         songProgressBar = (SeekBar) view.findViewById(R.id.songProgressBar);
+        songCurrentDurationText = (TextView) view.findViewById(R.id.songCurrentDurationText);
+        songTotalDurationText = (TextView) view.findViewById(R.id.songTotalDurationText);
 
 
         songName.setText(currentSong.getTrackName());
+        songTotalDurationText.setText(currentSong.getDurationInMins());
+        songCurrentDurationText.setText("00:00");
         currentSong.loadImage(getActivity(), songArtwork);
         currentSong.loadThumbnail(getActivity(), slidingPlayerSongThumbnail);
         if (!getArguments().getBoolean("IS_PLAYING")) {
@@ -169,6 +175,8 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
     public void updateSong(Song newSong, boolean isPlaying){
         currentSong = newSong;
         songName.setText(currentSong.getTrackName());
+        songCurrentDurationText.setText("00:00");
+        songTotalDurationText.setText(currentSong.getDurationInMins());
         currentSong.loadImage(getActivity(), songArtwork);
         currentSong.loadThumbnail(getActivity(), slidingPlayerSongThumbnail);
         songProgressBar.setProgress(0);
@@ -191,6 +199,8 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
             long currentDuration = musicService.getCurrentDuration();
             int progress = (int) getProgressPercentage(currentDuration, totalDuration);
             songProgressBar.setProgress(progress);
+            songCurrentDurationText.setText(musicService.getCurrentDurationInMins());
+
             mHandler.postDelayed(this, 100);
         }
     };

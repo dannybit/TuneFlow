@@ -14,7 +14,9 @@ import android.util.Log;
 
 import com.dannybit.tuneflow.models.Song;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class AudioPlaybackService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
 
@@ -257,6 +259,14 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
 
     public long getCurrentDuration(){
         return mediaPlayer.getCurrentPosition();
+    }
+
+    public String getCurrentDurationInMins(){
+        long duration = getCurrentDuration();
+        if (getCurrentDuration() > getTotalDuration()){
+            duration = getTotalDuration();
+        }
+        return new SimpleDateFormat("mm:ss").format(new Date(duration));
     }
 
     public void seekTo(int position){
