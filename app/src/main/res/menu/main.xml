@@ -1,10 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tuneflow="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/action_add"
-        android:icon="@drawable/ic_add_white_48dp"
-        android:title="@string/action_add"
-        tuneflow:showAsAction="ifRoom"/>
 
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"

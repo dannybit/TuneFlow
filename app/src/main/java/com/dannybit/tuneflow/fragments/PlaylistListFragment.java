@@ -19,11 +19,12 @@ import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.database.DatabaseHelper;
 import com.dannybit.tuneflow.models.Playlist;
 import com.dannybit.tuneflow.views.adapters.PlaylistAdapter;
+import com.melnykov.fab.FloatingActionButton;
 
 import java.util.List;
 
 
-public class PlaylistListFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class PlaylistListFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener {
 
 
     private PlaylistAdapter adapter;
@@ -31,6 +32,7 @@ public class PlaylistListFragment extends Fragment implements AdapterView.OnItem
     private DatabaseHelper dbHelper;
     private static final String PLAYLIST_FRAGMENT_TITLE = "Playlists";
     private GridView playlistsGridView;
+    private FloatingActionButton fabPlaylist;
 
 
     public interface OnPlaylistSelectedListener {
@@ -58,6 +60,9 @@ public class PlaylistListFragment extends Fragment implements AdapterView.OnItem
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_playlists, container, false);
         playlistsGridView = (GridView) view.findViewById(R.id.playlistsGridview);
+        fabPlaylist = (FloatingActionButton) view.findViewById(R.id.fabPlaylist);
+        fabPlaylist.attachToListView(playlistsGridView);
+        fabPlaylist.setOnClickListener(this);
         playlistsGridView.setAdapter(adapter);
         playlistsGridView.setOnItemClickListener(this);
         return view;
@@ -95,13 +100,16 @@ public class PlaylistListFragment extends Fragment implements AdapterView.OnItem
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.action_add:
-                addNewPlaylist();
-                return true;
+
             default:
                 return false;
         }
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        addNewPlaylist();
     }
 
     private void addNewPlaylist(){
