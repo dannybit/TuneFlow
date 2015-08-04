@@ -55,8 +55,8 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
     }
 
     public interface OnMediaPlayerButtonClickedListener {
-        public void onForwardClicked();
-        public void onBackwardClicked();
+        void onForwardClicked();
+        void onBackwardClicked();
     }
 
     @Override

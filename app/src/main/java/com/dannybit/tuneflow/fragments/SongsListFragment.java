@@ -46,18 +46,24 @@ public class SongsListFragment extends ListFragment implements View.OnClickListe
         webSelectionFragment = new WebsiteSelectionDialogFragment();
         // Needed to intercept menu click
         setHasOptionsMenu(true);
-        adapter = new SongAdapter(getActivity());
         Bundle extras = getArguments();
         songs = extras.getParcelableArrayList("SONGS");
         playListName = extras.getString("PLAYLIST_NAME");
-        ((MainActivity) getActivity()).setActionBarTitle(playListName);
+        setupAdapter();
+        setupActionBarTitle();
+    }
+
+    private void setupAdapter(){
+        adapter = new SongAdapter(getActivity());
         setListAdapter(adapter);
 
         for (int i = 0; i < songs.size(); i++){
             adapter.add(songs.get(i));
-            adapter.notifyDataSetChanged();
         }
+    }
 
+    private void setupActionBarTitle(){
+        ((MainActivity) getActivity()).setActionBarTitle(playListName);
     }
 
     @Override
@@ -137,7 +143,7 @@ public class SongsListFragment extends ListFragment implements View.OnClickListe
 
     public interface OnSongSelectedListener {
 
-        public void onSongSelected(ArrayList<Song> songs, int position);
+        void onSongSelected(ArrayList<Song> songs, int position);
     }
 
     public SongAdapter getAdapter(){
@@ -145,7 +151,6 @@ public class SongsListFragment extends ListFragment implements View.OnClickListe
     }
 
     public void addSongToList(Song song){
-        Log.v("HELLO", "added song: " + song.toString());
         getAdapter().add(song);
         getAdapter().notifyDataSetChanged();
         songs.add(song);

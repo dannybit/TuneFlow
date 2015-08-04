@@ -74,8 +74,7 @@ public class SearchSoundcloudFragment extends ListFragment {
     }
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Song song);
+        void onFragmentInteraction(Song song);
     }
 
 

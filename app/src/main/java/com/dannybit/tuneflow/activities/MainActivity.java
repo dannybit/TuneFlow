@@ -1,6 +1,5 @@
 package com.dannybit.tuneflow.activities;
 
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -45,7 +44,7 @@ public class MainActivity extends ActionBarActivity
         AudioPlaybackService.SongCompletedListener,
         NowPlayingFragment.OnMediaPlayerButtonClickedListener, AudioPlaybackService.SongPreparedListener{
 
-    public static final String TAG = "MainActivityTag";
+    public static final String TAG = MainActivity.class.getName();
     /* Used for ActivityResult when starting the SearchActivity */
     public static final int FIND_SOUNDClOUD_SONG_REQUEST = 1;
     public static final int FIND_LOCAL_SONG_REQUEST = 2;
@@ -101,7 +100,7 @@ public class MainActivity extends ActionBarActivity
 
         /* Initial setup */
         setupSlidingPlayer();
-        initToolbar();
+        setupToolbar();
         setupDrawer();
         setupDraggableFragment();
 
@@ -109,14 +108,12 @@ public class MainActivity extends ActionBarActivity
             // Create a new playlist fragment and add it to the activity
             startPlaylistsFragment();
         } else {
-            // Get PlaylistListFragment reference
-            restorePlaylistsFragment();
-            // Get SongsListFragment reference
-            restoreSongsListFragment();
-            // Get NowPlayingFramgnet reference
-            restoreNowPlayingFragment();
+            // Restore fragment references lost at runtime change
+            restorePlaylistsFragmentReference();
+            restoreSongsListFragmentReference();
+            restoreNowPlayingFragmentReference();
 
-            // Restore variables
+            // Restore variables lost at runtime change
             currentPlaylistId = savedInstanceState.getLong("CURRENT_PLAYLIST_ID");
             songSelected = savedInstanceState.getBoolean("SONG_SELECTED");
 
@@ -213,7 +210,7 @@ public class MainActivity extends ActionBarActivity
     };
 
 
-    private void initToolbar(){
+    private void setupToolbar(){
         mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(mToolbar);
     }
@@ -227,19 +224,19 @@ public class MainActivity extends ActionBarActivity
 
 
 
-    private void restorePlaylistsFragment(){
+    private void restorePlaylistsFragmentReference(){
         playlistListFragment = (PlaylistListFragment) getSupportFragmentManager().findFragmentByTag(PLAYLIST_FRAGMENT_TAG);
 
     }
 
-    private void restoreSongsListFragment(){
+    private void restoreSongsListFragmentReference(){
         SongsListFragment songsListFragment = (SongsListFragment) getSupportFragmentManager().findFragmentByTag(SONGS_LIST_FRAGMENT_TAG);
         if (songsListFragment != null){
             currentSongsListFragment = songsListFragment;
         }
     }
 
-    private void restoreNowPlayingFragment(){
+    private void restoreNowPlayingFragmentReference(){
         NowPlayingFragment restoredNowPlayingFragment = (NowPlayingFragment) getSupportFragmentManager().findFragmentByTag(NOW_PLAYING_FRAGMENT_TAG);
         if (restoredNowPlayingFragment != null){
             nowPlayingFragment = restoredNowPlayingFragment;
@@ -493,9 +490,6 @@ public class MainActivity extends ActionBarActivity
     }
 
     private void startNotification(Song song){
-        Intent intent = new Intent(this, MainActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
         NowPlayingNotification nowPlayingNotification = new NowPlayingNotification(this);
         nowPlayingNotification.createNowPlayingNotification(song, getMusicService().isPlaying());
     }

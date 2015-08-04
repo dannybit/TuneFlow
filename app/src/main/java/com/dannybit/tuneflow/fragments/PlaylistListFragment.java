@@ -36,7 +36,7 @@ public class PlaylistListFragment extends Fragment implements AdapterView.OnItem
 
 
     public interface OnPlaylistSelectedListener {
-        public void onPlaylistSelected(Playlist playlist);
+        void onPlaylistSelected(Playlist playlist);
     }
 
     public PlaylistListFragment() {
@@ -46,14 +46,9 @@ public class PlaylistListFragment extends Fragment implements AdapterView.OnItem
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        adapter = new PlaylistAdapter(getActivity());
         dbHelper = DatabaseHelper.getInstance(getActivity());
-        List<Playlist> playlists = dbHelper.getAllPlaylist();
-        for (int i = 0; i < playlists.size(); i++){
-            adapter.add(playlists.get(i));
-        }
-
-        ((MainActivity) getActivity()).setActionBarTitle(PLAYLIST_FRAGMENT_TITLE);
+        setupAdapter();
+        setupActionBarTitle();
     }
 
     @Override
@@ -76,6 +71,18 @@ public class PlaylistListFragment extends Fragment implements AdapterView.OnItem
         } catch (ClassCastException e){
          throw new ClassCastException(activity.toString() + " must implement OnPlaylistSelectedListener");
         }
+    }
+
+    private void setupAdapter(){
+        adapter = new PlaylistAdapter(getActivity());
+        List<Playlist> playlists = dbHelper.getAllPlaylist();
+        for (int i = 0; i < playlists.size(); i++){
+            adapter.add(playlists.get(i));
+        }
+    }
+
+    private void setupActionBarTitle(){
+        ((MainActivity) getActivity()).setActionBarTitle(PLAYLIST_FRAGMENT_TITLE);
     }
 
 
