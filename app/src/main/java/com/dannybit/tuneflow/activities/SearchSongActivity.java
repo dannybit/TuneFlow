@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.dannybit.tuneflow.R;
+import com.dannybit.tuneflow.fragments.search.SearchLocalFragment;
 import com.dannybit.tuneflow.fragments.search.SearchSoundcloudFragment;
 import com.dannybit.tuneflow.fragments.search.WebsiteSelection;
 import com.dannybit.tuneflow.models.LocalSong;
@@ -43,7 +44,9 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
     private WebsiteSelection websiteSelection;
     private Toolbar toolbar;
     private SearchSoundcloudFragment searchSoundcloudFragment;
-    private static final String SEARCH_LIST_FRAGMENT_TAG = "SEARCH_LIST_FRAGMENT";
+    private SearchLocalFragment searchLocalFragment;
+    private static final String SEARCH_LIST_SOUNDCLOUD_FRAGMENT_TAG = "SEARCH_LIST_SOUNDCLOUD_FRAGMENT";
+    private static final String SEARCH_LIST_LOCAL_FRAGMENT_TAG = "SEARCH_LIST_LOCAL_FRAGMENT";
 
 
     @Override
@@ -58,14 +61,23 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
         else {
             websiteSelection = (WebsiteSelection) savedInstanceState.getSerializable("SELECTION");
         }
+
         if (savedInstanceState == null) {
-            searchSoundcloudFragment = new SearchSoundcloudFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.search_container, searchSoundcloudFragment, SEARCH_LIST_FRAGMENT_TAG).commit();
+            if (websiteSelection.equals(WebsiteSelection.SOUNDCLOUD)) {
+                searchSoundcloudFragment = new SearchSoundcloudFragment();
+                getSupportFragmentManager().beginTransaction().add(R.id.search_container, searchSoundcloudFragment, SEARCH_LIST_SOUNDCLOUD_FRAGMENT_TAG).commit();
+            }
+            else if (websiteSelection.equals(WebsiteSelection.LOCAL)){
+                searchLocalFragment = new SearchLocalFragment();
+                getSupportFragmentManager().beginTransaction().add(R.id.search_container, searchLocalFragment, SEARCH_LIST_LOCAL_FRAGMENT_TAG).commit();
+            }
+
             // Get the intent, verify the action and get the query
             Intent intent = getIntent();
             handleIntent(intent);
         } else {
-           restoreSearchSoundcloudFragmentReference();
+            restoreSearchSoundcloudFragmentReference();
+            restoreSearchLocalFragmentReference();
         }
     }
 
@@ -83,7 +95,11 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
     }
 
     private void restoreSearchSoundcloudFragmentReference(){
-        searchSoundcloudFragment = (SearchSoundcloudFragment) getSupportFragmentManager().findFragmentByTag(SEARCH_LIST_FRAGMENT_TAG);
+        searchSoundcloudFragment = (SearchSoundcloudFragment) getSupportFragmentManager().findFragmentByTag(SEARCH_LIST_SOUNDCLOUD_FRAGMENT_TAG);
+    }
+
+    private void restoreSearchLocalFragmentReference(){
+        searchLocalFragment = (SearchLocalFragment) getSupportFragmentManager().findFragmentByTag(SEARCH_LIST_LOCAL_FRAGMENT_TAG);
     }
 
     private void setupToolbar(){
