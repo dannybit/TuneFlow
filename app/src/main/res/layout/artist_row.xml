@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    
+
     <ImageView
-        android:id="@+id/songArt"
+        android:id="@+id/artistArt"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:padding="5dp"
@@ -15,20 +15,20 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/songName"
+        android:id="@+id/artistName"
         android:textColor="#040404"
         android:textSize="15dip"
-        android:layout_toRightOf="@id/songArt"
+        android:layout_toRightOf="@id/artistArt"
         android:layout_centerVertical="true"
         android:layout_marginLeft="5dp"
         android:padding="5dp"/>
 
     <TextView
-        android:id="@+id/songDuration"
+        android:id="@+id/artistNumberOfSongs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/songName"
+        android:layout_alignTop="@id/artistName"
         android:textSize="10dip"
         android:textColor="#040404"
         android:layout_marginLeft="5dp"

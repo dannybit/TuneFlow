@@ -1,38 +1,35 @@
 package com.dannybit.tuneflow.fragments.search;
 
 import android.app.Activity;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-
+import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.database.LocalLibrary;
-import com.dannybit.tuneflow.fragments.search.adapters.SearchLocalSongsAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.dannybit.tuneflow.fragments.search.adapters.SearchLocalArtistsAdapter;
 
 
-public class SearchLocalSongsListFragment extends ListFragment {
+public class SearchLocalArtistsListFragment extends ListFragment {
 
 
-    private SearchLocalSongsAdapter adapter;
+    private SearchLocalArtistsAdapter adapter;
     private LocalLibrary localLibrary;
 
-    public SearchLocalSongsListFragment() {
+    public SearchLocalArtistsListFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         localLibrary = new LocalLibrary(getActivity().getContentResolver());
-        adapter = new SearchLocalSongsAdapter(getActivity(), localLibrary.getSongs());
+        adapter = new SearchLocalArtistsAdapter(getActivity(), localLibrary.getArtists());
         setListAdapter(adapter);
     }
+
+
 
 
 

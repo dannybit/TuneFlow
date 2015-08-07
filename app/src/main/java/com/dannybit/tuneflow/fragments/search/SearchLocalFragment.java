@@ -46,7 +46,6 @@ public class SearchLocalFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.v("HELLO", "onCreateView");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search_local, container, false);
         pager = (ViewPager) view.findViewById(R.id.pager);
@@ -70,7 +69,18 @@ public class SearchLocalFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-           return new SearchLocalSongsListFragment();
+            switch (position) {
+                case 0:
+                    return new SearchLocalSongsListFragment();
+                case 1:
+                    return new SearchLocalArtistsListFragment();
+                case 2:
+                    return new SearchLocalSongsListFragment();
+                default:
+                    return null;
+
+
+            }
         }
 
         @Override

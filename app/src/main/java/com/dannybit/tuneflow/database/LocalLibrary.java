@@ -1,0 +1,138 @@
+package com.dannybit.tuneflow.database;
+
+import android.content.ContentResolver;
+import android.database.Cursor;
+import android.provider.BaseColumns;
+import android.provider.MediaStore;
+import android.util.Log;
+
+import com.dannybit.tuneflow.models.Album;
+import com.dannybit.tuneflow.models.Artist;
+import com.dannybit.tuneflow.models.LocalSong;
+import com.dannybit.tuneflow.models.Playlist;
+import com.dannybit.tuneflow.models.Song;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by danielnamdar on 8/6/15.
+ *
+ * // thanks:
+ // https://github.com/CyanogenMod/android_packages_apps_Apollo/tree/cm-11.0/src/com/andrew/apollo
+ */
+public class LocalLibrary {
+    private ContentResolver resolver;
+
+    public LocalLibrary(ContentResolver resolver) {
+        this.resolver = resolver;
+    }
+
+
+
+    private final Cursor makeSongCursor(){
+        //Some audio may be explicitly marked as not being music
+        String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
+
+        String[] projection = {
+                MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.DISPLAY_NAME,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.ALBUM_ID,
+
+        };
+
+        return resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                projection,
+                selection,
+                null,
+                null
+                );
+    }
+
+    public ArrayList<LocalSong> getSongs(){
+        ArrayList<LocalSong> songs = new ArrayList<>();
+        Cursor cursor = makeSongCursor();
+        if (cursor != null && cursor.moveToFirst()){
+            do {
+                final long id = cursor.getLong(0);
+                final String title = cursor.getString(2);
+                final String duration = cursor.getString(5);
+                final long albumId = cursor.getLong(6);
+                LocalSong localSong = new LocalSong();
+                localSong.setId(id);
+                localSong.setTrackName(title);
+                localSong.setDuration(duration);
+
+
+                localSong.setArtworkLink(getAlbumArtUri(albumId));
+                songs.add(localSong);
+            } while (cursor.moveToNext());
+        }
+
+        if (cursor != null) {
+            cursor.close();
+            cursor = null;
+        }
+        return songs;
+    }
+
+    private String getAlbumArtUri(long albumId){
+        Cursor imageCursor = resolver.query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                new String[] {MediaStore.Audio.AlbumColumns.ALBUM_ART},
+                MediaStore.Audio.Media._ID+" =?",
+                new String[]{String.valueOf(albumId)},
+                null);
+        imageCursor.moveToFirst();
+        return imageCursor.getString(0);
+    }
+
+
+    private final Cursor makeArtistCursor() {
+        return resolver.query(MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
+                new String[] {
+                        BaseColumns._ID,
+                        MediaStore.Audio.ArtistColumns.ARTIST,
+                        MediaStore.Audio.ArtistColumns.NUMBER_OF_ALBUMS,
+                        MediaStore.Audio.ArtistColumns.NUMBER_OF_TRACKS
+                }, null, null, MediaStore.Audio.Artists.DEFAULT_SORT_ORDER);
+    }
+
+    public ArrayList<Artist> getArtists() {
+        ArrayList<Artist> artists = new ArrayList<Artist>();
+        Cursor cursor = makeArtistCursor();
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                final long id = cursor.getLong(0);
+                final String artistName = cursor.getString(1);
+                final int albumCount = cursor.getInt(2);
+                final int songCount = cursor.getInt(3);
+                final Artist artist = new Artist(id, artistName, songCount, albumCount);
+                artists.add(artist);
+
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null) {
+            cursor.close();
+            cursor = null;
+        }
+        return artists;
+    }
+
+    private final Cursor makeArtistAlbumCursor(final Long artistId) {
+        return resolver.query(MediaStore.Audio.Artists.Albums.getContentUri("external", artistId),
+                new String[] {
+                        BaseColumns._ID,
+          MediaStore.Audio.AlbumColumns.ALBUM,
+                        MediaStore.Audio.AlbumColumns.ALBUM_ART,
+          MediaStore.Audio.AlbumColumns.ARTIST,
+          MediaStore.Audio.AlbumColumns.NUMBER_OF_SONGS,
+          MediaStore.Audio.AlbumColumns.FIRST_YEAR
+
+                }, null, null, MediaStore.Audio.Albums.DEFAULT_SORT_ORDER);
+    }
+
+}
