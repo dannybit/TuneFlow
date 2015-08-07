@@ -75,7 +75,7 @@ public class SearchLocalFragment extends Fragment {
                 case 1:
                     return new SearchLocalArtistsListFragment();
                 case 2:
-                    return new SearchLocalSongsListFragment();
+                    return new SearchLocalAlbumsListFragment();
                 default:
                     return null;
 

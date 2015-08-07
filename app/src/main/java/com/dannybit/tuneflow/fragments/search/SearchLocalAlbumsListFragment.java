@@ -9,24 +9,25 @@ import android.widget.ListView;
 
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.database.LocalLibrary;
-import com.dannybit.tuneflow.fragments.search.adapters.SearchLocalArtistsAdapter;
+import com.dannybit.tuneflow.fragments.search.adapters.SearchLocalAlbumsAdapter;
+
+public class SearchLocalAlbumsListFragment extends ListFragment {
 
 
-public class SearchLocalArtistsListFragment extends ListFragment {
-
-
-    private SearchLocalArtistsAdapter adapter;
     private LocalLibrary localLibrary;
+    private SearchLocalAlbumsAdapter adapter;
 
-    public SearchLocalArtistsListFragment() {
+    public SearchLocalAlbumsListFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         localLibrary = new LocalLibrary(getActivity().getContentResolver());
-        adapter = new SearchLocalArtistsAdapter(getActivity(), localLibrary.getArtists());
+        adapter = new SearchLocalAlbumsAdapter(getActivity(), localLibrary.getAlbums(null));
         setListAdapter(adapter);
     }
+
 
 }

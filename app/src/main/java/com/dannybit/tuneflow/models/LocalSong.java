@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.widget.ImageView;
 
+import com.dannybit.tuneflow.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -42,7 +43,7 @@ public class LocalSong extends Song {
         if (getArtworkLink() != null) {
             Picasso.with(context).load(new File(getArtworkLink())).into(imageView);
         } else {
-            // load default image
+            Picasso.with(context).load(R.drawable.web_hi_res_512).into(imageView);
         }
     }
 

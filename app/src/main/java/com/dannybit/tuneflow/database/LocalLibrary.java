@@ -93,7 +93,7 @@ public class LocalLibrary {
 
     private final Cursor makeArtistCursor() {
         return resolver.query(MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
-                new String[] {
+                new String[]{
                         BaseColumns._ID,
                         MediaStore.Audio.ArtistColumns.ARTIST,
                         MediaStore.Audio.ArtistColumns.NUMBER_OF_ALBUMS,
@@ -122,17 +122,55 @@ public class LocalLibrary {
         return artists;
     }
 
+    private final Cursor makeAlbumCursor() {
+        return resolver.query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                new String[] {
+            BaseColumns._ID,
+                        MediaStore.Audio.AlbumColumns.ALBUM,
+                        MediaStore.Audio.AlbumColumns.ARTIST,
+                        MediaStore.Audio.AlbumColumns.ALBUM_ART,
+                        MediaStore.Audio.AlbumColumns.NUMBER_OF_SONGS,
+                }, null, null, MediaStore.Audio.Albums.DEFAULT_SORT_ORDER);
+    }
+
     private final Cursor makeArtistAlbumCursor(final Long artistId) {
         return resolver.query(MediaStore.Audio.Artists.Albums.getContentUri("external", artistId),
                 new String[] {
                         BaseColumns._ID,
-          MediaStore.Audio.AlbumColumns.ALBUM,
+                        MediaStore.Audio.AlbumColumns.ALBUM,
+                        MediaStore.Audio.AlbumColumns.ARTIST,
                         MediaStore.Audio.AlbumColumns.ALBUM_ART,
-          MediaStore.Audio.AlbumColumns.ARTIST,
-          MediaStore.Audio.AlbumColumns.NUMBER_OF_SONGS,
-          MediaStore.Audio.AlbumColumns.FIRST_YEAR
+                        MediaStore.Audio.AlbumColumns.NUMBER_OF_SONGS,
 
                 }, null, null, MediaStore.Audio.Albums.DEFAULT_SORT_ORDER);
     }
+
+    public ArrayList<Album> getAlbums(final Long artistId) {
+        ArrayList<Album> albums = new ArrayList<Album>();
+        Cursor cursor;
+        if (artistId != null) {
+            cursor = makeArtistAlbumCursor(artistId);
+        } else {
+            cursor = makeAlbumCursor();
+        }
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                final long id = cursor.getLong(0);
+                final String albumName = cursor.getString(1);
+                final String artist = cursor.getString(2);
+                final String albumArt = cursor.getString(3);
+                final int songCount = cursor.getInt(4);
+                final Album album = new Album(id, albumName,artist, albumArt, songCount);
+                albums.add(album);
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null) {
+            cursor.close();
+            cursor = null;
+        }
+        return albums;
+    }
+
+
 
 }
