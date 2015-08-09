@@ -95,7 +95,6 @@ public class SearchLocalFragment extends Fragment {
     }
 
     public void performQuery(String query){
-        Log.v("HELLO", " " + currentFragmentPosition);
         switch (currentFragmentPosition){
             case 0:
                 ((SearchLocalSongsListFragment) pagerAdapter.getCurrentFragment()).filter(query);

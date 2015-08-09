@@ -80,9 +80,10 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
                 getSupportFragmentManager().beginTransaction().add(R.id.search_container, searchLocalFragment, SEARCH_LIST_LOCAL_FRAGMENT_TAG).commit();
             }
 
-            // Get the intent, verify the action and get the query
+            /*
             Intent intent = getIntent();
             handleIntent(intent);
+            */
         } else {
             restoreSearchSoundcloudFragmentReference();
             restoreSearchLocalFragmentReference();
@@ -142,10 +143,16 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
         }
     }
 
-    public void localSongSearch(String query){
-        if (query == null || query.isEmpty()){
-            return;
+    public void performSearch(String query){
+        if (websiteSelection.equals(WebsiteSelection.SOUNDCLOUD)) {
+            soundcloudSongSearch(query);
         }
+        else if (websiteSelection.equals(WebsiteSelection.LOCAL)){
+            localSongSearch(query);
+        }
+    }
+
+    public void localSongSearch(String query){
         if (searchLocalFragment != null){
             searchLocalFragment.performQuery(query);
         }
@@ -246,12 +253,21 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_search_song, menu);
         // Associate searchable configuration with the SearchView
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView =
                 (SearchView) menu.findItem(R.id.search_view).getActionView();
-        ComponentName cn = new ComponentName(this, SearchSongActivity.class);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                performSearch(s);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                performSearch(s);
+                return true;
+            }
+        });
         searchView.onActionViewExpanded();
         return true;
     }

@@ -105,8 +105,14 @@ public class SearchLocalSongsAdapter extends BaseAdapter implements Filterable {
 
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-
+                Log.v("HELLO", constraint.toString());
                 FilterResults results = new FilterResults();
+                if (constraint == null || constraint.toString().isEmpty()){
+
+                    results.count = allSongs.size();
+                    results.values = allSongs;
+                    return results;
+                }
                 ArrayList<LocalSong> filteredLocalSongs = new ArrayList<LocalSong>();
 
                 // perform your search here using the searchConstraint String.
