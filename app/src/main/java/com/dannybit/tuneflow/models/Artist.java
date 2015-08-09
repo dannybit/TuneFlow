@@ -1,9 +1,12 @@
 package com.dannybit.tuneflow.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by danielnamdar on 8/6/15.
  */
-public class Artist {
+public class Artist implements Parcelable {
 
     private long id;
     private String artistName;
@@ -48,4 +51,37 @@ public class Artist {
     public void setSongCount(int songCount) {
         this.songCount = songCount;
     }
+
+    protected Artist(Parcel in) {
+        id = in.readLong();
+        artistName = in.readString();
+        albumCount = in.readInt();
+        songCount = in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(artistName);
+        dest.writeInt(albumCount);
+        dest.writeInt(songCount);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Artist> CREATOR = new Parcelable.Creator<Artist>() {
+        @Override
+        public Artist createFromParcel(Parcel in) {
+            return new Artist(in);
+        }
+
+        @Override
+        public Artist[] newArray(int size) {
+            return new Artist[size];
+        }
+    };
 }

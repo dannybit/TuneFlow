@@ -1,6 +1,8 @@
 package com.dannybit.tuneflow.models;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.widget.ImageView;
 
 import com.dannybit.tuneflow.R;
@@ -11,7 +13,7 @@ import java.io.File;
 /**
  * Created by danielnamdar on 8/6/15.
  */
-public class Album {
+public class Album implements Parcelable {
 
 
     private long id;
@@ -77,4 +79,39 @@ public class Album {
         }
     }
 
+
+    protected Album(Parcel in) {
+        id = in.readLong();
+        name = in.readString();
+        albumArtUri = in.readString();
+        artist = in.readString();
+        songCount = in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(name);
+        dest.writeString(albumArtUri);
+        dest.writeString(artist);
+        dest.writeInt(songCount);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Album> CREATOR = new Parcelable.Creator<Album>() {
+        @Override
+        public Album createFromParcel(Parcel in) {
+            return new Album(in);
+        }
+
+        @Override
+        public Album[] newArray(int size) {
+            return new Album[size];
+        }
+    };
 }

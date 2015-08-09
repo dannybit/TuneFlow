@@ -15,9 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.dannybit.tuneflow.BusProvider;
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.activities.SearchSongActivity;
+import com.dannybit.tuneflow.events.LocalSongClickedEvent;
 import com.dannybit.tuneflow.fragments.NowPlayingFragment;
+import com.squareup.otto.Subscribe;
 
 
 public class SearchLocalFragment extends Fragment {
@@ -42,6 +45,19 @@ public class SearchLocalFragment extends Fragment {
 
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        BusProvider.getInstance().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        BusProvider.getInstance().unregister(this);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -60,12 +60,68 @@ public class LocalLibrary {
             do {
                 final long id = cursor.getLong(0);
                 final String title = cursor.getString(2);
+                final String data = cursor.getString(3);
                 final String duration = cursor.getString(5);
                 final long albumId = cursor.getLong(6);
+
                 LocalSong localSong = new LocalSong();
                 localSong.setId(id);
                 localSong.setTrackName(title);
                 localSong.setDuration(duration);
+                localSong.setUrl(data);
+
+
+                localSong.setArtworkLink(getAlbumArtUri(albumId));
+                songs.add(localSong);
+            } while (cursor.moveToNext());
+        }
+
+        if (cursor != null) {
+            cursor.close();
+            cursor = null;
+        }
+        return songs;
+    }
+
+    private final Cursor makeArtistSongCursor(long artistId){
+        final StringBuilder selection = new StringBuilder();
+        selection.append(MediaStore.Audio.AudioColumns.IS_MUSIC + "=1");
+        selection.append(" AND " + MediaStore.Audio.AudioColumns.ARTIST_ID + "=" + artistId);
+        String[] projection = {
+                MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.DISPLAY_NAME,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.ALBUM_ID,
+
+        };
+
+        return resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                projection,
+                selection.toString(),
+                null,
+                null
+        );
+    }
+
+    public ArrayList<LocalSong> getArtistSongs(long artistId){
+        ArrayList<LocalSong> songs = new ArrayList<>();
+        Cursor cursor = makeArtistSongCursor(artistId);
+        if (cursor != null && cursor.moveToFirst()){
+            do {
+                final long id = cursor.getLong(0);
+                final String title = cursor.getString(2);
+                final String data = cursor.getString(3);
+                final String duration = cursor.getString(5);
+                final long albumId = cursor.getLong(6);
+
+                LocalSong localSong = new LocalSong();
+                localSong.setId(id);
+                localSong.setTrackName(title);
+                localSong.setDuration(duration);
+                localSong.setUrl(data);
 
 
                 localSong.setArtworkLink(getAlbumArtUri(albumId));
@@ -169,6 +225,47 @@ public class LocalLibrary {
             cursor = null;
         }
         return albums;
+    }
+
+
+    private final Cursor makeAlbumSongCursor(final Long albumId) {
+        final StringBuilder selection = new StringBuilder();
+        selection.append(MediaStore.Audio.AudioColumns.IS_MUSIC + "=1");
+        selection.append(" AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''");
+        selection.append(" AND " + MediaStore.Audio.AudioColumns.ALBUM_ID + "=" + albumId);
+        return resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                new String[] {
+          /* 0 */ MediaStore.Audio.Media._ID,
+                        MediaStore.Audio.Media.TITLE,
+                        MediaStore.Audio.Media.DATA,
+                        MediaStore.Audio.Media.DURATION
+                }, selection.toString(), null, MediaStore.Audio.Media.TRACK + ", " + MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+    }
+
+    public ArrayList<LocalSong> getAlbumSongs(final Long albumId) {
+        ArrayList<LocalSong> localSongs = new ArrayList<LocalSong>();
+        Cursor cursor = makeAlbumSongCursor(albumId);
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                final long id = cursor.getLong(0);
+                final String songName = cursor.getString(1);
+                final String songUrl = cursor.getString(2);
+                final String duration = cursor.getString(3);
+
+                LocalSong localSong = new LocalSong();
+                localSong.setId(id);
+                localSong.setTrackName(songName);
+                localSong.setDuration(duration);
+                localSong.setUrl(songUrl);
+
+                localSongs.add(localSong);
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null) {
+            cursor.close();
+            cursor = null;
+        }
+        return localSongs;
     }
 
 

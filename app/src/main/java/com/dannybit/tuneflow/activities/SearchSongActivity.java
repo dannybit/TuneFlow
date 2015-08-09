@@ -9,18 +9,25 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.transition.VisibilityPropagation;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.dannybit.tuneflow.BusProvider;
 import com.dannybit.tuneflow.R;
+import com.dannybit.tuneflow.events.LocalAlbumClickedEvent;
+import com.dannybit.tuneflow.events.LocalArtistClickedEvent;
+import com.dannybit.tuneflow.events.LocalSongClickedEvent;
 import com.dannybit.tuneflow.fragments.search.SearchLocalFragment;
+import com.dannybit.tuneflow.fragments.search.SearchLocalSongsListFragment;
 import com.dannybit.tuneflow.fragments.search.SearchSoundcloudFragment;
 import com.dannybit.tuneflow.fragments.search.WebsiteSelection;
 import com.dannybit.tuneflow.models.LocalSong;
@@ -29,6 +36,7 @@ import com.dannybit.tuneflow.models.SoundcloudSong;
 import com.dannybit.tuneflow.network.SoundcloudRestClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.squareup.otto.Subscribe;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -47,7 +55,7 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
     private SearchLocalFragment searchLocalFragment;
     private static final String SEARCH_LIST_SOUNDCLOUD_FRAGMENT_TAG = "SEARCH_LIST_SOUNDCLOUD_FRAGMENT";
     private static final String SEARCH_LIST_LOCAL_FRAGMENT_TAG = "SEARCH_LIST_LOCAL_FRAGMENT";
-
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +87,18 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
             restoreSearchSoundcloudFragmentReference();
             restoreSearchLocalFragmentReference();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BusProvider.getInstance().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BusProvider.getInstance().unregister(this);
     }
 
     @Override
@@ -165,7 +185,7 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
         params.put("q", query);
         params.put("limit", 200);
 
-        SoundcloudRestClient.get(params, new JsonHttpResponseHandler(){
+        SoundcloudRestClient.get(params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
@@ -182,7 +202,7 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
                 int length = response.length();
                 searchSoundcloudFragment.getAdapter().clear();
 
-                for (int i = 0; i < length; i++){
+                for (int i = 0; i < length; i++) {
 
                     SoundcloudSong song = new SoundcloudSong();
                     try {
@@ -194,7 +214,7 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
                         song.setUrl(addClientIdToUrl(jsonSong.getString("stream_url")));
 
 
-                    } catch (JSONException e){
+                    } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     searchSoundcloudFragment.getAdapter().add(song);
@@ -216,8 +236,39 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
         finish();
     }
 
+    @Subscribe
+    public void onLocalSongClicked(LocalSongClickedEvent localSongClickedEvent){
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("result", localSongClickedEvent.getSong());
+        setResult(RESULT_OK, returnIntent);
+        finish();
+    }
+
+    @Subscribe
+    public void onLocalArtistClicked(LocalArtistClickedEvent localArtistClickedEvent){
+        SearchLocalSongsListFragment searchLocalSongsListFragment = new SearchLocalSongsListFragment();
+        Bundle args = new Bundle();
+        args.putParcelable("ARTIST", localArtistClickedEvent.getArtist());
+        searchLocalSongsListFragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchLocalSongsListFragment).addToBackStack(null).commit();
+        menu.findItem(R.id.search_view).setVisible(false);
+    }
+
+    @Subscribe
+    public void onLocalAlbumClicked(LocalAlbumClickedEvent localAlbumClickedEvent){
+        SearchLocalSongsListFragment searchLocalSongsListFragment = new SearchLocalSongsListFragment();
+        Bundle args = new Bundle();
+        args.putParcelable("ALBUM", localAlbumClickedEvent.getAlbum());
+        searchLocalSongsListFragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchLocalSongsListFragment).addToBackStack(null).commit();
+        menu.findItem(R.id.search_view).setVisible(false);
+    }
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_search_song, menu);
         // Associate searchable configuration with the SearchView
@@ -233,7 +284,6 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.v("hello", "clicked");
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -253,5 +303,17 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
 
     public String addClientIdToUrl(String url){
         return url + "?client_id=" + SoundcloudRestClient.CLIENT_ID;
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+
+            getSupportFragmentManager().popBackStack();
+            menu.findItem(R.id.search_view).setVisible(true);
+        } else {
+            super.onBackPressed();
+        }
     }
 }
