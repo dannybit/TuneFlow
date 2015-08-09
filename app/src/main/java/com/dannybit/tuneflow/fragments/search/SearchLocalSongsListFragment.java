@@ -58,4 +58,8 @@ public class SearchLocalSongsListFragment extends ListFragment {
         super.onListItemClick(l, v, position, id);
         BusProvider.getInstance().post(new LocalSongClickedEvent((LocalSong) adapter.getItem(position)));
     }
+
+    public void filter(String query){
+        adapter.getFilter().filter(query);
+    }
 }

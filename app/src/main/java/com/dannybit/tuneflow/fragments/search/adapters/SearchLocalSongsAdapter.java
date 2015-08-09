@@ -1,10 +1,19 @@
 package com.dannybit.tuneflow.fragments.search.adapters;
 
 import android.app.Activity;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.TextAppearanceSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,14 +22,18 @@ import com.dannybit.tuneflow.models.LocalSong;
 import com.dannybit.tuneflow.models.Song;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by danielnamdar on 8/6/15.
  */
-public class SearchLocalSongsAdapter extends BaseAdapter {
+public class SearchLocalSongsAdapter extends BaseAdapter implements Filterable {
 
+    private ArrayList<LocalSong> allSongs;
     private ArrayList<LocalSong> songs;
     private Activity context;
+    private String query;
 
     static class ViewHolder{
         public ImageView songArt;
@@ -32,6 +45,7 @@ public class SearchLocalSongsAdapter extends BaseAdapter {
     public SearchLocalSongsAdapter(Activity context, ArrayList<LocalSong> songs){
         this.context = context;
         this.songs = songs;
+        this.allSongs = songs;
     }
 
     @Override
@@ -65,9 +79,70 @@ public class SearchLocalSongsAdapter extends BaseAdapter {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
         Song song = songs.get(position);
         song.loadImage(context, viewHolder.songArt);
-        viewHolder.songName.setText(song.getTrackName());
+        if (query != null) {
+            highlightText(song.getTrackName(), query, viewHolder.songName);
+        } else {
+            viewHolder.songName.setText(song.getTrackName());
+        }
         viewHolder.songDuration.setText(song.getDurationInMins());
         return view;
     }
 
+    @Override
+    public Filter getFilter() {
+
+        Filter filter = new Filter() {
+
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+
+                songs = (ArrayList<LocalSong>) results.values;
+                query = constraint.toString();
+                notifyDataSetChanged();
+
+            }
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+
+                FilterResults results = new FilterResults();
+                ArrayList<LocalSong> filteredLocalSongs = new ArrayList<LocalSong>();
+
+                // perform your search here using the searchConstraint String.
+
+                constraint = constraint.toString().toLowerCase();
+                for (int i = 0; i < allSongs.size(); i++) {
+                    if (allSongs.get(i).getTrackName().toLowerCase().contains(constraint.toString()))  {
+                        filteredLocalSongs.add(allSongs.get(i));
+                    }
+                }
+
+                results.count = filteredLocalSongs.size();
+                results.values = filteredLocalSongs;
+
+                return results;
+            }
+        };
+
+        return filter;
+
+    }
+
+    private void highlightText(String originalValue, String filter, TextView textView){
+        int startPos = originalValue.toLowerCase(Locale.US).indexOf(filter.toLowerCase(Locale.US));
+        int endPos = startPos + filter.length();
+
+        if (startPos != -1){
+            Spannable spannable = new SpannableString(originalValue);
+            ColorStateList blueColor = new ColorStateList(new int[][] { new int[] {}}, new int[] { Color.BLUE });
+            TextAppearanceSpan highlightSpan = new TextAppearanceSpan(null, Typeface.BOLD, -1, blueColor, null);
+
+            spannable.setSpan(highlightSpan, startPos, endPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            textView.setText(spannable);
+        }
+        else {
+            textView.setText(originalValue);
+        }
+    }
 }

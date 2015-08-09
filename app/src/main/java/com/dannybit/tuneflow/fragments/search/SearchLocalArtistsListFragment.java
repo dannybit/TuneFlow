@@ -34,4 +34,10 @@ public class SearchLocalArtistsListFragment extends ListFragment {
         super.onListItemClick(l, v, position, id);
         BusProvider.getInstance().post(new LocalArtistClickedEvent((Artist) adapter.getItem(position)));
     }
+
+    public void filter(String query){
+
+    }
+
+
 }

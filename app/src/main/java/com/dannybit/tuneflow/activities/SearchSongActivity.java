@@ -143,39 +143,13 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
     }
 
     public void localSongSearch(String query){
-        searchSoundcloudFragment.getAdapter().clear();
-        String[] projection = {MediaStore.Audio.Media._ID,
-                 MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.DURATION, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM_ID};
-        String where = MediaStore.Audio.Media.TITLE + " LIKE ?";
-        String[] params = new String[] {"%" + query + "%"};
-
-        Cursor q = managedQuery(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                projection, where, params, MediaStore.Audio.Media.TITLE);
-
-
-
-        try {
-            while (q.moveToNext()) {
-                long albumId =  q.getLong(q.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
-                Cursor imageCursor = managedQuery(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
-                        new String[] {MediaStore.Audio.AlbumColumns.ALBUM_ART},
-                        MediaStore.Audio.Media._ID+" =?",
-                        new String[]{String.valueOf(albumId)},
-                        null);
-
-                Song song = new LocalSong();
-                song.setTrackName(q.getString(q.getColumnIndex(MediaStore.Audio.Media.TITLE)));
-                song.setDuration(q.getString(q.getColumnIndex(MediaStore.Audio.Media.DURATION)));
-                song.setUrl(q.getString(q.getColumnIndex(MediaStore.Audio.Media.DATA)));
-                if (imageCursor.moveToFirst()){
-                    song.setArtworkLink(imageCursor.getString(imageCursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART)));
-                }
-                searchSoundcloudFragment.getAdapter().add(song);
-            }
-        } finally {
-            q.close();
+        if (query == null || query.isEmpty()){
+            return;
         }
-        searchSoundcloudFragment.getAdapter().notifyDataSetChanged();
+        if (searchLocalFragment != null){
+            searchLocalFragment.performQuery(query);
+        }
+
     }
 
     public void soundcloudSongSearch(String query){

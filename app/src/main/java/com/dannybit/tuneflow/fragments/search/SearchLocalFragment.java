@@ -1,5 +1,6 @@
 package com.dannybit.tuneflow.fragments.search;
 
+import android.support.v4.app.ListFragment;
 import android.support.v7.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentTransaction;
@@ -13,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.Filterable;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.dannybit.tuneflow.BusProvider;
@@ -20,14 +23,16 @@ import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.activities.SearchSongActivity;
 import com.dannybit.tuneflow.events.LocalSongClickedEvent;
 import com.dannybit.tuneflow.fragments.NowPlayingFragment;
+import com.dannybit.tuneflow.fragments.search.adapters.SearchLocalAlbumsAdapter;
 import com.squareup.otto.Subscribe;
 
 
 public class SearchLocalFragment extends Fragment {
 
     private ViewPager pager;
-    private PagerAdapter pagerAdapter;
+    private ScreenSlidePagerAdapter pagerAdapter;
     private Activity activity;
+    private int currentFragmentPosition;
 
     public SearchLocalFragment() {
         // Required empty public constructor
@@ -68,9 +73,35 @@ public class SearchLocalFragment extends Fragment {
         pagerAdapter = new ScreenSlidePagerAdapter(getChildFragmentManager());
         pager.setAdapter(pagerAdapter);
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) view.findViewById(R.id.tabs);
+        tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                currentFragmentPosition = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         tabs.setViewPager(pager);
 
         return view;
+    }
+
+    public void performQuery(String query){
+        Log.v("HELLO", " " + currentFragmentPosition);
+        switch (currentFragmentPosition){
+            case 0:
+                ((SearchLocalSongsListFragment) pagerAdapter.getCurrentFragment()).filter(query);
+
+        }
+
     }
 
 
@@ -78,6 +109,7 @@ public class SearchLocalFragment extends Fragment {
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter{
 
         private final String[] TITLES = { "Songs", "Artists", "Albums"};
+        private Fragment currentFragment;
 
         public ScreenSlidePagerAdapter(FragmentManager fm){
             super(fm);
@@ -99,6 +131,20 @@ public class SearchLocalFragment extends Fragment {
             }
         }
 
+        public Fragment getCurrentFragment(){
+            return this.currentFragment;
+        }
+
+        @Override
+        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+            if (getCurrentFragment() != object){
+                currentFragment = (Fragment) object;
+            }
+
+            super.setPrimaryItem(container, position, object);
+
+        }
+
         @Override
         public CharSequence getPageTitle(int position) {
             return TITLES[position];
@@ -109,6 +155,7 @@ public class SearchLocalFragment extends Fragment {
             return TITLES.length;
         }
     }
+
 
 
 
