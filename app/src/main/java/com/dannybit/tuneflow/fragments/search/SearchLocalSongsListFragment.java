@@ -6,12 +6,16 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 
 import com.dannybit.tuneflow.BusProvider;
+import com.dannybit.tuneflow.R;
+import com.dannybit.tuneflow.activities.SearchSongActivity;
 import com.dannybit.tuneflow.database.LocalLibrary;
 import com.dannybit.tuneflow.events.LocalSongClickedEvent;
 import com.dannybit.tuneflow.fragments.search.adapters.SearchLocalSongsAdapter;
@@ -62,4 +66,23 @@ public class SearchLocalSongsListFragment extends ListFragment {
     public void filter(String query){
         adapter.getFilter().filter(query);
     }
+
+    /*
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        Bundle extras = getArguments();
+        if (extras != null && extras.getParcelable("ARTIST") != null) {
+            getActivity().getMenuInflater().inflate(R.menu.main, menu);
+            ((SearchSongActivity)getActivity()).getSupportActionBar().setTitle(
+
+                    ((Artist) extras.getParcelable("ARTIST")).getArtistName()
+
+            );
+        }
+        else if (extras != null && extras.getParcelable("ALBUM") != null){
+            getActivity().getMenuInflater().inflate(R.menu.main, menu);
+        }
+    }
+    */
 }

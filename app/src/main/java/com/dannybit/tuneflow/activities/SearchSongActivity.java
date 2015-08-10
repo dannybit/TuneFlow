@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.opengl.Visibility;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
@@ -232,7 +233,10 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
         args.putParcelable("ARTIST", localArtistClickedEvent.getArtist());
         searchLocalSongsListFragment.setArguments(args);
         getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchLocalSongsListFragment).addToBackStack(null).commit();
-        menu.findItem(R.id.search_view).setVisible(false);
+        collapseSearchView();
+        getSupportActionBar().setTitle(localArtistClickedEvent.getArtist().getArtistName());
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+
     }
 
     @Subscribe
@@ -242,7 +246,22 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
         args.putParcelable("ALBUM", localAlbumClickedEvent.getAlbum());
         searchLocalSongsListFragment.setArguments(args);
         getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchLocalSongsListFragment).addToBackStack(null).commit();
-        menu.findItem(R.id.search_view).setVisible(false);
+        collapseSearchView();
+        getSupportActionBar().setTitle(localAlbumClickedEvent.getAlbum().getName());
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+    }
+
+    private void collapseSearchView(){
+        MenuItem menuItem = menu.findItem(R.id.search_view);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        searchView.setQuery("", false);
+        searchView.setIconified(true);
+    }
+
+    private void expandSearchView(){
+        MenuItem menuItem = menu.findItem(R.id.search_view);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        searchView.setIconified(false);
     }
 
 
@@ -299,9 +318,11 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
     public void onBackPressed() {
 
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-
             getSupportFragmentManager().popBackStack();
-            menu.findItem(R.id.search_view).setVisible(true);
+            getSupportActionBar().setTitle("");
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+            expandSearchView();
+
         } else {
             super.onBackPressed();
         }
