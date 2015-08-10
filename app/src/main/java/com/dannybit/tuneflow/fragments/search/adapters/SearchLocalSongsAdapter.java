@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dannybit.tuneflow.R;
+import com.dannybit.tuneflow.Utils.MainUtils;
 import com.dannybit.tuneflow.models.LocalSong;
 import com.dannybit.tuneflow.models.Song;
 
@@ -80,7 +81,7 @@ public class SearchLocalSongsAdapter extends BaseAdapter implements Filterable {
         Song song = songs.get(position);
         song.loadImage(context, viewHolder.songArt);
         if (query != null) {
-            highlightText(song.getTrackName(), query, viewHolder.songName);
+            MainUtils.highlightText(song.getTrackName(), query, viewHolder.songName);
         } else {
             viewHolder.songName.setText(song.getTrackName());
         }
@@ -135,20 +136,5 @@ public class SearchLocalSongsAdapter extends BaseAdapter implements Filterable {
 
     }
 
-    private void highlightText(String originalValue, String filter, TextView textView){
-        int startPos = originalValue.toLowerCase(Locale.US).indexOf(filter.toLowerCase(Locale.US));
-        int endPos = startPos + filter.length();
 
-        if (startPos != -1){
-            Spannable spannable = new SpannableString(originalValue);
-            ColorStateList blueColor = new ColorStateList(new int[][] { new int[] {}}, new int[] { Color.BLUE });
-            TextAppearanceSpan highlightSpan = new TextAppearanceSpan(null, Typeface.BOLD, -1, blueColor, null);
-
-            spannable.setSpan(highlightSpan, startPos, endPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            textView.setText(spannable);
-        }
-        else {
-            textView.setText(originalValue);
-        }
-    }
 }

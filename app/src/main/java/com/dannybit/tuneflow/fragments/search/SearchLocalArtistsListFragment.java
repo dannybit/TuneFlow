@@ -36,7 +36,7 @@ public class SearchLocalArtistsListFragment extends ListFragment {
     }
 
     public void filter(String query){
-
+        adapter.getFilter().filter(query);
     }
 
 

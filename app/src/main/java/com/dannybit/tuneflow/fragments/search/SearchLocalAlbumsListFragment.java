@@ -35,10 +35,10 @@ public class SearchLocalAlbumsListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        BusProvider.getInstance().post(new LocalAlbumClickedEvent((Album)adapter.getItem(position)));
+        BusProvider.getInstance().post(new LocalAlbumClickedEvent((Album) adapter.getItem(position)));
     }
 
     public void filter(String query){
-
+        adapter.getFilter().filter(query);
     }
 }

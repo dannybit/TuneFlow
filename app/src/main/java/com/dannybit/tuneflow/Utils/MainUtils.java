@@ -1,10 +1,19 @@
 package com.dannybit.tuneflow.Utils;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.TextAppearanceSpan;
 import android.util.DisplayMetrics;
+import android.widget.TextView;
+
+import java.util.Locale;
 
 /**
  * Created by danielnamdar on 8/1/15.
@@ -38,7 +47,7 @@ public class MainUtils {
         return dp;
     }
 
-    private boolean isNetworkAvailable(Context context){
+    private static boolean isNetworkAvailable(Context context){
         boolean haveConnectedWifi = false;
         boolean haveConnectedMobile = false;
 
@@ -53,5 +62,22 @@ public class MainUtils {
                     haveConnectedMobile = true;
         }
         return haveConnectedWifi || haveConnectedMobile;
+    }
+
+    public static void highlightText(String originalValue, String filter, TextView textView){
+        int startPos = originalValue.toLowerCase(Locale.US).indexOf(filter.toLowerCase(Locale.US));
+        int endPos = startPos + filter.length();
+
+        if (startPos != -1){
+            Spannable spannable = new SpannableString(originalValue);
+            ColorStateList blueColor = new ColorStateList(new int[][] { new int[] {}}, new int[] { Color.BLUE });
+            TextAppearanceSpan highlightSpan = new TextAppearanceSpan(null, Typeface.BOLD, -1, blueColor, null);
+
+            spannable.setSpan(highlightSpan, startPos, endPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            textView.setText(spannable);
+        }
+        else {
+            textView.setText(originalValue);
+        }
     }
 }

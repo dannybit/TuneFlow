@@ -95,9 +95,17 @@ public class SearchLocalFragment extends Fragment {
     }
 
     public void performQuery(String query){
+        Log.v("HELLO", "p " + currentFragmentPosition);
         switch (currentFragmentPosition){
             case 0:
                 ((SearchLocalSongsListFragment) pagerAdapter.getCurrentFragment()).filter(query);
+                break;
+            case 1:
+                ((SearchLocalArtistsListFragment) pagerAdapter.getCurrentFragment()).filter(query);
+                break;
+            case 2:
+                ((SearchLocalAlbumsListFragment) pagerAdapter.getCurrentFragment()).filter(query);
+                break;
 
         }
 
