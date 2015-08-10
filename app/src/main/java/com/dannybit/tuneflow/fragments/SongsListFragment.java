@@ -13,8 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 
+import com.dannybit.tuneflow.BusProvider;
 import com.dannybit.tuneflow.activities.MainActivity;
 import com.dannybit.tuneflow.R;
+import com.dannybit.tuneflow.events.SongSelectedEvent;
 import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.views.adapters.SongAdapter;
 import com.melnykov.fab.FloatingActionButton;
@@ -24,7 +26,6 @@ import java.util.ArrayList;
 
 public class SongsListFragment extends ListFragment implements View.OnClickListener {
 
-    private OnSongSelectedListener callback;
     private SongAdapter adapter;
     private ArrayList<Song> songs;
     private String playListName;
@@ -81,33 +82,14 @@ public class SongsListFragment extends ListFragment implements View.OnClickListe
         addNewSong();
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            callback = (OnSongSelectedListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        callback = null;
-    }
 
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        if (callback != null) {
-            callback.onSongSelected(songs, position);
-        }
+        BusProvider.getInstance().post(new SongSelectedEvent(songs, position));
+
     }
 
 
@@ -141,10 +123,6 @@ public class SongsListFragment extends ListFragment implements View.OnClickListe
     }
 
 
-    public interface OnSongSelectedListener {
-
-        void onSongSelected(ArrayList<Song> songs, int position);
-    }
 
     public SongAdapter getAdapter(){
         return this.adapter;

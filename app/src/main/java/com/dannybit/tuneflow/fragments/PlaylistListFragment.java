@@ -14,9 +14,11 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
 
+import com.dannybit.tuneflow.BusProvider;
 import com.dannybit.tuneflow.activities.MainActivity;
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.database.DatabaseHelper;
+import com.dannybit.tuneflow.events.PlaylistSelectedEvent;
 import com.dannybit.tuneflow.models.Playlist;
 import com.dannybit.tuneflow.views.adapters.PlaylistAdapter;
 import com.melnykov.fab.FloatingActionButton;
@@ -28,16 +30,12 @@ public class PlaylistListFragment extends Fragment implements AdapterView.OnItem
 
 
     private PlaylistAdapter adapter;
-    private OnPlaylistSelectedListener callback;
     private DatabaseHelper dbHelper;
     private static final String PLAYLIST_FRAGMENT_TITLE = "Playlists";
     private GridView playlistsGridView;
     private FloatingActionButton fabPlaylist;
 
 
-    public interface OnPlaylistSelectedListener {
-        void onPlaylistSelected(Playlist playlist);
-    }
 
     public PlaylistListFragment() {
     }
@@ -63,15 +61,7 @@ public class PlaylistListFragment extends Fragment implements AdapterView.OnItem
         return view;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            callback =  (OnPlaylistSelectedListener) activity;
-        } catch (ClassCastException e){
-         throw new ClassCastException(activity.toString() + " must implement OnPlaylistSelectedListener");
-        }
-    }
+
 
     private void setupAdapter(){
         adapter = new PlaylistAdapter(getActivity());
@@ -100,8 +90,8 @@ public class PlaylistListFragment extends Fragment implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-
-        callback.onPlaylistSelected((Playlist) adapter.getItem(position));
+        Playlist selectedPlaylist = (Playlist) adapter.getItem(position);
+        BusProvider.getInstance().post(new PlaylistSelectedEvent(selectedPlaylist));
     }
 
     @Override

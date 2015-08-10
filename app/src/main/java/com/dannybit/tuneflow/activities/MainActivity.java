@@ -15,7 +15,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.dannybit.tuneflow.BusProvider;
 import com.dannybit.tuneflow.Utils.MainUtils;
+import com.dannybit.tuneflow.events.NewPlaylistCreatedEvent;
+import com.dannybit.tuneflow.events.PlaylistSelectedEvent;
+import com.dannybit.tuneflow.events.SongSelectedEvent;
+import com.dannybit.tuneflow.events.WebsiteSelectedEvent;
 import com.dannybit.tuneflow.fragments.NavigationDrawerCallbacks;
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.database.DatabaseHelper;
@@ -31,18 +36,17 @@ import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.services.AudioPlaybackService;
 import com.dannybit.tuneflow.views.notifications.NowPlayingNotification;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerCallbacks,
-        SongsListFragment.OnSongSelectedListener,
-        PlaylistListFragment.OnPlaylistSelectedListener,
-        WebsiteSelectionDialogFragment.OnWebsiteSelectionListner,
-        NewPlaylistDialogFragment.OnNewPlaylistCreatedListener,
         AudioPlaybackService.SongCompletedListener,
-        NowPlayingFragment.OnMediaPlayerButtonClickedListener, AudioPlaybackService.SongPreparedListener{
+        NowPlayingFragment.OnMediaPlayerButtonClickedListener,
+        AudioPlaybackService.SongPreparedListener
+{
 
     public static final String TAG = MainActivity.class.getName();
     /* Used for ActivityResult when starting the SearchActivity */
@@ -190,6 +194,18 @@ public class MainActivity extends ActionBarActivity
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BusProvider.getInstance().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BusProvider.getInstance().unregister(this);
+    }
+
 
     private ServiceConnection audioConnection = new ServiceConnection() {
         @Override
@@ -314,10 +330,10 @@ public class MainActivity extends ActionBarActivity
     }
 
 
-    @Override
-    public void onSongSelected(ArrayList<Song> songs, int position) {
-        audioService.setList(songs);
-        audioService.setSongPosition(position);
+    @Subscribe
+    public void onSongSelected(SongSelectedEvent songSelectedEvent) {
+        audioService.setList(songSelectedEvent.getSongs());
+        audioService.setSongPosition(songSelectedEvent.getPosition());
         // Only start the nowplayingfragment if there was no error setting the data source for the mediaplayer
         if (audioService.playSong()) {
             openNowPlayingFragment(audioService.getCurrentSong(), false);
@@ -378,8 +394,12 @@ public class MainActivity extends ActionBarActivity
 
 
 
-    @Override
-    public void onPlaylistSelected(Playlist playlist) {
+    @Subscribe
+    public void onPlaylistSelected(PlaylistSelectedEvent playlistSelectedEvent) {
+       playlistSelected(playlistSelectedEvent.getPlaylist());
+    }
+
+    private void playlistSelected(Playlist playlist){
         currentPlaylistId = playlist.getId();
         currentSongsListFragment = new SongsListFragment();
         Bundle extras = new Bundle();
@@ -396,8 +416,9 @@ public class MainActivity extends ActionBarActivity
 
 
 
-    @Override
-    public void onWebsiteSelected(WebsiteSelection websiteSelection) {
+    @Subscribe
+    public void onWebsiteSelected(WebsiteSelectedEvent websiteSelectedEvent) {
+        WebsiteSelection websiteSelection = websiteSelectedEvent.getSelection();
         if (websiteSelection.equals(WebsiteSelection.SOUNDCLOUD)){
             startSoundcloudSearch();
         }
@@ -464,11 +485,12 @@ public class MainActivity extends ActionBarActivity
     }
 
 
-    @Override
-    public void onNewPlaylistCreated(Playlist playlist) {
+    @Subscribe
+    public void onNewPlaylistCreated(NewPlaylistCreatedEvent newPlaylistCreatedEvent) {
+        Playlist playlist = newPlaylistCreatedEvent.getPlaylist();
         dbHelper.createPlaylist(playlist);
         playlistListFragment.addPlaylist(playlist);
-        onPlaylistSelected(playlist);
+        playlistSelected(playlist);
     }
 
     public AudioPlaybackService getMusicService(){

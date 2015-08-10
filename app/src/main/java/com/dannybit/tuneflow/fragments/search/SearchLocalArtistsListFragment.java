@@ -7,7 +7,7 @@ import android.widget.ListView;
 
 import com.dannybit.tuneflow.BusProvider;
 import com.dannybit.tuneflow.database.LocalLibrary;
-import com.dannybit.tuneflow.events.LocalArtistClickedEvent;
+import com.dannybit.tuneflow.events.SearchLocalArtistClickedEvent;
 import com.dannybit.tuneflow.fragments.search.adapters.SearchLocalArtistsAdapter;
 import com.dannybit.tuneflow.models.Artist;
 
@@ -32,7 +32,7 @@ public class SearchLocalArtistsListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        BusProvider.getInstance().post(new LocalArtistClickedEvent((Artist) adapter.getItem(position)));
+        BusProvider.getInstance().post(new SearchLocalArtistClickedEvent((Artist) adapter.getItem(position)));
     }
 
     public void filter(String query){

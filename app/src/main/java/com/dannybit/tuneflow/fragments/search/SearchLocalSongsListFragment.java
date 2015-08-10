@@ -1,31 +1,20 @@
 package com.dannybit.tuneflow.fragments.search;
 
-import android.app.Activity;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 
 import com.dannybit.tuneflow.BusProvider;
-import com.dannybit.tuneflow.R;
-import com.dannybit.tuneflow.activities.SearchSongActivity;
 import com.dannybit.tuneflow.database.LocalLibrary;
-import com.dannybit.tuneflow.events.LocalSongClickedEvent;
+import com.dannybit.tuneflow.events.SearchLocalSongClickedEvent;
 import com.dannybit.tuneflow.fragments.search.adapters.SearchLocalSongsAdapter;
 import com.dannybit.tuneflow.models.Album;
 import com.dannybit.tuneflow.models.Artist;
 import com.dannybit.tuneflow.models.LocalSong;
-import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class SearchLocalSongsListFragment extends ListFragment {
@@ -60,7 +49,7 @@ public class SearchLocalSongsListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        BusProvider.getInstance().post(new LocalSongClickedEvent((LocalSong) adapter.getItem(position)));
+        BusProvider.getInstance().post(new SearchLocalSongClickedEvent((LocalSong) adapter.getItem(position)));
     }
 
     public void filter(String query){

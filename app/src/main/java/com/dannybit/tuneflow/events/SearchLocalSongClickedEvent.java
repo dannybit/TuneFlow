@@ -5,11 +5,11 @@ import com.dannybit.tuneflow.models.LocalSong;
 /**
  * Created by danielnamdar on 8/8/15.
  */
-public class LocalSongClickedEvent {
+public class SearchLocalSongClickedEvent {
 
     private LocalSong song;
 
-    public LocalSongClickedEvent(LocalSong song){
+    public SearchLocalSongClickedEvent(LocalSong song){
         this.song = song;
     }
 

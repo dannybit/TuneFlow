@@ -12,7 +12,9 @@ import android.widget.Button;
 import android.support.v4.app.DialogFragment;
 import android.widget.EditText;
 
+import com.dannybit.tuneflow.BusProvider;
 import com.dannybit.tuneflow.R;
+import com.dannybit.tuneflow.events.NewPlaylistCreatedEvent;
 import com.dannybit.tuneflow.fragments.search.WebsiteSelection;
 import com.dannybit.tuneflow.models.Playlist;
 import com.dannybit.tuneflow.models.Song;
@@ -22,12 +24,8 @@ import com.dannybit.tuneflow.models.Song;
  */
 public class NewPlaylistDialogFragment extends DialogFragment {
 
-    private OnNewPlaylistCreatedListener callback;
     private EditText editName;
 
-    public interface OnNewPlaylistCreatedListener {
-        public void onNewPlaylistCreated(Playlist playlist);
-    }
 
     public NewPlaylistDialogFragment() {
         // Required empty public constructor
@@ -41,16 +39,6 @@ public class NewPlaylistDialogFragment extends DialogFragment {
         Dialog dialog = getDialog();
         if (dialog != null) {
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            callback =  (OnNewPlaylistCreatedListener) activity;
-        } catch (ClassCastException e){
-            throw new ClassCastException(activity.toString() + " must implement OnNewPlaylistCreatedListener");
         }
     }
 
@@ -71,12 +59,9 @@ public class NewPlaylistDialogFragment extends DialogFragment {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (callback != null){
                     Playlist playlist = new Playlist(editName.getText().toString());
-
-                    callback.onNewPlaylistCreated(playlist);
+                    BusProvider.getInstance().post(new NewPlaylistCreatedEvent(playlist));
                     dismiss();
-                }
             }
         });
         return view;

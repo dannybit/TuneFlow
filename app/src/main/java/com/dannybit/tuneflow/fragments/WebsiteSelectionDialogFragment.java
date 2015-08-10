@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.dannybit.tuneflow.BusProvider;
 import com.dannybit.tuneflow.R;
+import com.dannybit.tuneflow.events.WebsiteSelectedEvent;
 import com.dannybit.tuneflow.fragments.search.WebsiteSelection;
 
 /**
@@ -19,19 +21,9 @@ import com.dannybit.tuneflow.fragments.search.WebsiteSelection;
  */
 public class WebsiteSelectionDialogFragment extends DialogFragment {
 
-    private OnWebsiteSelectionListner callback;
-
-    public interface OnWebsiteSelectionListner {
-        public void onWebsiteSelected(WebsiteSelection websiteSelection);
-    }
-
     public WebsiteSelectionDialogFragment() {
         // Required empty public constructor
     }
-
-
-
-
 
     @Override
     public void onStart() {
@@ -39,16 +31,6 @@ public class WebsiteSelectionDialogFragment extends DialogFragment {
         Dialog dialog = getDialog();
         if (dialog != null) {
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            callback =  (OnWebsiteSelectionListner) activity;
-        } catch (ClassCastException e){
-            throw new ClassCastException(activity.toString() + " must implement OnPlaylistSelectedListener");
         }
     }
 
@@ -69,15 +51,14 @@ public class WebsiteSelectionDialogFragment extends DialogFragment {
         localButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.onWebsiteSelected(WebsiteSelection.LOCAL);
+                BusProvider.getInstance().post(new WebsiteSelectedEvent(WebsiteSelection.LOCAL));
             }
         });
         Button soundcloudButton = (Button) view.findViewById(R.id.soundcloud_button);
         soundcloudButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.onWebsiteSelected(WebsiteSelection.SOUNDCLOUD);
-
+                BusProvider.getInstance().post(new WebsiteSelectedEvent(WebsiteSelection.SOUNDCLOUD));
             }
         });
 

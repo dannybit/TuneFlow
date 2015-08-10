@@ -1,37 +1,25 @@
 package com.dannybit.tuneflow.activities;
 
 import android.app.SearchManager;
-import android.content.ComponentName;
-import android.content.ContentUris;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.opengl.Visibility;
-import android.os.ParcelFileDescriptor;
-import android.provider.MediaStore;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.transition.VisibilityPropagation;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.dannybit.tuneflow.BusProvider;
 import com.dannybit.tuneflow.R;
-import com.dannybit.tuneflow.events.LocalAlbumClickedEvent;
-import com.dannybit.tuneflow.events.LocalArtistClickedEvent;
-import com.dannybit.tuneflow.events.LocalSongClickedEvent;
+import com.dannybit.tuneflow.events.SearchLocalAlbumClickedEvent;
+import com.dannybit.tuneflow.events.SearchLocalArtistClickedEvent;
+import com.dannybit.tuneflow.events.SearchLocalSongClickedEvent;
 import com.dannybit.tuneflow.fragments.search.SearchLocalFragment;
 import com.dannybit.tuneflow.fragments.search.SearchLocalSongsListFragment;
 import com.dannybit.tuneflow.fragments.search.SearchSoundcloudFragment;
 import com.dannybit.tuneflow.fragments.search.WebsiteSelection;
-import com.dannybit.tuneflow.models.LocalSong;
 import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.models.SoundcloudSong;
 import com.dannybit.tuneflow.network.SoundcloudRestClient;
@@ -43,8 +31,6 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.FileDescriptor;
 
 
 public class SearchSongActivity extends ActionBarActivity implements SearchSoundcloudFragment.OnFragmentInteractionListener {
@@ -219,35 +205,35 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
     }
 
     @Subscribe
-    public void onLocalSongClicked(LocalSongClickedEvent localSongClickedEvent){
+    public void onLocalSongClicked(SearchLocalSongClickedEvent searchLocalSongClickedEvent){
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("result", localSongClickedEvent.getSong());
+        returnIntent.putExtra("result", searchLocalSongClickedEvent.getSong());
         setResult(RESULT_OK, returnIntent);
         finish();
     }
 
     @Subscribe
-    public void onLocalArtistClicked(LocalArtistClickedEvent localArtistClickedEvent){
+    public void onLocalArtistClicked(SearchLocalArtistClickedEvent searchLocalArtistClickedEvent){
         SearchLocalSongsListFragment searchLocalSongsListFragment = new SearchLocalSongsListFragment();
         Bundle args = new Bundle();
-        args.putParcelable("ARTIST", localArtistClickedEvent.getArtist());
+        args.putParcelable("ARTIST", searchLocalArtistClickedEvent.getArtist());
         searchLocalSongsListFragment.setArguments(args);
         getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchLocalSongsListFragment).addToBackStack(null).commit();
         collapseSearchView();
-        getSupportActionBar().setTitle(localArtistClickedEvent.getArtist().getArtistName());
+        getSupportActionBar().setTitle(searchLocalArtistClickedEvent.getArtist().getArtistName());
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
     }
 
     @Subscribe
-    public void onLocalAlbumClicked(LocalAlbumClickedEvent localAlbumClickedEvent){
+    public void onLocalAlbumClicked(SearchLocalAlbumClickedEvent searchLocalAlbumClickedEvent){
         SearchLocalSongsListFragment searchLocalSongsListFragment = new SearchLocalSongsListFragment();
         Bundle args = new Bundle();
-        args.putParcelable("ALBUM", localAlbumClickedEvent.getAlbum());
+        args.putParcelable("ALBUM", searchLocalAlbumClickedEvent.getAlbum());
         searchLocalSongsListFragment.setArguments(args);
         getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchLocalSongsListFragment).addToBackStack(null).commit();
         collapseSearchView();
-        getSupportActionBar().setTitle(localAlbumClickedEvent.getAlbum().getName());
+        getSupportActionBar().setTitle(searchLocalAlbumClickedEvent.getAlbum().getName());
         getSupportActionBar().setDisplayShowTitleEnabled(true);
     }
 

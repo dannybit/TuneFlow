@@ -5,11 +5,11 @@ import com.dannybit.tuneflow.models.Album;
 /**
  * Created by danielnamdar on 8/8/15.
  */
-public class LocalAlbumClickedEvent {
+public class SearchLocalAlbumClickedEvent {
 
     private Album album;
 
-    public LocalAlbumClickedEvent(Album album){
+    public SearchLocalAlbumClickedEvent(Album album){
         this.album = album;
     }
 

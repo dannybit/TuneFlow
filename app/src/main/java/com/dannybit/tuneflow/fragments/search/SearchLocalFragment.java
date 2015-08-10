@@ -1,30 +1,19 @@
 package com.dannybit.tuneflow.fragments.search;
 
-import android.support.v4.app.ListFragment;
-import android.support.v7.app.ActionBar;
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.Filterable;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.dannybit.tuneflow.BusProvider;
 import com.dannybit.tuneflow.R;
-import com.dannybit.tuneflow.activities.SearchSongActivity;
-import com.dannybit.tuneflow.events.LocalSongClickedEvent;
-import com.dannybit.tuneflow.fragments.NowPlayingFragment;
-import com.dannybit.tuneflow.fragments.search.adapters.SearchLocalAlbumsAdapter;
-import com.squareup.otto.Subscribe;
 
 
 public class SearchLocalFragment extends Fragment {
