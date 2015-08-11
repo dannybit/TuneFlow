@@ -35,7 +35,7 @@ public class MainUtilTest {
         when(resources.getDisplayMetrics()).thenReturn(displayMetrics);
         when(context.getResources()).thenReturn(resources);
 
-        float pixels = MainUtils.convertDpToPixel(0, context);
+        float pixels = MainUtils.convertDpToPixel(1, context);
 
         assertEquals(0.393701, pixels, EPSILON);
     }
