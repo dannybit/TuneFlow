@@ -69,7 +69,7 @@ public class SearchLocalSongsAdapter extends BaseAdapter implements Filterable {
         View view = convertView;
         if (view == null){
             LayoutInflater vi = LayoutInflater.from(context);
-            view = vi.inflate(R.layout.song_row, null);
+            view = vi.inflate(R.layout.search_song_row, null);
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.songArt = (ImageView) view.findViewById(R.id.songArt);
             viewHolder.songName = (TextView) view.findViewById(R.id.songName);

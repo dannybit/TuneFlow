@@ -1,25 +1,15 @@
-package com.dannybit.tuneflow.views.adapters;
+package com.dannybit.tuneflow.fragments.adapters;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dannybit.tuneflow.R;
-import com.dannybit.tuneflow.network.SoundcloudRestClient;
 import com.dannybit.tuneflow.models.Playlist;
 import com.dannybit.tuneflow.views.SquareImageView;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.squareup.picasso.Picasso;
-
-import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.dannybit.tuneflow.views.adapters;
+package com.dannybit.tuneflow.fragments.adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.models.Song;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -25,6 +24,7 @@ public class SongAdapter extends BaseAdapter {
         public ImageView songArt;
         public TextView songName;
         public TextView songDuration;
+        public TextView songTag;
 
     }
 
@@ -58,6 +58,7 @@ public class SongAdapter extends BaseAdapter {
             viewHolder.songArt = (ImageView) view.findViewById(R.id.songArt);
             viewHolder.songName = (TextView) view.findViewById(R.id.songName);
             viewHolder.songDuration = (TextView) view.findViewById(R.id.songDuration);
+            viewHolder.songTag = (TextView) view.findViewById(R.id.songTag);
             view.setTag(viewHolder);
         }
 
@@ -66,6 +67,7 @@ public class SongAdapter extends BaseAdapter {
         song.loadImage(context, viewHolder.songArt);
         viewHolder.songName.setText(song.getTrackName());
         viewHolder.songDuration.setText(song.getDurationInMins());
+        song.styleTag(context, viewHolder.songTag);
         return view;
     }
 

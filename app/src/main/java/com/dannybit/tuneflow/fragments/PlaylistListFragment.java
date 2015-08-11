@@ -1,18 +1,15 @@
 package com.dannybit.tuneflow.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ListView;
 
 import com.dannybit.tuneflow.BusProvider;
 import com.dannybit.tuneflow.activities.MainActivity;
@@ -20,7 +17,7 @@ import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.database.DatabaseHelper;
 import com.dannybit.tuneflow.events.PlaylistSelectedEvent;
 import com.dannybit.tuneflow.models.Playlist;
-import com.dannybit.tuneflow.views.adapters.PlaylistAdapter;
+import com.dannybit.tuneflow.fragments.adapters.PlaylistAdapter;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.util.List;

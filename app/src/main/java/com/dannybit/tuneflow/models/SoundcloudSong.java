@@ -3,20 +3,12 @@ package com.dannybit.tuneflow.models;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.network.SoundcloudRestClient;
-import com.dannybit.tuneflow.views.adapters.SongAdapter;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 import com.squareup.picasso.Picasso;
-
-import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by danielnamdar on 7/18/15.
@@ -84,5 +76,11 @@ public class SoundcloudSong extends Song {
     @Override
     public void loadThumbnail(Context context, ImageView imageView){
             Picasso.with(context).load(getArtworkLink()).error(R.drawable.soundcloud_icon).into(imageView);
+    }
+
+    @Override
+    public void styleTag(Context context, TextView tagText) {
+        tagText.setText(R.string.soundcloud_tag_text);
+        tagText.setTextColor(context.getResources().getColor(R.color.soundcloud_tag_color));
     }
 }

@@ -15,8 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.dannybit.tuneflow.views.adapters.NavigationDrawerAdapter;
-import com.dannybit.tuneflow.fragments.NavigationDrawerCallbacks;
+import com.dannybit.tuneflow.fragments.adapters.NavigationDrawerAdapter;
 import com.dannybit.tuneflow.models.NavigationItem;
 import com.dannybit.tuneflow.R;
 

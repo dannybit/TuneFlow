@@ -15,5 +15,7 @@
     <string name="title_activity_now_playing">NowPlayingActivity</string>
     <string name="website_selection_dialog_title">Choose library</string>
     <string name="new_playlist_dialog_title">New Playlist</string>
+    <string name="local_tag_text">Local</string>
+    <string name="soundcloud_tag_text">Soundcloud</string>
 
 </resources>

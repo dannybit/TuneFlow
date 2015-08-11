@@ -1,11 +1,8 @@
 package com.dannybit.tuneflow.fragments;
 
 import android.os.Bundle;
-import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +15,7 @@ import com.dannybit.tuneflow.activities.MainActivity;
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.events.SongSelectedEvent;
 import com.dannybit.tuneflow.models.Song;
-import com.dannybit.tuneflow.views.adapters.SongAdapter;
+import com.dannybit.tuneflow.fragments.adapters.SongAdapter;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;

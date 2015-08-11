@@ -1,18 +1,13 @@
 package com.dannybit.tuneflow.fragments.search;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.models.Song;
-import com.dannybit.tuneflow.views.adapters.SearchSoundcloudAdapter;
+import com.dannybit.tuneflow.fragments.adapters.SearchSoundcloudAdapter;
 
 import java.util.List;
 

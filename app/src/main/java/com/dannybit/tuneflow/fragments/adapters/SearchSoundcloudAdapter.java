@@ -1,4 +1,4 @@
-package com.dannybit.tuneflow.views.adapters;
+package com.dannybit.tuneflow.fragments.adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -9,9 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dannybit.tuneflow.R;
-import com.dannybit.tuneflow.fragments.search.SearchSoundcloudFragment;
 import com.dannybit.tuneflow.models.Song;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;

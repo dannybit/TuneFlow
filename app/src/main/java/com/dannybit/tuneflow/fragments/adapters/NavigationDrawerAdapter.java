@@ -1,4 +1,4 @@
-package com.dannybit.tuneflow.views.adapters;
+package com.dannybit.tuneflow.fragments.adapters;
 
 
 import android.support.v7.widget.RecyclerView;

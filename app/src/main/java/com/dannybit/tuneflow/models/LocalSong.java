@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.dannybit.tuneflow.R;
 import com.squareup.picasso.Picasso;
@@ -57,6 +58,9 @@ public class LocalSong extends Song {
         }
     }
 
-
-
+    @Override
+    public void styleTag(Context context, TextView tagText) {
+        tagText.setText(R.string.local_tag_text);
+        tagText.setTextColor(context.getResources().getColor(R.color.local_tag_color));
+    }
 }

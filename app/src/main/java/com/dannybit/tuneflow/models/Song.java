@@ -3,16 +3,11 @@ package com.dannybit.tuneflow.models;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 import android.widget.ImageView;
-
-import com.dannybit.tuneflow.views.adapters.SongAdapter;
-
-import org.json.JSONObject;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by danielnamdar on 6/27/15.
@@ -99,6 +94,7 @@ public abstract class Song implements Parcelable {
 
     public abstract void loadImage(Context context, ImageView imageView);
     public abstract void loadThumbnail(Context context, ImageView imageView);
+    public abstract void styleTag(Context context, TextView tagText);
 
 
     @Override
