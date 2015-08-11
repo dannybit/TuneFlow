@@ -18,10 +18,11 @@ import java.io.File;
 public class LocalSong extends Song {
 
     public LocalSong(){
-
+        songType = SongType.LOCAL;
     }
     public LocalSong(Parcel in){
         super(in);
+        songType = SongType.LOCAL;
     }
 
 

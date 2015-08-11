@@ -18,10 +18,12 @@ public class SoundcloudSong extends Song {
 
     public SoundcloudSong(){
         super();
+        songType = SongType.SOUNDCLOUD;
     }
 
     public SoundcloudSong(Parcel in){
         super(in);
+        songType = SongType.SOUNDCLOUD;
         soundcloudId = in.readString();
     }
 

@@ -7,8 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.dannybit.tuneflow.models.LocalSong;
 import com.dannybit.tuneflow.models.Playlist;
 import com.dannybit.tuneflow.models.Song;
+import com.dannybit.tuneflow.models.SongType;
 import com.dannybit.tuneflow.models.SoundcloudSong;
 
 import java.text.SimpleDateFormat;
@@ -25,7 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper dbInstance;
 
     // Database Version
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     // Database Name
     private static final String DATABASE_NAME = "tuneflow.db";
@@ -44,6 +46,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_SONG_DURATION = "song_duration";
     private static final String KEY_SONG_ARTWORK_LINK = "song_artwork_link";
     private static final String KEY_SONG_URL = "song_url";
+    private static final String KEY_SONG_TYPE = "song_type";
 
 
     private static final String KEY_PLAYLIST_ID = "playlist_id";
@@ -59,6 +62,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + KEY_SONG_DURATION + " TEXT, "
             + KEY_SONG_ARTWORK_LINK + " TEXT, "
             + KEY_SONG_URL + " TEXT, "
+            + KEY_SONG_TYPE + " TEXT, "
             + KEY_CREATED_AT + " DATETIME" + ")";
 
     private static String CREATE_TABLE_PLAYLIST_SONG = "create table " + TABLE_PLAYLIST_SONG + "(" + KEY_ID + " INTEGER PRIMARY KEY, "
@@ -123,6 +127,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_SONG_DURATION, song.getDuration());
         values.put(KEY_SONG_URL, song.getUrl());
         values.put(KEY_SONG_ARTWORK_LINK, song.getArtworkLink());
+        values.put(KEY_SONG_TYPE, song.getSongType().name());
         values.put(KEY_CREATED_AT, getDateTime());
 
         long song_id = db.insert(TABLE_SONG, null, values);
@@ -161,13 +166,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             c.moveToFirst();
         }
 
-        Song song = new SoundcloudSong();
-        song.setId(c.getInt(c.getColumnIndex(KEY_ID)));
-        song.setTrackName(c.getString(c.getColumnIndex(KEY_SONG_NAME)));
-        song.setUrl(c.getString(c.getColumnIndex(KEY_SONG_URL)));
-        song.setDuration(c.getString(c.getColumnIndex(KEY_SONG_DURATION)));
-        song.setArtworkLink(c.getString(c.getColumnIndex(KEY_SONG_ARTWORK_LINK)));
-       // song.setCreatedAt(c.getString(c.getColumnIndex(KEY_CREATED_AT)));
+        return createSongFromCursor(c);
+    }
+
+    private Song createSongFromCursor(Cursor c){
+        Song song = null;
+        switch (SongType.valueOf(c.getString(c.getColumnIndex(KEY_SONG_TYPE)))){
+            case LOCAL:
+                song = new LocalSong();
+                break;
+            case SOUNDCLOUD:
+                song = new SoundcloudSong();
+                break;
+        }
+
+        if (song != null) {
+            song.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+            song.setTrackName(c.getString(c.getColumnIndex(KEY_SONG_NAME)));
+            song.setUrl(c.getString(c.getColumnIndex(KEY_SONG_URL)));
+            song.setDuration(c.getString(c.getColumnIndex(KEY_SONG_DURATION)));
+            song.setArtworkLink(c.getString(c.getColumnIndex(KEY_SONG_ARTWORK_LINK)));
+            // song.setCreatedAt(c.getString(c.getColumnIndex(KEY_CREATED_AT)));
+        }
         return song;
     }
 
@@ -180,13 +200,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (c.moveToFirst()){
             do {
-                Song song = new SoundcloudSong();
-                song.setId(c.getInt(c.getColumnIndex(KEY_ID)));
-                song.setTrackName(c.getString(c.getColumnIndex(KEY_SONG_NAME)));
-                song.setUrl(c.getString(c.getColumnIndex(KEY_SONG_URL)));
-                song.setDuration(c.getString(c.getColumnIndex(KEY_SONG_DURATION)));
-                song.setArtworkLink(c.getString(c.getColumnIndex(KEY_SONG_ARTWORK_LINK)));
-                songs.add(song);
+                Song song = createSongFromCursor(c);
+                if (song != null) {
+                    songs.add(song);
+                }
             } while (c.moveToNext());
         }
         return songs;
@@ -241,13 +258,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (c.moveToFirst()){
             do {
-                Song song = new SoundcloudSong();
-                song.setId(c.getInt(c.getColumnIndex(KEY_ID)));
-                song.setTrackName(c.getString(c.getColumnIndex(KEY_SONG_NAME)));
-                song.setUrl(c.getString(c.getColumnIndex(KEY_SONG_URL)));
-                song.setDuration(c.getString(c.getColumnIndex(KEY_SONG_DURATION)));
-                song.setArtworkLink(c.getString(c.getColumnIndex(KEY_SONG_ARTWORK_LINK)));
-                songs.add(song);
+                Song song = createSongFromCursor(c);
+                if (song != null) {
+                    songs.add(song);
+                }
             } while (c.moveToNext());
         }
         return songs;

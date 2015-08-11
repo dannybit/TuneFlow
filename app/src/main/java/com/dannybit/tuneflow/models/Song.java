@@ -19,6 +19,7 @@ public abstract class Song implements Parcelable {
     private String duration;
     private String artworkLink;
     private String url;
+    protected SongType songType;
 
     public Song() {
 
@@ -75,6 +76,7 @@ public abstract class Song implements Parcelable {
         duration = in.readString();
         artworkLink = in.readString();
         url = in.readString();
+        songType = (SongType) in.readSerializable();
     }
 
     @Override
@@ -89,12 +91,17 @@ public abstract class Song implements Parcelable {
         dest.writeString(duration);
         dest.writeString(artworkLink);
         dest.writeString(url);
+        dest.writeSerializable(songType);
     }
 
 
     public abstract void loadImage(Context context, ImageView imageView);
     public abstract void loadThumbnail(Context context, ImageView imageView);
     public abstract void styleTag(Context context, TextView tagText);
+
+    public SongType getSongType(){
+        return this.songType;
+    }
 
 
     @Override
