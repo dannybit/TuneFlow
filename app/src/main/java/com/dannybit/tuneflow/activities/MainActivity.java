@@ -491,7 +491,9 @@ public class MainActivity extends ActionBarActivity
         Playlist playlist = newPlaylistCreatedEvent.getPlaylist();
         dbHelper.createPlaylist(playlist);
         playlistListFragment.addPlaylist(playlist);
-        playlistSelected(playlist);
+        if (playlistListFragment != null) {
+            playlistListFragment.scrollToBottom();
+        }
     }
 
     public AudioPlaybackService getMusicService(){

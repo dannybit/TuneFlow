@@ -115,4 +115,8 @@ public class PlaylistListFragment extends Fragment implements AdapterView.OnItem
         adapter.add(playlist);
         adapter.notifyDataSetChanged();
     }
+
+    public void scrollToBottom(){
+        playlistsGridView.smoothScrollToPosition(adapter.getCount() - 1);
+    }
 }
