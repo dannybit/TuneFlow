@@ -43,6 +43,8 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
     private static final String SEARCH_LIST_SOUNDCLOUD_FRAGMENT_TAG = "SEARCH_LIST_SOUNDCLOUD_FRAGMENT";
     private static final String SEARCH_LIST_LOCAL_FRAGMENT_TAG = "SEARCH_LIST_LOCAL_FRAGMENT";
     private Menu menu;
+    private static Integer SOUNDCLOUD_REQUEST_TAG = 132435;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +68,7 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
                 searchLocalFragment = new SearchLocalFragment();
                 getSupportFragmentManager().beginTransaction().add(R.id.search_container, searchLocalFragment, SEARCH_LIST_LOCAL_FRAGMENT_TAG).commit();
             }
-
-            /*
-            Intent intent = getIntent();
-            handleIntent(intent);
-            */
+            
         } else {
             restoreSearchSoundcloudFragmentReference();
             restoreSearchLocalFragmentReference();
@@ -147,13 +145,20 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
     }
 
     public void soundcloudSongSearch(String query){
-        Log.v(TAG, "souncdloudsearch");
         RequestParams params = new RequestParams();
         params.put("client_id", SoundcloudRestClient.CLIENT_ID);
         params.put("q", query);
         params.put("limit", 200);
 
-        SoundcloudRestClient.get(params, new JsonHttpResponseHandler() {
+
+
+        SoundcloudRestClient.cancelRequestsByTag(SOUNDCLOUD_REQUEST_TAG++);
+        SoundcloudRestClient.get(this, params,SOUNDCLOUD_REQUEST_TAG, new JsonHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);

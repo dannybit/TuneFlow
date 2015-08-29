@@ -1,5 +1,7 @@
 package com.dannybit.tuneflow.network;
 
+import android.content.Context;
+
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -16,8 +18,8 @@ public class SoundcloudRestClient {
 
 
 
-    public static void get(RequestParams params, AsyncHttpResponseHandler responseHandler){
-        client.get(getAbsoluteUrl(), params, responseHandler);
+    public static void get(Context context, RequestParams params, Object tag, AsyncHttpResponseHandler responseHandler){
+        client.get(context, getAbsoluteUrl(), params, responseHandler).setTag(tag);
     }
 
     public static void post(String id, RequestParams params, AsyncHttpResponseHandler responseHandler){
@@ -28,6 +30,11 @@ public class SoundcloudRestClient {
     private static String getAbsoluteUrl(){
         return BASE_URL;
     }
+
+    public static void cancelRequestsByTag(Object tag){
+        client.cancelRequestsByTAG(tag, true);
+    }
+
 
 
 
