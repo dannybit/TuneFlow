@@ -79,6 +79,10 @@ public class PlaylistAdapter extends BaseAdapter {
     public void add(Playlist playlist){
         playlists.add(playlist);
     }
+
+    public void remove(Playlist playlist){
+        playlists.remove(playlist);
+    }
 }
 
 

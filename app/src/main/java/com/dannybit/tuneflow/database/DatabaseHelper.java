@@ -127,6 +127,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return rowsAffected;
     }
 
+    public int deletePlaylist(Playlist playlist){
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsAffected = db.delete(TABLE_PLAYLIST, "id=?", new String[]{String.valueOf(playlist.getId())});
+        return rowsAffected;
+    }
+
 
     public long createSong(Song song){
         SQLiteDatabase db = this.getWritableDatabase();

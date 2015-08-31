@@ -18,7 +18,9 @@ import com.dannybit.tuneflow.BusProvider;
 import com.dannybit.tuneflow.activities.MainActivity;
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.database.DatabaseHelper;
+import com.dannybit.tuneflow.events.DeletePlaylistEvent;
 import com.dannybit.tuneflow.events.PlaylistSelectedEvent;
+import com.dannybit.tuneflow.events.RenamePlaylistEvent;
 import com.dannybit.tuneflow.events.SongSelectedEvent;
 import com.dannybit.tuneflow.models.Playlist;
 import com.dannybit.tuneflow.fragments.adapters.PlaylistAdapter;
@@ -133,7 +135,7 @@ public class PlaylistListFragment extends Fragment implements AdapterView.OnItem
                         editPlaylistDialogFragment.show(fm, "show");
                         break;
                     case 2: // Delete
-                        
+                        BusProvider.getInstance().post(new DeletePlaylistEvent(selectedPlaylist));
                         break;
                     case 3: // Add Tracks to Playlist
                         //BusProvider.getInstance().post(new PlaylistSelectedEvent(selectedPlaylist));

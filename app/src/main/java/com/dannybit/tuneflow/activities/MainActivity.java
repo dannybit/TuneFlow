@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.dannybit.tuneflow.BusProvider;
 import com.dannybit.tuneflow.Utils.MainUtils;
+import com.dannybit.tuneflow.events.DeletePlaylistEvent;
 import com.dannybit.tuneflow.events.NewPlaylistCreatedEvent;
 import com.dannybit.tuneflow.events.PlaylistSelectedEvent;
 import com.dannybit.tuneflow.events.RenamePlaylistEvent;
@@ -504,6 +505,14 @@ public class MainActivity extends ActionBarActivity
         String newName = renamePlaylistEvent.getNewName();
         dbHelper.renamePlaylist(playlist, newName);
         playlist.setName(newName);
+        playlistListFragment.getAdapter().notifyDataSetChanged();
+    }
+
+    @Subscribe
+    public void onDeletePlaylist(DeletePlaylistEvent deletePlaylistEvent){
+        Playlist playlist = deletePlaylistEvent.getPlaylist();
+        dbHelper.deletePlaylist(playlist);
+        playlistListFragment.getAdapter().remove(playlist);
         playlistListFragment.getAdapter().notifyDataSetChanged();
     }
 
