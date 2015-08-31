@@ -14,11 +14,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.dannybit.tuneflow.BusProvider;
 import com.dannybit.tuneflow.Utils.MainUtils;
 import com.dannybit.tuneflow.events.NewPlaylistCreatedEvent;
 import com.dannybit.tuneflow.events.PlaylistSelectedEvent;
+import com.dannybit.tuneflow.events.RenamePlaylistEvent;
 import com.dannybit.tuneflow.events.SongSelectedEvent;
 import com.dannybit.tuneflow.events.WebsiteSelectedEvent;
 import com.dannybit.tuneflow.fragments.NavigationDrawerCallbacks;
@@ -494,6 +496,15 @@ public class MainActivity extends ActionBarActivity
         if (playlistListFragment != null) {
             playlistListFragment.scrollToBottom();
         }
+    }
+
+    @Subscribe
+    public void onRenamePlaylist(RenamePlaylistEvent renamePlaylistEvent){
+        Playlist playlist = renamePlaylistEvent.getPlaylist();
+        String newName = renamePlaylistEvent.getNewName();
+        dbHelper.renamePlaylist(playlist, newName);
+        playlist.setName(newName);
+        playlistListFragment.getAdapter().notifyDataSetChanged();
     }
 
     public AudioPlaybackService getMusicService(){

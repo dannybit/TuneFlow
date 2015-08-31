@@ -17,5 +17,9 @@
     <string name="new_playlist_dialog_title">New Playlist</string>
     <string name="local_tag_text">Local</string>
     <string name="soundcloud_tag_text">Soundcloud</string>
+    <string name="playlist_is_empty_message">Playlist is empty</string>
+    <string name="edit_playlist_dialog_title"> Rename Playlist</string>
+    <string name="rename_playlist"> Rename </string>
+    <string name="cancenl"> Cancel </string>
 
 </resources>

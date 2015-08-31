@@ -119,6 +119,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public int renamePlaylist(Playlist playlist, String newName){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues newValues = new ContentValues();
+        newValues.put(KEY_PLAYLIST_NAME, newName);
+        int rowsAffected = db.update(TABLE_PLAYLIST, newValues, "id=?", new String[]{String.valueOf(playlist.getId())});
+        return rowsAffected;
+    }
+
 
     public long createSong(Song song){
         SQLiteDatabase db = this.getWritableDatabase();
