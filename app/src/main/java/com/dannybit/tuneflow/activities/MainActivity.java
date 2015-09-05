@@ -52,6 +52,7 @@ public class MainActivity extends ActionBarActivity
 {
 
     public static final String TAG = MainActivity.class.getName();
+
     /* Used for ActivityResult when starting the SearchActivity */
     public static final int FIND_SOUNDClOUD_SONG_REQUEST = 1;
     public static final int FIND_LOCAL_SONG_REQUEST = 2;

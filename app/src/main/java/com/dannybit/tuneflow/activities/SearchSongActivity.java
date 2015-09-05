@@ -145,15 +145,20 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
     }
 
     public void soundcloudSongSearch(String query){
+        if (query.isEmpty()){
+            SoundcloudRestClient.cancelRequestsByTag(SOUNDCLOUD_REQUEST_TAG++);
+            searchSoundcloudFragment.getAdapter().clear();
+            searchSoundcloudFragment.getAdapter().notifyDataSetChanged();
+            return;
+        }
         RequestParams params = new RequestParams();
         params.put("client_id", SoundcloudRestClient.CLIENT_ID);
         params.put("q", query);
         params.put("limit", 200);
 
 
-
         SoundcloudRestClient.cancelRequestsByTag(SOUNDCLOUD_REQUEST_TAG++);
-        SoundcloudRestClient.get(this, params,SOUNDCLOUD_REQUEST_TAG, new JsonHttpResponseHandler() {
+        SoundcloudRestClient.get(this, params, SOUNDCLOUD_REQUEST_TAG, new JsonHttpResponseHandler() {
             @Override
             public void onStart() {
                 super.onStart();
