@@ -48,9 +48,9 @@ public class EditPlaylistDialogFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         getDialog().setTitle(R.string.edit_playlist_dialog_title);
         final Playlist playlistSelected = getArguments().getParcelable("PLAYLIST");
-        View view = inflater.inflate(R.layout.fragment_edit_playlist_dialog, container, false);
-        editName = (EditText) view.findViewById(R.id.editPlaylistName);
-        Button renameButton = (Button) view.findViewById(R.id.bRename);
+        View view = inflater.inflate(R.layout.fragment_new_edit_playlist_dialog, container, false);
+        editName = (EditText) view.findViewById(R.id.playlistName);
+        Button renameButton = (Button) view.findViewById(R.id.bAddOrEdit);
         renameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -9,17 +9,20 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
 
 import com.dannybit.tuneflow.BusProvider;
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.events.WebsiteSelectedEvent;
+import com.dannybit.tuneflow.fragments.adapters.WebSelectionAdapter;
 import com.dannybit.tuneflow.fragments.search.WebsiteSelection;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WebsiteSelectionDialogFragment extends DialogFragment {
+public class WebsiteSelectionDialogFragment extends DialogFragment implements AdapterView.OnItemClickListener {
 
     public WebsiteSelectionDialogFragment() {
         // Required empty public constructor
@@ -44,29 +47,23 @@ public class WebsiteSelectionDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         getDialog().setTitle(R.string.website_selection_dialog_title);
         View view = inflater.inflate(R.layout.fragment_website_selection_dialog, container, false);
-        Button localButton = (Button) view.findViewById(R.id.local_button);
-        localButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                BusProvider.getInstance().post(new WebsiteSelectedEvent(WebsiteSelection.LOCAL));
-            }
-        });
-        Button soundcloudButton = (Button) view.findViewById(R.id.soundcloud_button);
-        soundcloudButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                BusProvider.getInstance().post(new WebsiteSelectedEvent(WebsiteSelection.SOUNDCLOUD));
-            }
-        });
-
-
+        ListView selectionList = (ListView) view.findViewById(R.id.selectionList);
+        selectionList.setAdapter(new WebSelectionAdapter(getActivity()));
+        selectionList.setOnItemClickListener(this);
         return view;
     }
 
-
-
-
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        switch (position){
+            case 0: // Local
+                BusProvider.getInstance().post(new WebsiteSelectedEvent(WebsiteSelection.LOCAL));
+                break;
+            case 1: // Soundcloud
+                BusProvider.getInstance().post(new WebsiteSelectedEvent(WebsiteSelection.SOUNDCLOUD));
+                break;
+        }
+    }
 }

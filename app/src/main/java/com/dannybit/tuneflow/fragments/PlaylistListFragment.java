@@ -114,7 +114,7 @@ public class PlaylistListFragment extends Fragment implements AdapterView.OnItem
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
         final Playlist selectedPlaylist = (Playlist) adapter.getItem(position);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        CharSequence[] arr = {"Play", "Rename", "Delete", "Add Tracks to Playlist"};
+        CharSequence[] arr = {"Play", "Rename", "Delete"};
         builder.setTitle(selectedPlaylist.getName()).setItems(arr, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
@@ -137,10 +137,6 @@ public class PlaylistListFragment extends Fragment implements AdapterView.OnItem
                     case 2: // Delete
                         BusProvider.getInstance().post(new DeletePlaylistEvent(selectedPlaylist));
                         break;
-                    case 3: // Add Tracks to Playlist
-                        //BusProvider.getInstance().post(new PlaylistSelectedEvent(selectedPlaylist));
-                        break;
-
                 }
             }
         });

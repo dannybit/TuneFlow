@@ -4,12 +4,14 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/editPlaylistName"
+        android:id="@+id/playlistName"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:singleLine="true"
+        android:maxLength="60"/>
 
     <Button
-        android:id="@+id/bAddNewPlaylist"
+        android:id="@+id/bAddOrEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text= "@string/add"/>
