@@ -13,10 +13,12 @@ import android.os.PowerManager;
 import android.util.Log;
 
 import com.dannybit.tuneflow.models.Song;
+import com.dannybit.tuneflow.models.SongQueue;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class AudioPlaybackService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
 
@@ -29,6 +31,8 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
     private SongCompletedListener songCompletedListener;
     private SongPreparedListener songPreparedListener;
     private boolean duckedFromPlaying;
+    private SongQueue songQueue;
+
 
 
 
@@ -96,8 +100,16 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
         mediaPlayer.setOnErrorListener(this);
     }
 
-    public void setList(ArrayList<Song> songs){
+    public void setQueue(ArrayList<Song> songs){
         this.songs = songs;
+    }
+
+    public List<Song> getQueue(){
+        return this.songs;
+    }
+    public void addToQueue(ArrayList<Song> songs){
+            this.songs.addAll(songs);
+
     }
 
 

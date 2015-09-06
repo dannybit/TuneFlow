@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.dannybit.tuneflow.BusProvider;
 import com.dannybit.tuneflow.Utils.MainUtils;
+import com.dannybit.tuneflow.events.AddPlaylistToQueue;
 import com.dannybit.tuneflow.events.DeletePlaylistEvent;
 import com.dannybit.tuneflow.events.NewPlaylistCreatedEvent;
 import com.dannybit.tuneflow.events.PlaylistSelectedEvent;
@@ -39,6 +40,7 @@ import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.services.AudioPlaybackService;
 import com.dannybit.tuneflow.views.notifications.NowPlayingNotification;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -336,7 +338,7 @@ public class MainActivity extends ActionBarActivity
 
     @Subscribe
     public void onSongSelected(SongSelectedEvent songSelectedEvent) {
-        audioService.setList(songSelectedEvent.getSongs());
+        audioService.setQueue(songSelectedEvent.getSongs());
         audioService.setSongPosition(songSelectedEvent.getPosition());
         // Only start the nowplayingfragment if there was no error setting the data source for the mediaplayer
         if (audioService.playSong()) {
@@ -344,9 +346,9 @@ public class MainActivity extends ActionBarActivity
             startNotification(audioService.getCurrentSong());
         }
         songSelected = true;
-
-
     }
+
+
 
     private void openNowPlayingFragment(Song song, boolean isPlaying){
         slidingUpPanelLayout.setPanelHeight((int) MainUtils.convertDpToPixel((int) getResources().getDimension(R.dimen.draggable_header) / getResources().getDisplayMetrics().density, this));
@@ -515,6 +517,17 @@ public class MainActivity extends ActionBarActivity
         dbHelper.deletePlaylist(playlist);
         playlistListFragment.getAdapter().remove(playlist);
         playlistListFragment.getAdapter().notifyDataSetChanged();
+    }
+
+    @Subscribe
+    public void onAddPlaylistToQueue(AddPlaylistToQueue addPlaylistToQueue){
+        Playlist playlist = addPlaylistToQueue.getPlaylist();
+       if (audioService.getQueue() == null || audioService.getQueue().isEmpty()){
+           BusProvider.getInstance().post(new SongSelectedEvent(playlist.getSongs(), 0));
+       } else {
+            audioService.addToQueue(playlist.getSongs());
+        }
+
     }
 
     public AudioPlaybackService getMusicService(){

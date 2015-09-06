@@ -18,6 +18,7 @@ import com.dannybit.tuneflow.BusProvider;
 import com.dannybit.tuneflow.activities.MainActivity;
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.database.DatabaseHelper;
+import com.dannybit.tuneflow.events.AddPlaylistToQueue;
 import com.dannybit.tuneflow.events.DeletePlaylistEvent;
 import com.dannybit.tuneflow.events.PlaylistSelectedEvent;
 import com.dannybit.tuneflow.events.RenamePlaylistEvent;
@@ -114,7 +115,7 @@ public class PlaylistListFragment extends Fragment implements AdapterView.OnItem
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
         final Playlist selectedPlaylist = (Playlist) adapter.getItem(position);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        CharSequence[] arr = {"Play", "Rename", "Delete"};
+        CharSequence[] arr = {"Play", "Rename", "Delete", "Add to queue"};
         builder.setTitle(selectedPlaylist.getName()).setItems(arr, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
@@ -137,6 +138,8 @@ public class PlaylistListFragment extends Fragment implements AdapterView.OnItem
                     case 2: // Delete
                         BusProvider.getInstance().post(new DeletePlaylistEvent(selectedPlaylist));
                         break;
+                    case 3: // Add to queue
+                        BusProvider.getInstance().post(new AddPlaylistToQueue(selectedPlaylist));
                 }
             }
         });
