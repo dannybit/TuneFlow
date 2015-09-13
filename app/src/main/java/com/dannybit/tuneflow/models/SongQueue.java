@@ -13,14 +13,14 @@ import java.util.Queue;
  */
 public class SongQueue {
 
-    private final ArrayList<Song> songs;
+    private final List<Song> songs;
     private int currentSongPosition;
 
     public SongQueue(){
         this.songs = new ArrayList<>();
     }
 
-    public SongQueue(ArrayList<Song> queue){
+    public SongQueue(List<Song> queue){
         this.songs = queue;
         currentSongPosition = 0;
     }

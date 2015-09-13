@@ -161,9 +161,10 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
         playSong();
     }
 
-    public void playForwardSong(){
+    public boolean playForwardSong(){
         mediaPlayer.setOnCompletionListener(null);
         playSong();
+        return true;
 
     }
 
