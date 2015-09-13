@@ -74,4 +74,7 @@ public class SongAdapter extends BaseAdapter {
     public void add(Song s){
         songs.add(s);
     }
+    public void remove(Song s){
+        songs.remove(s);
+    }
 }

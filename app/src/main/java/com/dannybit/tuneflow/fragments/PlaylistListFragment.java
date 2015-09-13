@@ -18,10 +18,9 @@ import com.dannybit.tuneflow.BusProvider;
 import com.dannybit.tuneflow.activities.MainActivity;
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.database.DatabaseHelper;
-import com.dannybit.tuneflow.events.AddPlaylistToQueue;
+import com.dannybit.tuneflow.events.AddPlaylistToQueueEvent;
 import com.dannybit.tuneflow.events.DeletePlaylistEvent;
 import com.dannybit.tuneflow.events.PlaylistSelectedEvent;
-import com.dannybit.tuneflow.events.RenamePlaylistEvent;
 import com.dannybit.tuneflow.events.SongSelectedEvent;
 import com.dannybit.tuneflow.models.Playlist;
 import com.dannybit.tuneflow.fragments.adapters.PlaylistAdapter;
@@ -139,7 +138,7 @@ public class PlaylistListFragment extends Fragment implements AdapterView.OnItem
                         BusProvider.getInstance().post(new DeletePlaylistEvent(selectedPlaylist));
                         break;
                     case 3: // Add to queue
-                        BusProvider.getInstance().post(new AddPlaylistToQueue(selectedPlaylist));
+                        BusProvider.getInstance().post(new AddPlaylistToQueueEvent(selectedPlaylist));
                 }
             }
         });

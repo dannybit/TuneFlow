@@ -14,12 +14,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.dannybit.tuneflow.BusProvider;
 import com.dannybit.tuneflow.Utils.MainUtils;
-import com.dannybit.tuneflow.events.AddPlaylistToQueue;
+import com.dannybit.tuneflow.events.AddPlaylistToQueueEvent;
 import com.dannybit.tuneflow.events.DeletePlaylistEvent;
+import com.dannybit.tuneflow.events.DeleteSongEvent;
 import com.dannybit.tuneflow.events.NewPlaylistCreatedEvent;
 import com.dannybit.tuneflow.events.PlaylistSelectedEvent;
 import com.dannybit.tuneflow.events.RenamePlaylistEvent;
@@ -29,21 +29,16 @@ import com.dannybit.tuneflow.fragments.NavigationDrawerCallbacks;
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.database.DatabaseHelper;
 import com.dannybit.tuneflow.fragments.NavigationDrawerFragment;
-import com.dannybit.tuneflow.fragments.NewPlaylistDialogFragment;
 import com.dannybit.tuneflow.fragments.NowPlayingFragment;
 import com.dannybit.tuneflow.fragments.PlaylistListFragment;
 import com.dannybit.tuneflow.fragments.SongsListFragment;
-import com.dannybit.tuneflow.fragments.WebsiteSelectionDialogFragment;
 import com.dannybit.tuneflow.fragments.search.WebsiteSelection;
 import com.dannybit.tuneflow.models.Playlist;
 import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.services.AudioPlaybackService;
 import com.dannybit.tuneflow.views.notifications.NowPlayingNotification;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-
-import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity
@@ -338,7 +333,7 @@ public class MainActivity extends ActionBarActivity
 
     @Subscribe
     public void onSongSelected(SongSelectedEvent songSelectedEvent) {
-        audioService.setQueue(songSelectedEvent.getSongs());
+        audioService.newQueue(songSelectedEvent.getSongs());
         audioService.setSongPosition(songSelectedEvent.getPosition());
         // Only start the nowplayingfragment if there was no error setting the data source for the mediaplayer
         if (audioService.playSong()) {
@@ -410,7 +405,7 @@ public class MainActivity extends ActionBarActivity
         currentSongsListFragment = new SongsListFragment();
         Bundle extras = new Bundle();
         extras.putParcelableArrayList("SONGS", playlist.getSongs());
-        extras.putString("PLAYLIST_NAME", playlist.getName());
+        extras.putParcelable("PLAYLIST", playlist);
         currentSongsListFragment.setArguments(extras);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, currentSongsListFragment, SONGS_LIST_FRAGMENT_TAG).addToBackStack(null).commit();
     }
@@ -520,12 +515,22 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Subscribe
-    public void onAddPlaylistToQueue(AddPlaylistToQueue addPlaylistToQueue){
+    public void onDeleteSong(DeleteSongEvent deleteSongEvent){
+        Playlist playlist = deleteSongEvent.getPlaylist();
+        Song songToDelete = deleteSongEvent.getSong();
+        dbHelper.deleteSong(songToDelete, playlist);
+        currentSongsListFragment.getAdapter().remove(songToDelete);
+        currentSongsListFragment.getAdapter().notifyDataSetChanged();
+        audioService.removeSong(songToDelete);
+    }
+
+    @Subscribe
+    public void onAddPlaylistToQueue(AddPlaylistToQueueEvent addPlaylistToQueue){
         Playlist playlist = addPlaylistToQueue.getPlaylist();
-       if (audioService.getQueue() == null || audioService.getQueue().isEmpty()){
+       if (audioService.getSongQueue().isEmpty()){
            BusProvider.getInstance().post(new SongSelectedEvent(playlist.getSongs(), 0));
        } else {
-            audioService.addToQueue(playlist.getSongs());
+            audioService.getSongQueue().addSongs(playlist.getSongs());
         }
 
     }

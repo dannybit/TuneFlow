@@ -114,7 +114,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         for (int i = 0; i < playlist.getSongs().size(); i++){
             createPlaylistSong(playlist_id, playlist.getSongs().get(i).getId());
         }
-
         return playlist_id;
 
     }
@@ -130,6 +129,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public int deletePlaylist(Playlist playlist){
         SQLiteDatabase db = this.getWritableDatabase();
         int rowsAffected = db.delete(TABLE_PLAYLIST, "id=?", new String[]{String.valueOf(playlist.getId())});
+        return rowsAffected;
+    }
+
+    public int deleteSong(Song song, Playlist playlist){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_SONG, "id=?", new String[]{String.valueOf(song.getId())});
+        int rowsAffected = db.delete(TABLE_PLAYLIST_SONG, "song_id=? AND playlist_id=?", new String[]{String.valueOf(song.getId()), String.valueOf(playlist.getId())});
         return rowsAffected;
     }
 

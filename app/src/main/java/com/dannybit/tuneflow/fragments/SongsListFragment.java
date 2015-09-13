@@ -1,5 +1,7 @@
 package com.dannybit.tuneflow.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
@@ -7,13 +9,16 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 
 import com.dannybit.tuneflow.BusProvider;
 import com.dannybit.tuneflow.activities.MainActivity;
 import com.dannybit.tuneflow.R;
+import com.dannybit.tuneflow.events.DeleteSongEvent;
 import com.dannybit.tuneflow.events.SongSelectedEvent;
+import com.dannybit.tuneflow.models.Playlist;
 import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.fragments.adapters.SongAdapter;
 import com.melnykov.fab.FloatingActionButton;
@@ -21,11 +26,11 @@ import com.melnykov.fab.FloatingActionButton;
 import java.util.ArrayList;
 
 
-public class SongsListFragment extends ListFragment implements View.OnClickListener {
+public class SongsListFragment extends ListFragment implements View.OnClickListener, AdapterView.OnItemLongClickListener {
 
     private SongAdapter adapter;
     private ArrayList<Song> songs;
-    private String playListName;
+    private Playlist playlist;
     private WebsiteSelectionDialogFragment webSelectionFragment;
     private FloatingActionButton fabSongsList;
 
@@ -37,6 +42,13 @@ public class SongsListFragment extends ListFragment implements View.OnClickListe
     public SongsListFragment() {
     }
 
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getListView().setOnItemLongClickListener(this);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +58,7 @@ public class SongsListFragment extends ListFragment implements View.OnClickListe
         setHasOptionsMenu(true);
         Bundle extras = getArguments();
         songs = extras.getParcelableArrayList("SONGS");
-        playListName = extras.getString("PLAYLIST_NAME");
+        playlist = (Playlist) extras.getParcelable("PLAYLIST");
         setupAdapter();
         setupActionBarTitle();
     }
@@ -61,7 +73,7 @@ public class SongsListFragment extends ListFragment implements View.OnClickListe
     }
 
     private void setupActionBarTitle(){
-        ((MainActivity) getActivity()).setActionBarTitle(playListName);
+        ((MainActivity) getActivity()).setActionBarTitle(playlist.getName());
     }
 
     @Override
@@ -89,7 +101,29 @@ public class SongsListFragment extends ListFragment implements View.OnClickListe
 
     }
 
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+        final Song songSelected = (Song) adapter.getItem(position);
+        final int songPosition = position;
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        CharSequence[] arr = {"Play",  "Delete"};
+        builder.setTitle(songSelected.getTrackName()).setItems(arr, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0: // Play
+                        BusProvider.getInstance().post(new SongSelectedEvent(songs, songPosition));
+                        break;
+                    case 1: // Delete but doesnt update the queue
+                        BusProvider.getInstance().post(new DeleteSongEvent(songSelected, playlist));
+                        break;
 
+                }
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

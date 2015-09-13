@@ -5,11 +5,11 @@ import com.dannybit.tuneflow.models.Playlist;
 /**
  * Created by danielnamdar on 9/6/15.
  */
-public class AddPlaylistToQueue {
+public class AddPlaylistToQueueEvent {
 
     private Playlist playlist;
 
-    public AddPlaylistToQueue(Playlist playlist){
+    public AddPlaylistToQueueEvent(Playlist playlist){
         this.playlist = playlist;
     }
 
