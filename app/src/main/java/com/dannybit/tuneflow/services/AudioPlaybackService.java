@@ -91,8 +91,8 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
         return getSongQueue().getCurrentSong();
     }
 
-    public void newQueue(ArrayList<Song> songs){
-        songQueue = new SongQueue(songs);
+    public void newQueue(ArrayList<Song> songs, int position){
+        songQueue = new SongQueue(songs, position);
     }
 
     public void setSongPosition(int songPosition){

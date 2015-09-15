@@ -22,7 +22,12 @@ public class SongQueue {
 
     public SongQueue(List<Song> queue){
         this.songs = queue;
-        currentSongPosition = 0;
+        this.currentSongPosition = 0;
+    }
+
+    public SongQueue(List<Song> queue, int position){
+        this.songs = queue;
+        this.currentSongPosition = position;
     }
 
     public void addSong(Song songToAdd){

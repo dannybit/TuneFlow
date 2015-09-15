@@ -333,8 +333,7 @@ public class MainActivity extends ActionBarActivity
 
     @Subscribe
     public void onSongSelected(SongSelectedEvent songSelectedEvent) {
-        audioService.newQueue(songSelectedEvent.getSongs());
-        audioService.setSongPosition(songSelectedEvent.getPosition());
+        audioService.newQueue(songSelectedEvent.getSongs(), songSelectedEvent.getPosition());
         // Only start the nowplayingfragment if there was no error setting the data source for the mediaplayer
         if (audioService.playSong()) {
             openNowPlayingFragment(audioService.getCurrentSong(), false);
