@@ -1,26 +1,21 @@
 package com.dannybit.tuneflow.services;
 
 import android.app.Service;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.drm.DrmManagerClient;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.provider.MediaStore;
 import android.util.Log;
 
-import com.dannybit.tuneflow.activities.MainActivity;
 import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.models.SongQueue;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class AudioPlaybackService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
 
@@ -82,7 +77,7 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
         mediaPlayer.reset();
 
         try {
-            mediaPlayer.setDataSource(getSongQueue().currentSong().getUrl());
+            mediaPlayer.setDataSource(getSongQueue().getCurrentSong().getUrl());
         } catch (Exception e){
             Log.e("MUSIC SERVICE", "Error setting data source", e);
             return false;
@@ -93,7 +88,7 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
     }
 
     public Song getCurrentSong(){
-        return getSongQueue().currentSong();
+        return getSongQueue().getCurrentSong();
     }
 
     public void newQueue(ArrayList<Song> songs){
@@ -140,32 +135,44 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
         mediaPlayer.start();
         mediaPlayer.setOnCompletionListener(this);
         if (songPreparedListener != null){
-            songPreparedListener.songPrepared(getSongQueue().currentSong());
+            songPreparedListener.songPrepared(getSongQueue().getCurrentSong());
         }
     }
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        Song nextSong = songQueue.nextSong();
-        if (nextSong != null){
-            mediaPlayer.setOnCompletionListener(null);
-            playSong();
-            if (songCompletedListener != null){
-                songCompletedListener.songCompleted(nextSong);
+        if (songQueue.moveForward()) {
+            Song nextSong = songQueue.getCurrentSong();
+            if (nextSong != null) {
+                mediaPlayer.setOnCompletionListener(null);
+                playSong();
+                if (songCompletedListener != null) {
+                    songCompletedListener.songCompleted(nextSong);
+                }
             }
         }
     }
 
-    public void playBackwardSong(){
+    public boolean playBackwardSong(){
         mediaPlayer.setOnCompletionListener(null);
-        playSong();
+        if (songQueue.moveBackward()) {
+            playSong();
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     public boolean playForwardSong(){
         mediaPlayer.setOnCompletionListener(null);
-        playSong();
-        return true;
-
+        if (songQueue.moveForward()) {
+            playSong();
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     public void togglePlayOrPause(){

@@ -33,15 +33,27 @@ public class SongQueue {
         songsToAdd.addAll(songsToAdd);
     }
 
-    public Song nextSong(){
-        return songs.get(++currentSongPosition);
+    public boolean moveForward(){
+        if (currentSongPosition + 1 >= songs.size()){
+            return false;
+        }
+        else {
+            currentSongPosition++;
+            return true;
+        }
     }
 
-    public Song previousSong(){
-        return songs.get(--currentSongPosition);
+    public boolean moveBackward() {
+        if (currentSongPosition - 1 < 0) {
+            return false;
+        }
+        else {
+            currentSongPosition--;
+            return true;
+        }
     }
 
-    public Song currentSong(){
+    public Song getCurrentSong(){
         return songs.get(currentSongPosition);
     }
 
@@ -57,6 +69,4 @@ public class SongQueue {
     public boolean isEmpty(){
         return songs.isEmpty();
     }
-
-
 }
