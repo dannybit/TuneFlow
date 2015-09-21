@@ -74,9 +74,6 @@
         android:paddingBottom="5dp">
 
 
-
-
-
         <ImageButton
             android:id="@+id/bBackward"
             android:layout_width="wrap_content"
@@ -103,6 +100,14 @@
             android:layout_height="wrap_content"
             android:src="@drawable/btn_next"
             android:background="@android:color/transparent"/>
+
+        <ImageButton
+            android:id="@+id/bRepeat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_repeat"
+            android:background="@android:color/transparent"
+            />
 
 
 

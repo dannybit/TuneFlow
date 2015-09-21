@@ -23,6 +23,7 @@ import com.dannybit.tuneflow.events.DeleteSongEvent;
 import com.dannybit.tuneflow.events.NewPlaylistCreatedEvent;
 import com.dannybit.tuneflow.events.PlaylistSelectedEvent;
 import com.dannybit.tuneflow.events.RenamePlaylistEvent;
+import com.dannybit.tuneflow.events.RepeatButtonClickedEvent;
 import com.dannybit.tuneflow.events.SongSelectedEvent;
 import com.dannybit.tuneflow.events.WebsiteSelectedEvent;
 import com.dannybit.tuneflow.fragments.NavigationDrawerCallbacks;
@@ -529,6 +530,12 @@ public class MainActivity extends ActionBarActivity
        } else {
             audioService.getSongQueue().addSongs(playlist.getSongs());
         }
+
+    }
+
+    @Subscribe
+    public void onRepeatButtonClicked(RepeatButtonClickedEvent repeatButtonClickedEvent){
+        audioService.getSongQueue().enableRepeat();
 
     }
 

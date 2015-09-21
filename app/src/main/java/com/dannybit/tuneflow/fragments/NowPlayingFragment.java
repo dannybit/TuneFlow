@@ -16,8 +16,11 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.dannybit.tuneflow.BusProvider;
 import com.dannybit.tuneflow.activities.MainActivity;
 import com.dannybit.tuneflow.R;
+import com.dannybit.tuneflow.events.RepeatButtonClickedEvent;
+import com.dannybit.tuneflow.events.SongSelectedEvent;
 import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.services.AudioPlaybackService;
 
@@ -30,6 +33,7 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
     private ImageButton bBackward;
     private ImageButton bForward;
     private ImageButton bPlayOrPause;
+    private ImageButton bRepeat;
     private SeekBar songProgressBar;
     private Handler mHandler = new Handler();
     private OnMediaPlayerButtonClickedListener callback;
@@ -84,6 +88,7 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         bBackward = (ImageButton) view.findViewById(R.id.bBackward);
         bPlayOrPause = (ImageButton) view.findViewById(R.id.bPlayOrPause);
         bForward = (ImageButton) view.findViewById(R.id.bForward);
+        bRepeat = (ImageButton) view.findViewById(R.id.bRepeat);
         songProgressBar = (SeekBar) view.findViewById(R.id.songProgressBar);
         songCurrentDurationText = (TextView) view.findViewById(R.id.songCurrentDurationText);
         songTotalDurationText = (TextView) view.findViewById(R.id.songTotalDurationText);
@@ -153,6 +158,13 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
                 }
 
 
+            }
+        });
+
+        bRepeat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BusProvider.getInstance().post(new RepeatButtonClickedEvent());
             }
         });
 

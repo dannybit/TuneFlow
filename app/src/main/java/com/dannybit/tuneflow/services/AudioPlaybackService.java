@@ -60,7 +60,6 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
                 PowerManager.PARTIAL_WAKE_LOCK);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.setOnPreparedListener(this);
-
         mediaPlayer.setOnErrorListener(this);
     }
 
@@ -104,8 +103,6 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
     }
 
 
-    
-
     public class MusicBinder extends Binder {
         public AudioPlaybackService getService() {
             return AudioPlaybackService.this;
@@ -141,14 +138,16 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        if (songQueue.moveForward()) {
-            Song nextSong = songQueue.getCurrentSong();
-            if (nextSong != null) {
-                mediaPlayer.setOnCompletionListener(null);
-                playSong();
-                if (songCompletedListener != null) {
-                    songCompletedListener.songCompleted(nextSong);
-                }
+
+        if (!songQueue.isRepeat()){
+            songQueue.moveForward();
+        }
+        Song nextSong = songQueue.getCurrentSong();
+        if (nextSong != null) {
+            mediaPlayer.setOnCompletionListener(null);
+            playSong();
+            if (songCompletedListener != null) {
+                songCompletedListener.songCompleted(nextSong);
             }
         }
     }

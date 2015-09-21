@@ -15,6 +15,8 @@ public class SongQueue {
 
     private final List<Song> songs;
     private int currentSongPosition;
+    private boolean repeat;
+    private boolean repeatOnce;
 
     public SongQueue(){
         this.songs = new ArrayList<>();
@@ -26,6 +28,9 @@ public class SongQueue {
     }
 
     public SongQueue(List<Song> queue, int position){
+        if (position >= queue.size() || position < 0){
+            throw new IllegalArgumentException("position must be between 0 and (queue's size - 1)");
+        }
         this.songs = queue;
         this.currentSongPosition = position;
     }
@@ -68,10 +73,26 @@ public class SongQueue {
     }
 
     public void setSongPosition(int songPosition){
-        this.currentSongPosition = currentSongPosition;
+        this.currentSongPosition = songPosition;
     }
 
     public boolean isEmpty(){
         return songs.isEmpty();
+    }
+
+    public void enableRepeat(){
+        this.repeat = true;
+    }
+
+    public void enableRepeatOnce(){
+        this.repeatOnce = true;
+    }
+
+    public void disableRepeat(){
+        this.repeat = true;
+    }
+
+    public boolean isRepeat(){
+        return this.repeat;
     }
 }
