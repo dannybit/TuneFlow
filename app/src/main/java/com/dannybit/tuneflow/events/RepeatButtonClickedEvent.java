@@ -5,5 +5,4 @@ package com.dannybit.tuneflow.events;
  */
 public class RepeatButtonClickedEvent {
 
-
 }

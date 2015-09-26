@@ -156,8 +156,6 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
                     updateSong(((MainActivity) getActivity()).getMusicService().getCurrentSong(), false);
                     callback.onForwardClicked();
                 }
-
-
             }
         });
 
@@ -184,12 +182,20 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         bSlidingPlayerPlayOrPause.setVisibility(View.VISIBLE);
     }
 
+    public void enableRepeatButton(){
+        bRepeat.setImageResource(R.drawable.btn_repeat_clicked);
+    }
+
+    public void disableRepeatButton(){
+        bRepeat.setImageResource(R.drawable.btn_repeat);
+    }
+
     public void updateSong(Song newSong, boolean isPlaying){
         currentSong = newSong;
         songName.setText(currentSong.getTrackName());
         songCurrentDurationText.setText("00:00");
         songTotalDurationText.setText(currentSong.getDurationInMins());
-       currentSong.loadImage(getActivity(), songArtwork);
+        currentSong.loadImage(getActivity(), songArtwork);
         currentSong.loadThumbnail(getActivity(), slidingPlayerSongThumbnail);
         songProgressBar.setProgress(0);
         songProgressBar.setMax(100);

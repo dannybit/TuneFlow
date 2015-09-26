@@ -62,57 +62,70 @@
 
 
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/player_footer"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:gravity="center"
         android:background="@color/myPrimaryColor"
-        android:orientation="horizontal"
         android:layout_marginTop="10dp"
         android:paddingBottom="5dp">
+        
 
-
-        <ImageButton
-            android:id="@+id/bBackward"
+        <LinearLayout
+            android:id="@+id/navButtonsLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/btn_previous"
-            android:background="@android:color/transparent"
-            />
+            android:orientation="horizontal"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true">
 
-        <ImageButton
-            android:id="@+id/bPlayOrPause"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/btn_pause"
-            android:background="@android:color/transparent"
-            />
+            <ImageButton
+                android:id="@+id/bBackward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_previous"
+                android:background="@android:color/transparent"
+                />
+
+            <ImageButton
+                android:id="@+id/bPlayOrPause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/btn_pause"
+                android:background="@android:color/transparent"
+                />
 
 
 
-        <ImageButton
-            android:id="@+id/bForward"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/btn_next"
-            android:background="@android:color/transparent"/>
+            <ImageButton
+                android:id="@+id/bForward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_next"
+                android:background="@android:color/transparent"/>
+
+        </LinearLayout>
+
+
 
         <ImageButton
             android:id="@+id/bRepeat"
+            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/btn_repeat"
+            android:layout_marginRight="10dp"
             android:background="@android:color/transparent"
+            android:layout_centerVertical="true"
             />
 
 
 
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/seekBarLayout"

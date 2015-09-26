@@ -89,7 +89,7 @@ public class SongQueue {
     }
 
     public void disableRepeat(){
-        this.repeat = true;
+        this.repeat = false;
     }
 
     public boolean isRepeat(){

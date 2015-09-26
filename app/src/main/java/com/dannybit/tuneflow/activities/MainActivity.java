@@ -535,7 +535,13 @@ public class MainActivity extends ActionBarActivity
 
     @Subscribe
     public void onRepeatButtonClicked(RepeatButtonClickedEvent repeatButtonClickedEvent){
-        audioService.getSongQueue().enableRepeat();
+        if (audioService.getSongQueue().isRepeat()){
+            audioService.getSongQueue().disableRepeat();
+            nowPlayingFragment.disableRepeatButton();
+        } else {
+            audioService.getSongQueue().enableRepeat();
+            nowPlayingFragment.enableRepeatButton();
+        }
 
     }
 

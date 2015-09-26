@@ -138,7 +138,7 @@ public class AudioPlaybackService extends Service implements MediaPlayer.OnPrepa
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-
+        /* If repeat enabled don't move forward the song */
         if (!songQueue.isRepeat()){
             songQueue.moveForward();
         }
