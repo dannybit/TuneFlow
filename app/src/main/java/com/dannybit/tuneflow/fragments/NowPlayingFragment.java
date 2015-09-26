@@ -189,7 +189,7 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         songName.setText(currentSong.getTrackName());
         songCurrentDurationText.setText("00:00");
         songTotalDurationText.setText(currentSong.getDurationInMins());
-        currentSong.loadImage(getActivity(), songArtwork);
+       currentSong.loadImage(getActivity(), songArtwork);
         currentSong.loadThumbnail(getActivity(), slidingPlayerSongThumbnail);
         songProgressBar.setProgress(0);
         songProgressBar.setMax(100);

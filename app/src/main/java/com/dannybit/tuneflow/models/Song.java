@@ -1,9 +1,11 @@
 package com.dannybit.tuneflow.models;
 
+import android.app.Notification;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.widget.ImageView;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -97,6 +99,7 @@ public abstract class Song implements Parcelable {
 
     public abstract void loadImage(Context context, ImageView imageView);
     public abstract void loadThumbnail(Context context, ImageView imageView);
+    public abstract void loadNotificationArtwork(Context context, RemoteViews remoteViews, int viewId, int notificationId, Notification notification);
     public abstract void styleTag(Context context, TextView tagText);
 
     public SongType getSongType(){

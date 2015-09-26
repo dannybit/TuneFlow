@@ -1,14 +1,18 @@
 package com.dannybit.tuneflow.models;
 
+import android.app.Notification;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.widget.ImageView;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.network.SoundcloudRestClient;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 /**
  * Created by danielnamdar on 7/18/15.
@@ -78,6 +82,13 @@ public class SoundcloudSong extends Song {
     @Override
     public void loadThumbnail(Context context, ImageView imageView){
             Picasso.with(context).load(getArtworkLink()).error(R.drawable.soundcloud_icon).into(imageView);
+    }
+
+    @Override
+    public void loadNotificationArtwork(Context context, RemoteViews remoteViews, int viewId, int notificationId, Notification notification) {
+        Picasso.with(context)
+                    .load(getArtworkLink()).error(R.drawable.soundcloud_icon)
+                    .into(remoteViews, viewId, notificationId, notification);
     }
 
     @Override

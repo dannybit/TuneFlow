@@ -71,10 +71,7 @@ public class NowPlayingNotification  {
                 (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
         notificationManager.notify(MainActivity.PLAYING_SONG_NOTIFICATION_ID, notification);
 
-
-        Picasso.with(context)
-                .load(song.getArtworkLink())
-                .into(remoteViews, R.id.notification_artwork, MainActivity.PLAYING_SONG_NOTIFICATION_ID, notification);
+        song.loadNotificationArtwork(context, remoteViews, R.id.notification_artwork, MainActivity.PLAYING_SONG_NOTIFICATION_ID, notification);
 
         return notification;
     }

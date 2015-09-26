@@ -1,13 +1,16 @@
 package com.dannybit.tuneflow.models;
 
+import android.app.Notification;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.widget.ImageView;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import com.dannybit.tuneflow.R;
+import com.dannybit.tuneflow.activities.MainActivity;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -56,6 +59,19 @@ public class LocalSong extends Song {
             Picasso.with(context).load(new File(getArtworkLink())).into(imageView);
         } else {
             Picasso.with(context).load(R.drawable.web_hi_res_512).into(imageView);
+        }
+    }
+
+    @Override
+    public void loadNotificationArtwork(Context context, RemoteViews remoteViews, int viewId, int notificationId, Notification notification) {
+        if (getArtworkLink() != null){
+            Picasso.with(context)
+                    .load(new File(getArtworkLink()))
+                    .into(remoteViews, viewId, notificationId, notification);
+        } else {
+            Picasso.with(context)
+                    .load(R.drawable.web_hi_res_512)
+                    .into(remoteViews, viewId, notificationId, notification);
         }
     }
 
