@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.TextView;
@@ -64,6 +65,9 @@ public class SoundcloudSong extends Song {
     }
 
     public String getArtwork500x500(){
+        if (getArtworkLink() == null) {
+            return null;
+        }
         return replaceLast(getArtworkLink(), "large", "t500x500");
     }
 
@@ -76,19 +80,35 @@ public class SoundcloudSong extends Song {
 
     @Override
     public void loadImage(Context context, ImageView imageView) {
-           Picasso.with(context).load(getArtwork500x500()).error(R.drawable.soundcloud_icon).into(imageView);
+        if (getArtworkLink() != null && !getArtworkLink().equals("null")){
+            Picasso.with(context).load(getArtwork500x500()).error(R.drawable.soundcloud_icon).into(imageView);
+        } else {
+            Picasso.with(context).load(R.drawable.soundcloud_icon).into(imageView);
+        }
     }
 
     @Override
     public void loadThumbnail(Context context, ImageView imageView){
-            Picasso.with(context).load(getArtworkLink()).error(R.drawable.soundcloud_icon).into(imageView);
+        if (getArtworkLink() != null && !getArtworkLink().equals("null")){
+            Picasso.with(context).load(getArtworkLink()).into(imageView);
+        } else {
+            Picasso.with(context).load(R.drawable.soundcloud_icon).into(imageView);
+        }
+
     }
 
     @Override
     public void loadNotificationArtwork(Context context, RemoteViews remoteViews, int viewId, int notificationId, Notification notification) {
-        Picasso.with(context)
+        if (getArtworkLink() != null && !getArtworkLink().equals("null")){
+            Picasso.with(context)
                     .load(getArtworkLink()).error(R.drawable.soundcloud_icon)
                     .into(remoteViews, viewId, notificationId, notification);
+        } else {
+            Picasso.with(context)
+                    .load(R.drawable.soundcloud_icon)
+                    .into(remoteViews, viewId, notificationId, notification);
+        }
+
     }
 
     @Override

@@ -40,6 +40,7 @@ import com.dannybit.tuneflow.services.AudioPlaybackService;
 import com.dannybit.tuneflow.views.notifications.NowPlayingNotification;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.otto.Subscribe;
+import com.squareup.picasso.Picasso;
 
 
 public class MainActivity extends ActionBarActivity
@@ -100,7 +101,7 @@ public class MainActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //Picasso.with(this).setIndicatorsEnabled(true);
         instance = this;
         dbHelper = DatabaseHelper.getInstance(this);
 
