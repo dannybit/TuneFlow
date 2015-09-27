@@ -6,7 +6,6 @@ import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
 
-import com.dannybit.tuneflow.fragments.adapters.SongAdapter;
 import com.dannybit.tuneflow.models.Song;
 import com.dannybit.tuneflow.fragments.adapters.SearchSoundcloudAdapter;
 
@@ -16,7 +15,7 @@ import java.util.List;
 public class SearchSoundcloudFragment extends ListFragment {
 
     private List<Song> songs;
-    private SongAdapter adapter;
+    private SearchSoundcloudAdapter adapter;
     private OnFragmentInteractionListener mListener;
 
 
@@ -29,7 +28,7 @@ public class SearchSoundcloudFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        adapter = new SongAdapter(getActivity());
+        adapter = new SearchSoundcloudAdapter(getActivity());
         setListAdapter(adapter);
 
     }
@@ -54,7 +53,7 @@ public class SearchSoundcloudFragment extends ListFragment {
         mListener = null;
     }
 
-    public SongAdapter getAdapter(){
+    public SearchSoundcloudAdapter getAdapter(){
         return this.adapter;
     }
 
