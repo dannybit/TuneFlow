@@ -212,7 +212,6 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
         Intent returnIntent = new Intent();
         returnIntent.putExtra("result", song);
         setResult(RESULT_OK, returnIntent);
-        Log.v("HELLO ARTIST", song.getArtist());
         finish();
     }
 
