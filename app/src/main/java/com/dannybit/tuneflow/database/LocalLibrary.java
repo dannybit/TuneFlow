@@ -59,6 +59,7 @@ public class LocalLibrary {
         if (cursor != null && cursor.moveToFirst()){
             do {
                 final long id = cursor.getLong(0);
+                final String artist = cursor.getString(1);
                 final String title = cursor.getString(2);
                 final String data = cursor.getString(3);
                 final String duration = cursor.getString(5);
@@ -66,6 +67,7 @@ public class LocalLibrary {
 
                 LocalSong localSong = new LocalSong();
                 localSong.setId(id);
+                localSong.setArtist(artist);
                 localSong.setTrackName(title);
                 localSong.setDuration(duration);
                 localSong.setUrl(data);
@@ -112,6 +114,7 @@ public class LocalLibrary {
         if (cursor != null && cursor.moveToFirst()){
             do {
                 final long id = cursor.getLong(0);
+                final String artist = cursor.getString(1);
                 final String title = cursor.getString(2);
                 final String data = cursor.getString(3);
                 final String duration = cursor.getString(5);
@@ -119,6 +122,7 @@ public class LocalLibrary {
 
                 LocalSong localSong = new LocalSong();
                 localSong.setId(id);
+                localSong.setArtist(artist);
                 localSong.setTrackName(title);
                 localSong.setDuration(duration);
                 localSong.setUrl(data);
@@ -236,6 +240,7 @@ public class LocalLibrary {
         return resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 new String[] {
           /* 0 */ MediaStore.Audio.Media._ID,
+                        MediaStore.Audio.Media.ARTIST,
                         MediaStore.Audio.Media.TITLE,
                         MediaStore.Audio.Media.DATA,
                         MediaStore.Audio.Media.DURATION
@@ -248,12 +253,14 @@ public class LocalLibrary {
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 final long id = cursor.getLong(0);
-                final String songName = cursor.getString(1);
-                final String songUrl = cursor.getString(2);
-                final String duration = cursor.getString(3);
+                final String artist = cursor.getString(1);
+                final String songName = cursor.getString(2);
+                final String songUrl = cursor.getString(3);
+                final String duration = cursor.getString(4);
 
                 LocalSong localSong = new LocalSong();
                 localSong.setId(id);
+                localSong.setArtist(artist);
                 localSong.setTrackName(songName);
                 localSong.setDuration(duration);
                 localSong.setUrl(songUrl);

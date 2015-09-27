@@ -461,6 +461,7 @@ public class MainActivity extends ActionBarActivity
                 if (data != null) {
                     Song addedSong = data.getParcelableExtra("result");
                     if (addedSong != null) {
+                        Log.v("HELLO SOUNDCLOUD RESULT", addedSong.getArtist());
                         addNewSong(addedSong);
                     }
                 }

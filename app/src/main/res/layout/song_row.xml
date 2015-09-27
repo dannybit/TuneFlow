@@ -17,14 +17,25 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/songName"
         android:textColor="#040404"
         android:textSize="15dip"
         android:layout_toRightOf="@id/songArt"
         android:layout_centerVertical="true"
         android:layout_marginLeft="5dp"
-        android:padding="5dp"/>
+        android:padding="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/songArtist"
+        android:textColor="#6A6A6A"
+        android:text="hello"
+        android:layout_toRightOf="@id/songArt"
+        android:layout_marginLeft="5dp"
+        android:layout_alignTop="@id/songName"
+        android:padding="5dp" />
 
     <TextView
         android:id="@+id/songDuration"

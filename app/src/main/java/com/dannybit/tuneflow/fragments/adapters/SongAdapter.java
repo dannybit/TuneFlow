@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.dannybit.tuneflow.R;
 import com.dannybit.tuneflow.models.Song;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 /**
@@ -22,6 +24,7 @@ public class SongAdapter extends BaseAdapter {
 
     static class ViewHolder{
         public ImageView songArt;
+        public TextView songArtist;
         public TextView songName;
         public TextView songDuration;
         public TextView songTag;
@@ -56,6 +59,7 @@ public class SongAdapter extends BaseAdapter {
             view = vi.inflate(R.layout.song_row, null);
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.songArt = (ImageView) view.findViewById(R.id.songArt);
+            viewHolder.songArtist = (TextView) view.findViewById(R.id.songArtist);
             viewHolder.songName = (TextView) view.findViewById(R.id.songName);
             viewHolder.songDuration = (TextView) view.findViewById(R.id.songDuration);
             viewHolder.songTag = (TextView) view.findViewById(R.id.songTag);
@@ -65,6 +69,7 @@ public class SongAdapter extends BaseAdapter {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
         Song song = songs.get(position);
         song.loadImage(context, viewHolder.songArt);
+        viewHolder.songArtist.setText(song.getArtist());
         viewHolder.songName.setText(song.getTrackName());
         viewHolder.songDuration.setText(song.getDurationInMins());
         song.styleTag(context, viewHolder.songTag);
@@ -76,5 +81,9 @@ public class SongAdapter extends BaseAdapter {
     }
     public void remove(Song s){
         songs.remove(s);
+    }
+
+    public void clear(){
+        songs.clear();
     }
 }

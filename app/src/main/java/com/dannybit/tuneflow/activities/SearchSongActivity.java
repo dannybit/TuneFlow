@@ -188,6 +188,7 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
                         song.setSoundcloudId(jsonSong.getString("id"));
                         song.setDuration(jsonSong.getString("duration"));
                         song.setTrackName(jsonSong.getString("title"));
+                        song.setArtist(jsonSong.getJSONObject("user").getString("username"));
                         song.setArtworkLink(jsonSong.getString("artwork_url"));
                         song.setUrl(addClientIdToUrl(jsonSong.getString("stream_url")));
 
@@ -211,6 +212,7 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
         Intent returnIntent = new Intent();
         returnIntent.putExtra("result", song);
         setResult(RESULT_OK, returnIntent);
+        Log.v("HELLO ARTIST", song.getArtist());
         finish();
     }
 

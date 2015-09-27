@@ -17,6 +17,7 @@ import java.util.Date;
 public abstract class Song implements Parcelable {
 
     private long id;
+    private String artist;
     private String trackName;
     private String duration;
     private String artworkLink;
@@ -33,6 +34,14 @@ public abstract class Song implements Parcelable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getArtist() {
+        return artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
     }
 
     public String getTrackName() {
@@ -74,6 +83,7 @@ public abstract class Song implements Parcelable {
 
     protected Song(Parcel in) {
         id = in.readLong();
+        artist = in.readString();
         trackName = in.readString();
         duration = in.readString();
         artworkLink = in.readString();
@@ -89,6 +99,7 @@ public abstract class Song implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
+        dest.writeString(artist);
         dest.writeString(trackName);
         dest.writeString(duration);
         dest.writeString(artworkLink);
