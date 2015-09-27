@@ -74,6 +74,8 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         }
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -172,6 +174,12 @@ public class NowPlayingFragment extends Fragment implements SeekBar.OnSeekBarCha
         updateProgressBar();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateProgressBar();
     }
 
     public void hideSlidingPlayOrPauseButton(){
