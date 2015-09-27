@@ -179,6 +179,7 @@ public class SearchSongActivity extends ActionBarActivity implements SearchSound
                 super.onSuccess(statusCode, headers, response);
                 int length = response.length();
                 searchSoundcloudFragment.getAdapter().clear();
+                searchSoundcloudFragment.getAdapter().notifyDataSetChanged();
 
                 for (int i = 0; i < length; i++) {
 

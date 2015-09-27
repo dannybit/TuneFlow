@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.dannybit.tuneflow.models.Song;
-import com.dannybit.tuneflow.fragments.adapters.SearchSoundcloudAdapter;
+import com.dannybit.tuneflow.fragments.search.adapters.SearchSoundcloudAdapter;
 
 import java.util.List;
 

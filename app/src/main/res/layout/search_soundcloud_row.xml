@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/searchSongArtSoundcloud"
+        android:id="@+id/songArt"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:padding="5dp"
@@ -15,13 +15,37 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/searchSongNameSoundcloud"
+        android:id="@+id/songName"
         android:textColor="#040404"
         android:textSize="15dip"
-        android:layout_toRightOf="@id/searchSongArtSoundcloud"
+        android:layout_toRightOf="@id/songArt"
         android:layout_centerVertical="true"
         android:layout_marginLeft="5dp"
         android:padding="5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/songArtist"
+        android:textColor="#6A6A6A"
+        android:layout_toRightOf="@id/songArt"
+        android:layout_marginLeft="5dp"
+        android:layout_alignTop="@id/songName"
+        android:padding="5dp" />
+
+    <TextView
+        android:id="@+id/songDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/songName"
+        android:textSize="10dip"
+        android:textColor="#040404"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        />
 
 
 </RelativeLayout>

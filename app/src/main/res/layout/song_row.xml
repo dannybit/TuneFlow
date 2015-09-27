@@ -31,7 +31,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/songArtist"
         android:textColor="#6A6A6A"
-        android:text="hello"
         android:layout_toRightOf="@id/songArt"
         android:layout_marginLeft="5dp"
         android:layout_alignTop="@id/songName"

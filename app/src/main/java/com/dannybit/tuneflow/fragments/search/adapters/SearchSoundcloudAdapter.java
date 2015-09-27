@@ -1,4 +1,4 @@
-package com.dannybit.tuneflow.fragments.adapters;
+package com.dannybit.tuneflow.fragments.search.adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -25,6 +25,8 @@ public class SearchSoundcloudAdapter extends BaseAdapter {
     static class ViewHolder{
         public ImageView songArt;
         public TextView songName;
+        public TextView songArtist;
+        public TextView songDuration;
     }
 
     public SearchSoundcloudAdapter(Activity context){
@@ -53,7 +55,6 @@ public class SearchSoundcloudAdapter extends BaseAdapter {
 
     public void clear(){
         songs.clear();
-        notifyDataSetChanged();
     }
 
     @Override
@@ -63,8 +64,10 @@ public class SearchSoundcloudAdapter extends BaseAdapter {
             LayoutInflater vi = LayoutInflater.from(context);
             view = vi.inflate(R.layout.search_soundcloud_row, null);
             ViewHolder viewHolder = new ViewHolder();
-            viewHolder.songArt = (ImageView) view.findViewById(R.id.searchSongArtSoundcloud);
-            viewHolder.songName = (TextView) view.findViewById(R.id.searchSongNameSoundcloud);
+            viewHolder.songArt = (ImageView) view.findViewById(R.id.songArt);
+            viewHolder.songName = (TextView) view.findViewById(R.id.songName);
+            viewHolder.songArtist = (TextView) view.findViewById(R.id.songArtist);
+            viewHolder.songDuration = (TextView) view.findViewById(R.id.songDuration);
             view.setTag(viewHolder);
         }
 
@@ -72,6 +75,8 @@ public class SearchSoundcloudAdapter extends BaseAdapter {
         Song song = songs.get(position);
         song.loadImage(context, viewHolder.songArt);
         viewHolder.songName.setText(song.getTrackName());
+        viewHolder.songArtist.setText(song.getArtist());
+        viewHolder.songDuration.setText(song.getDurationInMins());
         return view;
     }
 }
