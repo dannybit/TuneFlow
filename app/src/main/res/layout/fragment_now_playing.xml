@@ -70,7 +70,7 @@
         android:background="@color/myPrimaryColor"
         android:layout_marginTop="10dp"
         android:paddingBottom="5dp">
-        
+
 
         <LinearLayout
             android:id="@+id/navButtonsLayout"

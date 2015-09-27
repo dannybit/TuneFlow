@@ -570,11 +570,15 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onForwardClicked() {
+        audioService.getSongQueue().disableRepeat();
+        nowPlayingFragment.disableRepeatButton();
         startNotification(audioService.getCurrentSong());
     }
 
     @Override
     public void onBackwardClicked() {
+        audioService.getSongQueue().disableRepeat();
+        nowPlayingFragment.disableRepeatButton();
         startNotification(audioService.getCurrentSong());
     }
 
