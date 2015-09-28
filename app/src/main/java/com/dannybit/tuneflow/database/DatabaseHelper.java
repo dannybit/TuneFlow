@@ -27,7 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper dbInstance;
 
     // Database Version
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     // Database Name
     private static final String DATABASE_NAME = "tuneflow.db";
@@ -42,6 +42,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_PLAYLIST_NAME = "playlist_name";
 
     private static final String KEY_SONG_TRACK_ID =  "song_track_id";
+    private static final String KEY_SONG_ARTIST = "song_artist";
     private static final String KEY_SONG_NAME = "song_name";
     private static final String KEY_SONG_DURATION = "song_duration";
     private static final String KEY_SONG_ARTWORK_LINK = "song_artwork_link";
@@ -58,6 +59,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_SONG = "create table " + TABLE_SONG + "(" + KEY_ID + " INTEGER PRIMARY KEY, "
             + KEY_SONG_TRACK_ID + " TEXT, "
+            + KEY_SONG_ARTIST + " TEXT, "
             + KEY_SONG_NAME + " TEXT, "
             + KEY_SONG_DURATION + " TEXT, "
             + KEY_SONG_ARTWORK_LINK + " TEXT, "
@@ -143,6 +145,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public long createSong(Song song){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put(KEY_SONG_ARTIST, song.getArtist());
         values.put(KEY_SONG_NAME, song.getTrackName());
         values.put(KEY_SONG_DURATION, song.getDuration());
         values.put(KEY_SONG_URL, song.getUrl());
@@ -202,6 +205,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (song != null) {
             song.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+            song.setArtist(c.getString(c.getColumnIndex(KEY_SONG_ARTIST)));
             song.setTrackName(c.getString(c.getColumnIndex(KEY_SONG_NAME)));
             song.setUrl(c.getString(c.getColumnIndex(KEY_SONG_URL)));
             song.setDuration(c.getString(c.getColumnIndex(KEY_SONG_DURATION)));
